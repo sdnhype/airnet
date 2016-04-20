@@ -1,0 +1,158 @@
+#************************
+DataFct with 7 ms delay*
+#************************
+
+mininet> users ping -c10 192.168.15.13
+PING 192.168.15.13 (192.168.15.13) 56(84) bytes of data.
+64 bytes from 192.168.15.13: icmp_seq=1 ttl=64 time=8.21 ms
+64 bytes from 192.168.15.13: icmp_seq=2 ttl=64 time=8.26 ms
+64 bytes from 192.168.15.13: icmp_seq=3 ttl=64 time=8.30 ms
+64 bytes from 192.168.15.13: icmp_seq=4 ttl=64 time=7.14 ms
+64 bytes from 192.168.15.13: icmp_seq=5 ttl=64 time=8.26 ms
+64 bytes from 192.168.15.13: icmp_seq=6 ttl=64 time=7.21 ms
+64 bytes from 192.168.15.13: icmp_seq=7 ttl=64 time=7.84 ms
+64 bytes from 192.168.15.13: icmp_seq=8 ttl=64 time=7.15 ms
+64 bytes from 192.168.15.13: icmp_seq=9 ttl=64 time=7.47 ms
+64 bytes from 192.168.15.13: icmp_seq=10 ttl=64 time=7.30 ms
+
+--- 192.168.15.13 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9019ms
+rtt min/avg/max/mdev = 7.144/7.719/8.305/0.488 ms
+mininet> 
+mininet> 
+mininet> users ping -c10 192.168.15.13
+PING 192.168.15.13 (192.168.15.13) 56(84) bytes of data.
+64 bytes from 192.168.15.13: icmp_seq=1 ttl=64 time=7.40 ms
+64 bytes from 192.168.15.13: icmp_seq=2 ttl=64 time=7.36 ms
+64 bytes from 192.168.15.13: icmp_seq=3 ttl=64 time=7.61 ms
+64 bytes from 192.168.15.13: icmp_seq=4 ttl=64 time=8.22 ms
+64 bytes from 192.168.15.13: icmp_seq=5 ttl=64 time=8.25 ms
+64 bytes from 192.168.15.13: icmp_seq=6 ttl=64 time=7.43 ms
+64 bytes from 192.168.15.13: icmp_seq=7 ttl=64 time=7.46 ms
+64 bytes from 192.168.15.13: icmp_seq=8 ttl=64 time=7.91 ms
+64 bytes from 192.168.15.13: icmp_seq=9 ttl=64 time=8.26 ms
+64 bytes from 192.168.15.13: icmp_seq=10 ttl=64 time=7.30 ms
+
+--- 192.168.15.13 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9022ms
+rtt min/avg/max/mdev = 7.302/7.724/8.267/0.379 ms
+mininet> 
+
+
+#************************
+DataFct with 3 ms delay*
+#************************
+
+mininet> users ping -c10 server1
+PING 192.168.15.13 (192.168.15.13) 56(84) bytes of data.
+64 bytes from 192.168.15.13: icmp_seq=1 ttl=64 time=2.62 ms
+64 bytes from 192.168.15.13: icmp_seq=2 ttl=64 time=2.51 ms
+64 bytes from 192.168.15.13: icmp_seq=3 ttl=64 time=2.44 ms
+64 bytes from 192.168.15.13: icmp_seq=4 ttl=64 time=2.67 ms
+64 bytes from 192.168.15.13: icmp_seq=5 ttl=64 time=2.55 ms
+64 bytes from 192.168.15.13: icmp_seq=6 ttl=64 time=2.67 ms
+64 bytes from 192.168.15.13: icmp_seq=7 ttl=64 time=2.56 ms
+64 bytes from 192.168.15.13: icmp_seq=8 ttl=64 time=2.64 ms
+64 bytes from 192.168.15.13: icmp_seq=9 ttl=64 time=2.60 ms
+64 bytes from 192.168.15.13: icmp_seq=10 ttl=64 time=2.49 ms
+
+--- 192.168.15.13 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9020ms
+rtt min/avg/max/mdev = 2.441/2.578/2.671/0.073 ms
+
+
+mininet> users ping -c10 server1
+PING 192.168.15.13 (192.168.15.13) 56(84) bytes of data.
+64 bytes from 192.168.15.13: icmp_seq=1 ttl=64 time=2.73 ms
+64 bytes from 192.168.15.13: icmp_seq=2 ttl=64 time=2.21 ms
+64 bytes from 192.168.15.13: icmp_seq=3 ttl=64 time=2.49 ms
+64 bytes from 192.168.15.13: icmp_seq=4 ttl=64 time=2.47 ms
+64 bytes from 192.168.15.13: icmp_seq=5 ttl=64 time=2.55 ms
+64 bytes from 192.168.15.13: icmp_seq=6 ttl=64 time=2.44 ms
+64 bytes from 192.168.15.13: icmp_seq=7 ttl=64 time=2.52 ms
+64 bytes from 192.168.15.13: icmp_seq=8 ttl=64 time=2.63 ms
+64 bytes from 192.168.15.13: icmp_seq=9 ttl=64 time=2.13 ms
+64 bytes from 192.168.15.13: icmp_seq=10 ttl=64 time=2.41 ms
+
+--- 192.168.15.13 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9018ms
+rtt min/avg/max/mdev = 2.137/2.463/2.737/0.174 ms
+
+#*******************
+No network function*
+#*******************
+
+users ping -c10 192.168.15.13
+PING 192.168.15.13 (192.168.15.13) 56(84) bytes of data.
+64 bytes from 192.168.15.13: icmp_seq=1 ttl=64 time=0.410 ms
+64 bytes from 192.168.15.13: icmp_seq=2 ttl=64 time=0.094 ms
+64 bytes from 192.168.15.13: icmp_seq=3 ttl=64 time=0.083 ms
+64 bytes from 192.168.15.13: icmp_seq=4 ttl=64 time=0.083 ms
+64 bytes from 192.168.15.13: icmp_seq=5 ttl=64 time=0.094 ms
+64 bytes from 192.168.15.13: icmp_seq=6 ttl=64 time=0.095 ms
+64 bytes from 192.168.15.13: icmp_seq=7 ttl=64 time=0.085 ms
+64 bytes from 192.168.15.13: icmp_seq=8 ttl=64 time=0.086 ms
+64 bytes from 192.168.15.13: icmp_seq=9 ttl=64 time=0.097 ms
+64 bytes from 192.168.15.13: icmp_seq=10 ttl=64 time=0.083 ms
+
+--- 192.168.15.13 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9001ms
+rtt min/avg/max/mdev = 0.083/0.121/0.410/0.096 ms
+
+mininet> users ping -c10 192.168.15.13
+PING 192.168.15.13 (192.168.15.13) 56(84) bytes of data.
+64 bytes from 192.168.15.13: icmp_seq=1 ttl=64 time=0.470 ms
+64 bytes from 192.168.15.13: icmp_seq=2 ttl=64 time=0.057 ms
+64 bytes from 192.168.15.13: icmp_seq=3 ttl=64 time=0.056 ms
+64 bytes from 192.168.15.13: icmp_seq=4 ttl=64 time=0.060 ms
+64 bytes from 192.168.15.13: icmp_seq=5 ttl=64 time=0.096 ms
+64 bytes from 192.168.15.13: icmp_seq=6 ttl=64 time=0.097 ms
+64 bytes from 192.168.15.13: icmp_seq=7 ttl=64 time=0.097 ms
+64 bytes from 192.168.15.13: icmp_seq=8 ttl=64 time=0.094 ms
+64 bytes from 192.168.15.13: icmp_seq=9 ttl=64 time=0.061 ms
+64 bytes from 192.168.15.13: icmp_seq=10 ttl=64 time=0.062 ms
+
+--- 192.168.15.13 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 8999ms
+rtt min/avg/max/mdev = 0.056/0.115/0.470/0.119 ms
+
+
+#********************
+One dynamic function*
+#********************
+
+mininet> users ping -c10 10.0.0.50
+PING 10.0.0.50 (10.0.0.50) 56(84) bytes of data.
+64 bytes from 10.0.0.50: icmp_seq=1 ttl=64 time=95.8 ms
+64 bytes from 10.0.0.50: icmp_seq=2 ttl=64 time=0.195 ms
+64 bytes from 10.0.0.50: icmp_seq=3 ttl=64 time=0.070 ms
+64 bytes from 10.0.0.50: icmp_seq=4 ttl=64 time=0.052 ms
+64 bytes from 10.0.0.50: icmp_seq=5 ttl=64 time=0.085 ms
+64 bytes from 10.0.0.50: icmp_seq=6 ttl=64 time=0.053 ms
+64 bytes from 10.0.0.50: icmp_seq=7 ttl=64 time=0.053 ms
+64 bytes from 10.0.0.50: icmp_seq=8 ttl=64 time=0.085 ms
+64 bytes from 10.0.0.50: icmp_seq=9 ttl=64 time=0.083 ms
+64 bytes from 10.0.0.50: icmp_seq=10 ttl=64 time=0.052 ms
+
+--- 10.0.0.50 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9000ms
+rtt min/avg/max/mdev = 0.052/9.660/95.874/28.738 ms
+mininet> 
+mininet> 
+mininet> users ping -c10 10.0.0.50
+PING 10.0.0.50 (10.0.0.50) 56(84) bytes of data.
+64 bytes from 10.0.0.50: icmp_seq=1 ttl=64 time=0.132 ms
+64 bytes from 10.0.0.50: icmp_seq=2 ttl=64 time=0.069 ms
+64 bytes from 10.0.0.50: icmp_seq=3 ttl=64 time=0.072 ms
+64 bytes from 10.0.0.50: icmp_seq=4 ttl=64 time=0.069 ms
+64 bytes from 10.0.0.50: icmp_seq=5 ttl=64 time=0.084 ms
+64 bytes from 10.0.0.50: icmp_seq=6 ttl=64 time=0.066 ms
+64 bytes from 10.0.0.50: icmp_seq=7 ttl=64 time=0.081 ms
+64 bytes from 10.0.0.50: icmp_seq=8 ttl=64 time=0.069 ms
+64 bytes from 10.0.0.50: icmp_seq=9 ttl=64 time=0.081 ms
+64 bytes from 10.0.0.50: icmp_seq=10 ttl=64 time=0.071 ms
+
+--- 10.0.0.50 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 8998ms
+rtt min/avg/max/mdev = 0.066/0.079/0.132/0.020 ms
+mininet> 

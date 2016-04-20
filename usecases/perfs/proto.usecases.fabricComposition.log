@@ -1,0 +1,17 @@
+INFO:proto.runtime:starting compilation -- Time == 1447838937388
+INFO:proto.runtime:compilation finished -- Time == 1447838937494
+INFO:proto.runtime:compilation DURATION == 106
+INFO:core:POX 0.2.0 (carp) is up.
+INFO:proto.arp_proxy:number of ARP rules: 5
+INFO:proto.runtime:start enforcing policies -- Time == 1447839746853
+INFO:proto.runtime:number of rules initially installed == 38
+INFO:proto.runtime:policies enforcing finished -- Time == 1447839746892
+INFO:proto.runtime:enforcing proactive rules DURATION== 37
+INFO:proto.infrastructure:Link down -- Time: 1447839891073
+INFO:proto.runtime:number of modified rules == 6
+INFO:proto.runtime:number of new installed rules == 18
+INFO:proto.runtime:number of deleted rules == 12
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1447839891114
+INFO:proto.runtime:enforcing diffLists DURATION == 41
+INFO:core:Going down...
+INFO:core:Down.

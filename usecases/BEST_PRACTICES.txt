@@ -1,0 +1,45 @@
+
+*********
+* EDGES *
+*********
+
+*** In match() instructions, SRC and DST fields MUST be Hosts or Networks
+
+*** Multiple hosts/networks on the same edge vs on different edges ***
+
+    --> TODO
+
+
+**********
+* FABRIC *
+**********
+
+*** In catch() and carry() instructions, SRC and DST fields MUST be Edges
+
+*** Multiple flows with same edge destination ***
+
+    --> CAN COMPOSE "catch" instructions in parallel
+    Ex.
+    t2 = ( catch(fabric="fabric", src="users_egress", flow="staff_out_flows") + 
+           catch(fabric="fabric", src="users_egress", flow="guests_out_flows")) >> carry(dst="users_IO")
+
+*** Multiple flows with same QoS and same edge destination ***
+
+    --> CAN SHARE a common label in the fabric
+    Ex. 
+    e1 = match(edge=EI, src=INTERNET,  dst=WS, tp_dst=HTTP) >> tag("ws_flows_in") >> forward(FAB)
+    e2 = match(edge=EW, src=WIFI_PUB,  dst=WS, tp_dst=HTTP) >> tag("ws_flows_in") >> forward(FAB)
+    e3 = match(edge=EW, src=WIFI_PRIV, dst=WS, tp_dst=HTTP) >> tag("ws_flows_in") >> forward(FAB)
+
+    f1 = catch(fabric=FAB, src=EI, flow="ws_flows_in") >> carry(dst=ED)
+    f2 = catch(fabric=FAB, src=EW, flow="ws_flows_in") >> carry(dst=ED)    
+
+    or
+    f1 = ( catch(fabric=FAB, src=EI, flow="ws_flows_in") +
+           catch(fabric=FAB, src=EW, flow="ws_flows_in") ) >> carry(dst=ED)    
+
+***
+
+Multiple fabrics flexibility: two fabrics to describe high-level policies (physical infra not important)
+								respond to physical constaints : physical topo matters
+

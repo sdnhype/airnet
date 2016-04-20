@@ -1,0 +1,69 @@
+INFO:proto.runtime:starting compilation -- Time == 1450090906247
+INFO:proto.runtime:compilation finished -- Time == 1450090906349
+INFO:proto.runtime:compilation DURATION == 102
+INFO:core:POX 0.2.0 (carp) is up.
+INFO:proto.arp_proxy:number of ARP rules: 3
+INFO:proto.runtime:start enforcing policies -- Time == 1450090951249
+INFO:proto.runtime:number of rules initially installed == 28
+INFO:proto.runtime:policies enforcing finished -- Time == 1450090951270
+INFO:proto.runtime:enforcing proactive rules DURATION== 21
+INFO:proto.infrastructure:Link down -- Time: 1450090996720
+INFO:proto.runtime:number of modified rules == 3
+INFO:proto.runtime:number of new installed rules == 6
+INFO:proto.runtime:number of deleted rules == 3
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450090996738
+INFO:proto.runtime:enforcing diffLists DURATION == 18
+INFO:proto.infrastructure:Link up -- Time: 1450091016974
+INFO:proto.runtime:number of modified rules == 3
+INFO:proto.runtime:number of new installed rules == 3
+INFO:proto.runtime:number of deleted rules == 6
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450091016991
+INFO:proto.runtime:enforcing diffLists DURATION == 17
+INFO:core:Going down...
+INFO:core:Down.
+INFO:proto.runtime:starting compilation -- Time == 1450091097583
+INFO:proto.runtime:compilation finished -- Time == 1450091097672
+INFO:proto.runtime:compilation DURATION == 90
+INFO:core:POX 0.2.0 (carp) is up.
+INFO:proto.arp_proxy:number of ARP rules: 3
+INFO:proto.runtime:start enforcing policies -- Time == 1450091159367
+INFO:proto.runtime:number of rules initially installed == 28
+INFO:proto.runtime:policies enforcing finished -- Time == 1450091159389
+INFO:proto.runtime:enforcing proactive rules DURATION== 22
+INFO:proto.infrastructure:Link down -- Time: 1450091193076
+INFO:proto.runtime:number of modified rules == 3
+INFO:proto.runtime:number of new installed rules == 6
+INFO:proto.runtime:number of deleted rules == 3
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450091193096
+INFO:proto.runtime:enforcing diffLists DURATION == 20
+INFO:proto.infrastructure:Link up -- Time: 1450091201228
+INFO:proto.runtime:number of modified rules == 3
+INFO:proto.runtime:number of new installed rules == 3
+INFO:proto.runtime:number of deleted rules == 6
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450091201246
+INFO:proto.runtime:enforcing diffLists DURATION == 18
+INFO:core:Going down...
+INFO:core:Down.
+INFO:proto.runtime:starting compilation -- Time == 1450091311407
+INFO:proto.runtime:compilation finished -- Time == 1450091311509
+INFO:proto.runtime:compilation DURATION == 101
+INFO:core:POX 0.2.0 (carp) is up.
+INFO:proto.arp_proxy:number of ARP rules: 3
+INFO:proto.runtime:start enforcing policies -- Time == 1450091355076
+INFO:proto.runtime:number of rules initially installed == 28
+INFO:proto.runtime:policies enforcing finished -- Time == 1450091355096
+INFO:proto.runtime:enforcing proactive rules DURATION== 20
+INFO:proto.infrastructure:Link down -- Time: 1450091416840
+INFO:proto.runtime:number of modified rules == 3
+INFO:proto.runtime:number of new installed rules == 6
+INFO:proto.runtime:number of deleted rules == 3
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450091416862
+INFO:proto.runtime:enforcing diffLists DURATION == 22
+INFO:proto.infrastructure:Link up -- Time: 1450091430596
+INFO:proto.runtime:number of modified rules == 3
+INFO:proto.runtime:number of new installed rules == 3
+INFO:proto.runtime:number of deleted rules == 6
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450091430614
+INFO:proto.runtime:enforcing diffLists DURATION == 18
+INFO:core:Going down...
+INFO:core:Down.

@@ -1,0 +1,88 @@
+INFO:proto.runtime:starting compilation -- Time == 1450092361294
+INFO:proto.runtime:compilation finished -- Time == 1450092361384
+INFO:proto.runtime:compilation DURATION == 90
+INFO:core:POX 0.2.0 (carp) is up.
+INFO:proto.arp_proxy:number of ARP rules: 3
+INFO:proto.runtime:start enforcing policies -- Time == 1450092396609
+INFO:proto.runtime:number of rules initially installed == 13
+INFO:proto.runtime:policies enforcing finished -- Time == 1450092396620
+INFO:proto.runtime:enforcing proactive rules DURATION== 11
+INFO:proto.infrastructure:Link down -- Time: 1450092446778
+INFO:proto.runtime:number of modified rules == 2
+INFO:proto.runtime:number of new installed rules == 4
+INFO:proto.runtime:number of deleted rules == 4
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450092446792
+INFO:proto.runtime:enforcing diffLists DURATION == 14
+INFO:proto.infrastructure:Link up -- Time: 1450092455786
+INFO:proto.runtime:number of modified rules == 2
+INFO:proto.runtime:number of new installed rules == 4
+INFO:proto.runtime:number of deleted rules == 4
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450092455801
+INFO:proto.runtime:enforcing diffLists DURATION == 15
+INFO:proto.pox_client:StatIn -- Time == 1450092456654
+INFO:proto.pox_client:StatIn -- Time == 1450092516638
+INFO:proto.runtime:number of modified rules == 5
+INFO:proto.runtime:number of new installed rules == 0
+INFO:proto.runtime:number of deleted rules == 4
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450092516649
+INFO:proto.runtime:enforcing diffLists DURATION == 11
+INFO:core:Going down...
+INFO:core:Down.
+INFO:proto.runtime:starting compilation -- Time == 1450092591283
+INFO:proto.runtime:compilation finished -- Time == 1450092591372
+INFO:proto.runtime:compilation DURATION == 89
+INFO:core:POX 0.2.0 (carp) is up.
+INFO:proto.arp_proxy:number of ARP rules: 3
+INFO:proto.runtime:start enforcing policies -- Time == 1450092626526
+INFO:proto.runtime:number of rules initially installed == 13
+INFO:proto.runtime:policies enforcing finished -- Time == 1450092626537
+INFO:proto.runtime:enforcing proactive rules DURATION== 11
+INFO:proto.infrastructure:Link down -- Time: 1450092651576
+INFO:proto.runtime:number of modified rules == 2
+INFO:proto.runtime:number of new installed rules == 4
+INFO:proto.runtime:number of deleted rules == 4
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450092651589
+INFO:proto.runtime:enforcing diffLists DURATION == 13
+INFO:proto.infrastructure:Link up -- Time: 1450092659706
+INFO:proto.runtime:number of modified rules == 2
+INFO:proto.runtime:number of new installed rules == 4
+INFO:proto.runtime:number of deleted rules == 4
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450092659718
+INFO:proto.runtime:enforcing diffLists DURATION == 12
+INFO:proto.pox_client:StatIn -- Time == 1450092686570
+INFO:proto.runtime:number of modified rules == 5
+INFO:proto.runtime:number of new installed rules == 0
+INFO:proto.runtime:number of deleted rules == 4
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450092686583
+INFO:proto.runtime:enforcing diffLists DURATION == 13
+INFO:core:Going down...
+INFO:core:Down.
+INFO:proto.runtime:starting compilation -- Time == 1450092736197
+INFO:proto.runtime:compilation finished -- Time == 1450092736285
+INFO:proto.runtime:compilation DURATION == 88
+INFO:core:POX 0.2.0 (carp) is up.
+INFO:proto.arp_proxy:number of ARP rules: 3
+INFO:proto.runtime:start enforcing policies -- Time == 1450092773333
+INFO:proto.runtime:number of rules initially installed == 13
+INFO:proto.runtime:policies enforcing finished -- Time == 1450092773344
+INFO:proto.runtime:enforcing proactive rules DURATION== 11
+INFO:proto.infrastructure:Link down -- Time: 1450092796481
+INFO:proto.runtime:number of modified rules == 2
+INFO:proto.runtime:number of new installed rules == 4
+INFO:proto.runtime:number of deleted rules == 4
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450092796493
+INFO:proto.runtime:enforcing diffLists DURATION == 12
+INFO:proto.infrastructure:Link up -- Time: 1450092812492
+INFO:proto.runtime:number of modified rules == 2
+INFO:proto.runtime:number of new installed rules == 4
+INFO:proto.runtime:number of deleted rules == 4
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450092812504
+INFO:proto.runtime:enforcing diffLists DURATION == 12
+INFO:proto.pox_client:StatIn -- Time == 1450092833368
+INFO:proto.runtime:number of modified rules == 5
+INFO:proto.runtime:number of new installed rules == 0
+INFO:proto.runtime:number of deleted rules == 4
+INFO:proto.runtime:diffLists enforcing finished -- Time == 1450092833379
+INFO:proto.runtime:enforcing diffLists DURATION == 11
+INFO:core:Going down...
+INFO:core:Down.
