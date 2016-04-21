@@ -6,8 +6,6 @@ from pox.lib.packet.arp import arp
 from pox.lib.packet.ethernet import ethernet
 from collections import namedtuple
 import copy
-import time
-import pdb
 #from IPython.utils.path import link
 
 log = core.getLogger()
@@ -112,13 +110,13 @@ class Infrastructure(object):
         :prop _hwAddrs: ports in topology. POX HostEvent bug !!
                         switch, edge, join --> get switch hwAddr not host!
         """
-        self.linkNum = 0
-        self.runtime_mode = False
-        self.hosts = {}
-        self.switches = {}
-        self.links = []
+        self.linkNum = 0 #int
+        self.runtime_mode = False # prends pas ca en compte
+        self.hosts = {} #{EthAddr('f6:81:69:bf:be:85'): Phy_Host object}       
+        self.switches = {} #{1: Phy_Switch object}        
+        self.links = [] #[Phy_Link object]
         self._hwAddrs = []  # POX bug ! when a link is down
-        self._deleted_links = []
+        self._deleted_links = #[Phy_Link object]
     
     def link_exist(self, lnk):
         for link in self.links:
@@ -126,169 +124,59 @@ class Infrastructure(object):
                 return True
         return False 
     
-    def _handle_topology_SwitchJoin(self, event):
-        # TODO: use local variables in order to have smaller code line
-        self.switch_event = event
-        assert event.switch.dpid not in self.switches.keys()
+    def _handle_SwitchJoin(self, dpid, ports):
+        assert dpid not in self.switches.keys()
         switch_ports = {}
-        # TODO: named tuples
-        for port in event.switch.ports.values():
+        for port in ports:
             switch_ports[port.number] = Phy_Port(port.id, port.name,
                                                   port.number,  port.hwAddr)
             self._hwAddrs.append(port.hwAddr)
-        self.switches[event.switch.dpid] = Phy_Switch(event.switch.dpid,
-                                                       switch_ports)
+        self.switches[dpid] = Phy_Switch(dpid, switch_ports)
                     
-    def _handle_topology_SwitchLeave(self, event):
+    def _handle_SwitchLeave(self, dpid):
         assert event.switch.dpid in self.switches.keys()
-        for port in self.switches[even.switch.dpid]._ports.values():
+        for port in self.switches[dpid].ports.values():
             for hwAddr in self._hwAddrs:
                 if hwAddr == port._hwAddr:
                     self._hwAddrs.remove(hwAddr)
-        del self.switches[even.switch.dpid]
+        del self.switches[dpid]
     
-    def opposite_link_exist(self, link):
-        for lnk in self.links:
-            if lnk.is_opposite(link):
-                return True
-        return False
-
     
-    def _handle_openflow_discovery_LinkEvent(self, event):
+    def _handle_LinkEvent(self, dpid1, port1, dpid2, port2, added):
         """
         LinkEvents are raised by POX only for switch to switch links
         """
         
-        if event.link.dpid1 == 5 and event.link.dpid2 == 5:
-            pdb.set_trace()
-        
-        entity1 = {"type": "switch_port", "dpid": event.link.dpid1, 
-                   "port": event.link.port1}
-        entity2 = {"type": "switch_port", "dpid": event.link.dpid2, 
-                   "port": event.link.port2}
+        entity1 = {"type": "switch_port", "dpid": dpid1, 
+                   "port": port1}
+        entity2 = {"type": "switch_port", "dpid": dpid2, 
+                   "port": link.port2}
         link = Phy_Link(entity1, entity2)
         
-        tmp_entity1 = {"type": "switch_port", "dpid": event.link.dpid2, 
-                   "port": event.link.port2}
-        tmp_entity2 = {"type": "switch_port", "dpid": event.link.dpid1, 
-                   "port": event.link.port1}
-        tmp_link = Phy_Link(tmp_entity1, tmp_entity2)
-        
-        if event.added:
-            if not self.link_exist(link):
-                self.linkNum += 2
-                self.links.append(link)
-                self.links.append(tmp_link)
-                if self.opposite_link_exist(link) and self.runtime_mode:
-                    core.runtime._event_time = int(round(time.time() * 1000))
-                    log.info("Link up -- Time: " + str(int(round(time.time() * 1000)))) 
-                    print event.link
-                    print "enforcing new rules to adapt to topology changes"
-                    core.runtime.handle_topology_change()
-            else:
-                pass
-                #print "link is already UP"
-                #raise RuntimeError(str(event.link) + " : link is already UP") 
+        if added:
+            self.links.append(link)
+            #core.runtime.handle_topology_change() 
         else:
-            if self.link_exist(link):
-                for lnk in self.links:
-                    if lnk == link:
-                        self.links.remove(lnk)
-                if (not self.opposite_link_exist(link)) and self.runtime_mode:
-                    core.runtime._event_time = int(round(time.time() * 1000))
-                    log.info("Link down -- Time: " + str(int(round(time.time() * 1000))))
-                    print event.link
-                    print "enforcing new rules to adapt to topology changes"
-                    core.runtime.handle_topology_change()
-            else:
-                raise RuntimeError(str(event.link) + " : link is already DOWN")
+            for lnk in self.links:
+                if lnk == link:
+                    self.links.remove(lnk)
+                    #core.runtime.handle_topology_change()
 
 
-    def _handle_host_tracker_HostEvent(self, event):
-        # TODO: use local variable to have smaller line
-        # POX bug ! ensure that the macaddr does not belong to a switch
-        if not event.entry.macaddr in self._hwAddrs:
-            #print event.entry.macaddr 
-            if event.join:
-                self.hosts[event.entry.macaddr] = Phy_Host(event.entry.dpid,
-                                                           event.entry.port,
-                                                        event.entry.macaddr,
-                                                         event.entry.ipAddrs)
+    def _handle_host_tracker_HostEvent(self, dpid, port, macaddr, ipAddrs, join):
+        if macaddr in self._hwAddrs: 
+            if join:
+                self.hosts[macaddr] = Phy_Host(dpid, port, macaddr, ipAddrs)
                 entity1 = {"type": "host_port", 
-                           "dpid": event.entry.macaddr, "port": 1}
+                           "dpid": macaddr, "port": 1}
                 entity2 = {"type": "switch_port", 
-                           "dpid": event.entry.dpid, "port": event.entry.port}
+                           "dpid": dpid, "port": port}
                 self.links.append(Phy_Link(entity1, entity2)) 
                 self.links.append(Phy_Link(entity2, entity1))
-            else:
-                print event.link
-                """
-                for link in self.links:
-                    if link.entity1["type"] == "host_port":
-                        # to avoid __cmp__ error between int and hwAddr
-                        if link.entity1["dpid"] == event.entry.macaddr: 
-                            self.links.remove(link)
-                for link in self.links:
-                    if link.entity2["type"] == "host_port":
-                        if link.entity2["dpid"] == event.entry.macaddr:
-                            self.links.remove(link)                        
-                if event.leave:
-                    assert event.entry.macaddr in self.hosts.keys()
-                    del self.hosts[event.entry.macaddr]
-                elif event.move:
-                    assert event.entry.macaddr in self.hosts.keys()
-                    entity1 = {"type": "host_port", 
-                               "dpid": event.entry.macaddr, "port": 1}
-                    entity2 = {"type": "switch_port", "dpid": event.entry.dpid,
-                                "port": event.entry.port}
-                    self.links.append(Phy_Link(entity1, entity2)) 
-                    self.links.append(Phy_Link(entity2, entity1))
-                 """
-    def discover(self):
-        """
-        switches
-        """
-        #TODO: can we refresh POX information ???
-        self.switches.clear()
-        del self._hwAddrs[:]
-        for switch in core.topology.getEntitiesOfType(t=topology.Switch):
-            dpid = switch.dpid
-            switch_ports = {}
-            # TODO: named tuples
-            for port in switch.ports.values():
-                switch_ports[port.number] = Phy_Port(port.id, port.name, 
-                                                port.number,  port.hwAddr)
-                self._hwAddrs.append(port.hwAddr)
-            self.switches[dpid] = Phy_Switch(dpid, switch_ports)
-
-        """
-        links
-        """
-        del self.links[:]
-        # TODO: named tuples        
-        for link in core.openflow_discovery.adjacency:
-            # TODO: link bandwidth 
-            entity1 = {"type": "switch_port", 
-                       "dpid": link.dpid1, "port": link.port1}
-            entity2 = {"type": "switch_port", 
-                       "dpid": link.dpid2, "port": link.port2}
-            self.links.append(Phy_Link(entity1, entity2))
+            else:            
+                #TODO.
                 
-        """
-        hosts
-        """
-        self.hosts.clear()    
-        # core.topology.getEntitiesOfType(t=topology.Host) is empty ! why ?
-        for host in core.host_tracker.entryByMAC.values():
-            self.hosts[host.macaddr] = Phy_Host(host.dpid, host.port,
-                                             host.macaddr, host.ipAddrs)
-            entity1 = {"type": "host_port", "dpid": host.macaddr, "port": 1}
-            entity2 = {"type": "switch_port", 
-                       "dpid": host.dpid, "port": host.port}
-            self.links.append(Phy_Link(entity1, entity2)) 
-            self.links.append(Phy_Link(entity2, entity1))
-        
-        # TODO: descriptor 
+                
     def  get_graph(self):
         """
         TODO: must be compatible with graph class and the algorithm
