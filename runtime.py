@@ -101,8 +101,7 @@ class Bucket(object):
         except KeyError:
             print "split can not be applied on this packet"
         
-    def add_packet(self, dpid, packet_match, packet):
-        print "foo"
+    def add_packet(self, dpid, packet_match, packet):        
         if self.limit is None:
             self.data.append(packet)
             core.runtime.apply_network_function(dpid, self.match, packet_match, packet)
@@ -287,6 +286,19 @@ class Runtime():
                 if edge_key == edge: 
                         phy_switches = edge_mapping
         return phy_switches
+    
+    def get_packetIn_edge(self, phy_switch, my_match):
+        edges = []
+        if "nw_proto" in my_match.map.keys():
+            my_match.map.pop("nw_proto") 
+        for edge, mapping in self.mapping.edges.iteritems():
+            if phy_switch in mapping:
+                edges.append(edge)
+        for edge in edges:
+            my_match.map["edge"] = edge
+            for rule in self.edge_policies.rules:                
+                if ((my_match == rule.match) or (rule.match.covers(my_match))) and (rule.match != identity):                    
+                    return rule.match.map["edge"]
     
     def get_corresponding_virtual_edge(self, physical_switch):
         """
@@ -1586,6 +1598,7 @@ class Runtime():
             
         
     def handle_packet_in(self, dpid, packet_match, packet):
+        #pdb.set_trace()
         for bucket in self.buckets:
             if bucket.match.covers(packet_match):
                 bucket.add_packet(dpid, packet_match, packet)

@@ -123,8 +123,12 @@ class PoxClient(object):
             my_match.dl_type = 0x0800
         if tp_src:
             my_match.tp_src = tp_src
+            my_match.dl_type = 0x0800
+            my_match.nw_proto = 6
         if tp_dst:
             my_match.tp_dst = tp_dst
+            my_match.dl_type = 0x0800
+            my_match.nw_proto = 6
         if nw_proto:
             my_match.nw_proto = nw_proto
         if in_port:
@@ -461,8 +465,9 @@ def match_from_packet(dpid, packet):
         
     #adding edge field in the match
     switch = 's' + str(dpid)
-    edge = core.runtime.get_corresponding_virtual_edge(switch)
-    if edge:
+    edge = core.runtime.get_packetIn_edge(switch, copy.deepcopy(my_match))
+    #LEGACY: edge = core.runtime.get_corresponding_virtual_edge(switch)
+    if edge:        
         my_match.map['edge'] = edge
     else:
         # fabric's switches fired it

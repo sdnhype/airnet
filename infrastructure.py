@@ -186,7 +186,8 @@ class Infrastructure(object):
                     print "enforcing new rules to adapt to topology changes"
                     core.runtime.handle_topology_change()
             else:
-                print "link is already UP"
+                pass
+                #print "link is already UP"
                 #raise RuntimeError(str(event.link) + " : link is already UP") 
         else:
             if self.link_exist(link):
@@ -207,7 +208,7 @@ class Infrastructure(object):
         # TODO: use local variable to have smaller line
         # POX bug ! ensure that the macaddr does not belong to a switch
         if not event.entry.macaddr in self._hwAddrs:
-            print event.entry.macaddr 
+            #print event.entry.macaddr 
             if event.join:
                 self.hosts[event.entry.macaddr] = Phy_Host(event.entry.dpid,
                                                            event.entry.port,

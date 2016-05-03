@@ -246,7 +246,6 @@ class match(EdgePolicy):
         shared = fs1 & fs2 # set intersection
         most_specific_src = None
         most_specific_dst = None
-
         for f in shared:
             if (f=='nw_src'):
                 most_specific_src = _intersect_ip(self.map[f], pol.map[f])
