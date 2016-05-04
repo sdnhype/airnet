@@ -1618,4 +1618,3 @@ class Runtime():
 def launch(control_program, mapping_program):
     core.registerNew(Runtime, control_program, mapping_program)
 """
-    

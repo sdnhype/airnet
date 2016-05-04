@@ -53,8 +53,8 @@ class AppRyu(app_manager.RyuApp):
 		msg = ev.msg
 		pkt = packet.Packet(msg.data)
 		eth = pkt.get_protocol(ethernet.ethernet)
-		if eth.ethertype != ether_types.ETH_TYPE_ARP:
-		#on ignore tout ce qui n'est pas ARP pour le moment
+		if eth.ethertype == ether_types.ETH_TYPE_LLDP:
+		#on ignore tout ce qui est pas LLDP
 			return
 		datapath = msg.datapath
 		dpid = datapath.id	
