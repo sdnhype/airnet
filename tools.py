@@ -1,4 +1,3 @@
-from pox.core import core
 
 def countOfMessages(of_messages):
     cpt = 0

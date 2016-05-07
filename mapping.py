@@ -1,4 +1,4 @@
-from lib.addresses import IPAddr
+# from lib.addresses import IPAddr
 
 #TODO: for mapping, arguments need to a list of node, not several nodes
 # e.g : ("edge1", ["s1", "s2"]) not ("edge1", "s1", "s2") 
