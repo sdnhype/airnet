@@ -10,8 +10,8 @@ from stage_tools import match_from_packet, countOfMessages
 from threading import Timer
 import time
 import pdb
-from scipy.weave.catalog import intermediate_dir
-#from Image import NONE
+# from scipy.weave.catalog import intermediate_dir
+# from Image import NONE
 
 import logging
 from ryu_client import RyuClient
