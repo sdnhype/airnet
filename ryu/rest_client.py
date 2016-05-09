@@ -101,3 +101,5 @@ class GenericClient(Client):
 			print 'Generic method : Exception'
 		
 	def doRequestRead(self,method,action,data=None):
+		return self.send_and_read_request(method,action,data)
+	
