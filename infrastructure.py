@@ -162,7 +162,6 @@ class Infrastructure(object):
                     self.links.remove(lnk)
                     #core.runtime.handle_topology_change()
 
-
     def _handle_host_tracker_HostEvent(self, dpid, port, macaddr, ipAddrs, join):
         if macaddr in self._hwAddrs: 
             if join:
