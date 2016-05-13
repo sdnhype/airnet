@@ -400,13 +400,14 @@ class Runtime():
         return output_switches
     
     def get_dycRule_forward(self, rule):
+    if len(rule.actions) != 0:
         for act in rule.actions:
             if isinstance(act, forward):
                 return act
-        if isinstance(rule.function, DynamicPolicy):    
-            if len(rule.actions) == 0:
-                return None
-        return self.get_nwFct_forward(rule.function)
+        if isinstance(rule.function, DynamicPolicy):
+            return self.get_nwFct_forward(rule.function)
+    else:
+        return None
     
     def get_nwFct_forward(self, fct):
         if not isinstance(fct, DynamicPolicy):
