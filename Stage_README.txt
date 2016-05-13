@@ -1,15 +1,15 @@
 Installation de Ryu:
-- installer les paquets suivant: python-pip python-dev libxml2-dev libxslt1-dev python-paramiko 
+- installer les paquets suivant: sudo python-pip python-dev libxml2-dev libxslt1-dev python-paramiko 
                                 python-webob python-routes
 - a l'aide de pip installer les dependances duivantes:
-        pip install -U six oslo.config eventlet msgpack-python ovs==2.6.0.dev0
+       sudo pip install -U six oslo.config eventlet msgpack-python ovs==2.6.0.dev0
 
 - cloner le depot git de ryu:
         git clone  https://github.com/osrg/ryu.git
-- Dans notre cas il faudra copier les fichiers ofctl_rest.py rest_client.py packetParser.py et appRyu.py du depôt 
+- Dans notre cas il faudra copier les fichiers controller.py rest_client.py packetParser.py du depôt 
   dans le repertoire ryu/ryu/app.Il existe deja un fichier ofctl_rest.py dans ce repertoire il sera donc remplace      
 - aller dans le repertoire ryu puis installer:
-         python setup.py install
+         sudo python setup.py install
 
 Lancement de Ryu:         
 Pour lancer Ryu :
@@ -19,7 +19,7 @@ Pour lancer Ryu :
             liste_app_contrôle :la liste des applications Ryu qu'on souhaite lancer. ex : ryu/app/ofctl_rest.py
 
 Le lancement de ryu s'effectuera donc comme suit:
-        ryu-manager --observe-links ryu/app/ofctl_rest.py ryu/app/appRyu.py 
+        ryu-manager --observe-links ryu/app/controller.py 
         en supposant qu'on se trouve dans le repertoire ryu (repertoire créé par le clonage du depot git de Ryu)
         pour quitter : Ctrl+c
 
