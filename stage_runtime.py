@@ -73,8 +73,10 @@ class PeriodicTimer(object):
             
 class Bucket(object):
     """
+    ajout de runtime
     """
-    def __init__(self, filter, type, split, limit, every):
+    def __init__(self, filter, type, split, limit, every,runtime):
+        self.runtime = runtime
         self.match = filter
         self.limit = limit
         self.split = split
@@ -98,7 +100,7 @@ class Bucket(object):
         """
         """
         self.data = stat
-        #core.runtime.apply_stat_network_function(self.match, stat)
+        self.runtime.apply_stat_network_function(self.match, stat)
     
     def get_micro_flow(self, packet):
         packet_match = match_from_packet(packet)
@@ -111,7 +113,7 @@ class Bucket(object):
         print "foo"
         if self.limit is None:
             self.data.append(packet)
-            #core.runtime.apply_network_function(dpid, self.match, packet_match, packet)
+            self.runtime.apply_network_function(dpid, self.match, packet_match, packet)
         else:
             if self.split is not None:
                 micro_flow = self.get_micro_flow(packet)
@@ -129,8 +131,8 @@ class Bucket(object):
                         self.locked[micro_flow] = True
                         micro_flow_match = copy.deepcopy(self.match)
                         micro_flow_match.map.update(micro_flow.map)
-                        #core.runtime.micro_flow_limit_reached(micro_flow_match)
-                    #core.runtime.apply_network_function(dpid, self.match, packet_match, packet)
+                        self.runtime.micro_flow_limit_reached(micro_flow_match)
+                    self.runtime.apply_network_function(dpid, self.match, packet_match, packet)
                 else:
                     print " micro-flow locked"
                     # TODO: add something to handle this lasts packets --> packets concurrency
@@ -140,8 +142,8 @@ class Bucket(object):
                     self.data.append(packet)
                     if self.nb_packets == self.limit:
                         self.locked = True
-                        #core.runtime.flow_limit_reached(self.match)
-                    #core.runtime.apply_network_function(dpid, self.match, packet_match, packet)
+                        self.runtime.flow_limit_reached(self.match)
+                    self.runtime.apply_network_function(dpid, self.match, packet_match, packet)
                 else:
                     print "flow locked"
                     # TODO: packets concurrency
@@ -398,13 +400,14 @@ class Runtime():
         return output_switches
     
     def get_dycRule_forward(self, rule):
-        for act in rule.actions:
-            if isinstance(act, forward):
-                return act
-        if isinstance(rule.function, DynamicPolicy):    
-            if len(rule.actions) == 0:
-                return None
-        return self.get_nwFct_forward(rule.function)
+        if len(rule.actions) != 0:
+            for act in rule.actions:
+                if isinstance(act, forward):
+                    return act
+            if isinstance(rule.function, DynamicPolicy):
+                return self.get_nwFct_forward(rule.function)
+        else:
+            return None
     
     def get_nwFct_forward(self, fct):
         if not isinstance(fct, DynamicPolicy):
@@ -925,7 +928,7 @@ class Runtime():
             self.buckets.append(Bucket(filter=rule.match, type='packet', 
                                        limit=function.limit, 
                                        split=function.split,
-                                       every=None))
+                                       every=None,runtime=self))
         # add a rule that sends packets towards controller
         rule_actions = {forward("controller")}
         for act in actions:
@@ -958,12 +961,12 @@ class Runtime():
                 self.buckets.append(Bucket(filter=rule.match, type=function.type, 
                                        limit=function.limit, 
                                        split=function.split,
-                                       every=None))
+                                       every=None,runtime=self))
             elif function.type == "stat":
                 self.buckets.append(Bucket(filter=rule.match, type=function.type, 
                                        limit=function.limit, 
                                        split=function.split,
-                                       every=function.every))
+                                       every=function.every,runtime=self))
             else:
                 raise RuntimeError(str(rule.match) + " : dynamic function data type error")
            
@@ -1204,21 +1207,18 @@ class Runtime():
                     if isinstance(act, modify):
                         act.apply(packet)
                 fwd = self.get_dycRule_forward(matching_rule)
-                if fwd:
+                if fwd :
                     output = self.get_phy_switch_output_port(switch, fwd.output)
                     self.nexus.send_packet_out(switch, packet, output)
-                    
         dyc_rule = None
         for rule in self.nwFct_rules:
             if rule.match.map == bucket_match.map:
                 dyc_rule = rule
-                break
-                
+                break    
         for act in dyc_rule.actions:
             if isinstance(act, modify):
                 act.apply(packet)
         result = dyc_rule.function.apply(packet)
-        
         if isinstance(result, Policy):
             self.add_new_policy(result)
             handle_using_new_policy(dpid, result, packet_match, packet)
@@ -1417,7 +1417,7 @@ class Runtime():
         for rule in self.edge_policies.rules:
             if (rule.match != identity and rule.match.covers(micro_flow)):
                 target_rule = copy.deepcopy(rule)
-
+        
         classifiers = self.create_classifiers()
         target_rule.match = micro_flow
         if self.is_DynamicFct_rule(target_rule) or self.is_DataFct_rule(target_rule): 
@@ -1443,7 +1443,6 @@ class Runtime():
                             self.physical_switches_classifiers[switch].append(new_r)
         else:
             raise RuntimeError("runtime failed to find the nwFct_rule corresponding to " + str(micro_flow))  
-        
     
     def get_diff_lists(self, old_classifiers, new_classifiers):
             """

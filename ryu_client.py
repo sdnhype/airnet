@@ -1,4 +1,7 @@
-#Ryu client
+"""
+Code executed by AirNet to interact with a remote RYU controller
+(via REST API)
+"""
 import httplib
 import json
 from stage_language import identity, forward, modify,match
@@ -75,7 +78,7 @@ class ConfigFlow(Client):
 			print 'Clear flows : Exception'
 
 class RecupStats(Client):
-	"""Client pour recuperer les stats"""
+	"""Client pour recuperer les stats et envoyer des packets"""
 	prefix_stat = 'stats'
 	
 	def __init__(self,host,port):
@@ -85,7 +88,7 @@ class RecupStats(Client):
 		action = 'flow/%s' % (dpid)
 		return self.send_request('GET',action,data)
 		
-	def sendEx(self,data):
+	def sendPacket(self,data):
 		action = 'send'
 		try:
 			self.send_request('POST',action,data)
@@ -166,7 +169,7 @@ class RyuClient(object):
 		self.runtime_mode = False #indique si on deja installe les 1eres regles
 	
 	"""
-	construit le dictionnaire de match
+	construit le dictionnaire de match de la regle OpenFlow
 	"""	
 	def build_match_field(self, src = None, dst = None,dl_src=None, dl_dst=None, 
                           nw_src = None, nw_dst = None, tp_src=None, tp_dst=None, nw_proto= None, in_port=None):
@@ -183,10 +186,10 @@ class RyuClient(object):
 			match['dl_src'] = dl_src
 		if nw_src:
 			match['nw_src'] = nw_src
-        	match['dl_type'] = 0x0800
+        	match['dl_type'] = 0x0800 #ipv4
 		if nw_dst:
 			match['nw_dst'] = nw_dst
-			match['dl_type'] = 0x0800
+			match['dl_type'] = 0x0800 #ipv4
 		if tp_src:
 			match['tp_src'] = tp_src
 		if tp_dst:
@@ -256,14 +259,6 @@ class RyuClient(object):
 				priority = priority-1
 				c.addFlow(data)
 		self.runtime_mode = True
-	
-	"""
-	depreciee
-	"""		
-	def install_arp_bis(self,dpid,ip_src,ip_dst,mac_src,mac_dst,port):
-		data = {'dpid':dpid,'port':port,'mac_src':mac_src,'mac_dst':mac_dst,'ip_src':ip_src,'ip_dst':ip_dst}
-		c = RecupStats('localhost',8080)
-		c.sendEx(data)
 		
 	"""
 	installe des nouvelles regles,utilise par le mode reactif
@@ -284,6 +279,25 @@ class RyuClient(object):
 				c.addFlow(data)
 			self.switches_rules_cpt[switch] += len(rules)	
 	
+	"""
+	installe des nouvelles regles,utilise par le mode dynamique
+	classifiers : dictionnaire des regles a installer
+	"""
+	def install_new_rules(self, classifiers):
+		c = ConfigFlow('localhost',8080)
+		for switch, rules in classifiers.iteritems():
+			priority = self.switches_rules_cpt[switch] + len(rules)
+			dpid = int(switch[1:])
+			for rule in rules:
+				data = {} #dictionnaire qui sera envoye 
+				data['dpid'] = dpid
+				data['match'] = self.build_match_field(**rule.match.map)
+				if not len(rule.actions) == 0:
+					data['actions'] = self.build_action_fields(rule.actions) 
+				data['priority'] = priority
+				priority -= 1
+				c.addFlow(data)
+			self.switches_rules_cpt[switch] += len(rules)
 	"""
 	supprime des regles,utilise par le mode reactif
 	to_delete: dictionnaire des regles a supprimer
@@ -390,24 +404,31 @@ class RyuClient(object):
 	"""
 	gere les packet in
 	pour le moment seul le ARP est traite
-	le packet en parametre est au format json avec le dpid,le port et une liste de protocoles
+	le packet en parametre est au format json avec le dpid,le port et les entetes des protocoles du packet
+	{"port":..,"id_packet":..,"dpid":..,"packet": {"ipv4":{.....},"tcp":{....},"icmp":{...},
+                                                   "udp":{.....},"dl_src":...,"dl_dst":...}}
 	"""
 	def handle_PacketIn(self,packet):
 		dpid = int(packet.get('dpid'))
-		port = int(packet.get('port_in'))
+		port = int(packet.get('port'))
 		protos = (packet.get('packet'))
-		if str(protos[1]).startswith("arp"):
-			data_arp = ast.literal_eval(str(protos[1])[5:])
+		protos = ast.literal_eval(str(protos))
+		if 'arp' in protos:
+			data_arp = protos.get('arp')
 			if data_arp.get('opcode') == ARP_REQUEST:
-				self.install_arp(protos,dpid,port,data_arp)	
+				self.install_arp(dpid,port,data_arp)
+		else: 
+			packet_match = self.match_from_packet(dpid,protos)
+			self.runtime.handle_packet_in(dpid, packet_match, packet)
 	
 	"""
 	fonction qui construit et envoie un packet ARP de reponse
 	protos est la liste des protocoles
 	dpid le switch, port est le numero de port
 	data_arp est le dictionnaire contenant les infos ARP
+	{"src_mac":..,"dst_mac":..,"src_ip":..,"dst_ip":...,"opcode":..}
 	"""
-	def install_arp(self,protos,dpid,port,data_arp):
+	def install_arp(self,dpid,port,data_arp):
 		ip_src = data_arp.get('src_ip')
 		ip_dst = data_arp.get('dst_ip')
 		mac_src = data_arp.get('src_mac')
@@ -419,22 +440,63 @@ class RyuClient(object):
 			data_arp["dst_ip"] = ip_src
 			data_arp["src_mac"] = requested_mac
 			data_arp["dst_mac"]	= mac_src
-			data_arp = "arp: " + str(data_arp)
+			packet = {}
+			packet["arp"] = data_arp
 			data_arp = unicode (data_arp)
-			protos[1] = data_arp
-			data_ethernet = ast.literal_eval(str(protos[0])[10:])
-			data_ethernet["dst"] = mac_src
-			data_ethernet["src"] = requested_mac
-			data_ethernet = "ethernet: " +str(data_ethernet)
-			data_ethernet = unicode(data_ethernet)
-			protos[0] = data_ethernet
 			packet_out = {}
 			packet_out['dpid'] = dpid
 			packet_out['port'] = port
-			packet_out['packet'] = protos
+			packet_out['packet'] = packet
 			c = RecupStats('localhost',8080)
-			c.sendEx(packet_out)
+			c.sendPacket(packet_out)
+	"""
+	permet d'envoyer un dictionnaire contenant le numero et les entetes d'un paquet
+	au controleur ryu pour que celui-ci le delivre
+	switch: nom du switch sur lequel envoyer le paquet
+	output le numero de port du switch
+	packet: dictionnaire contenant les infos du paquet 
+	{"port":..,"id_packet":..,"dpid":..,"packet": {"ipv4":{.....},"tcp":{....},"icmp":{...},
+                                                   "udp":{.....},"dl_src":...,"dl_dst":...}}
+	"""
+	def send_packet_out(self, switch, packet, output):
+		dpid = int((switch[1:]))
+		packet['dpid'] = dpid
+		packet['output'] = output
+		c = RecupStats('localhost',8080)
+		c.sendPacket(packet)
 			
+	"""
+	cree un match a partir des entete d'un paquet
+	dpid: numero du switch
+	protos: dictionnaires contenant les entetes des protocoles du packet
+	{"ipv4":{.....},"tcp":{....},"icmp":{...},"udp":{.....},"dl_src":...,"dl_dst":...}
+	"""		
+	def match_from_packet(self,dpid, protos):
+		my_match = match()
+		if 'ipv4' in protos:
+			ip = protos.get('ipv4')
+			my_match.map["nw_src"] = ip.get('src')
+			my_match.map["nw_dst"] = ip.get('dst')
+		if 'tcp' in protos:
+			tcp = protos.get('tcp')
+			my_match.map["tp_src"] = tcp.get('src_port')
+			my_match.map["tp_dst"] = tcp.get('dst_port')
+			my_match.map["nw_proto"] = "TCP"
+		if 'udp' in protos:
+			udp = protos.get('udp')
+			my_match.map["tp_src"] = udp.get('src_port')
+			my_match.map["tp_dst"] = udp.get('dst_port')
+			my_match.map["nw_proto"] = 17
+		if 'icmp' in protos:
+			my_match.map["nw_proto"] = 1    
+		#adding edge field in the match
+		switch = 's' + str(dpid)
+		edge = self.runtime.get_corresponding_virtual_edge(switch)
+		if edge:
+			my_match.map['edge'] = edge
+		else:
+			return None
+		return my_match
 		
 						
 		

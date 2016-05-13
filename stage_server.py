@@ -1,5 +1,8 @@
-# un server rest pour recevoir les infos a partir de Ryu
-#il utilise flask une bibliotheque python
+"""
+TODO: renommer en launch_airnet_ryu.py
+REST server to receive events emanating from RYU
+(based on the Flask micro web development framework: flask.pocoo.org)
+"""
 
 from flask import Flask
 from flask import json,request,Response
@@ -11,9 +14,7 @@ from stage_runtime import Runtime
 
 app = Flask(__name__)
 infra = Infrastructure()
-#f1 = 'stagecases.twoFabrics'
 f1 = sys.argv[1]
-#f2 = 'stagecases.twoFabrics_mapping_bis'
 f2 = sys.argv[2]
 runtime = Runtime(f1,f2,infra)
 
