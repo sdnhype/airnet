@@ -246,50 +246,50 @@ class RestStatsApi(app_manager.RyuApp):
 
     @set_ev_cls(event.EventSwitchLeave)
     def _event_switch_leave_handler(self, ev):
-	    msg = ev.switch.to_dict()
-	    self.client.switchLeave(msg)
+	msg = ev.switch.to_dict()
+	self.client.switchLeave(msg)
 
     @set_ev_cls(event.EventLinkAdd)
     def _event_link_add_handler(self, ev):
-	    msg = ev.link.to_dict()
-	    self.client.linkAdd(msg)
+	msg = ev.link.to_dict()
+	self.client.linkAdd(msg)
 
     @set_ev_cls(event.EventLinkDelete)
     def _event_link_delete_handler(self, ev):
-	    msg = ev.link.to_dict()
-	    self.client.linkDelete(msg)
+	msg = ev.link.to_dict()
+	self.client.linkDelete(msg)
 
     @set_ev_cls(event.EventHostAdd)
     def _event_host_add_handler(self, ev):
-	    msg = ev.host.to_dict()
-	    self.client.hostAdd(msg)
+	msg = ev.host.to_dict()
+	self.client.hostAdd(msg)
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
-	    msg = ev.msg
-	    pkt = packet.Packet(data=msg.data)
-	    eth = pkt.get_protocol(ethernet.ethernet)
-	    if eth.ethertype == ether_types.ETH_TYPE_LLDP:
-	    #on ignore tout ce qui est LLDP
-	        return
-	    parser = PacketParser()
-	    global id_packet
-	    global packets
-	    datapath = msg.datapath
-	    dpid = datapath.id	
-	    port = msg.in_port
-        data = {}
-        data['dpid'] = dpid
-        data['port'] = port
-        if eth.ethertype == ether_types.ETH_TYPE_ARP:
-            data['packet'] = parser.arp_to_dict(pkt)
-        else :
-            data['packet'] = parser.packet_to_dict(pkt)
-            data['id_packet'] = id_packet
-            packets[id_packet] = msg
-                id_packet = id_packet + 1
-        data = json.dumps(data)					
-        self.client.packetIn(data)
+	msg = ev.msg
+	pkt = packet.Packet(data=msg.data)
+	eth = pkt.get_protocol(ethernet.ethernet)
+	if eth.ethertype == ether_types.ETH_TYPE_LLDP:
+	#on ignore tout ce qui est LLDP
+	    return
+	parser = PacketParser()
+	global id_packet
+	global packets
+	datapath = msg.datapath
+	dpid = datapath.id	
+	port = msg.in_port
+	data = {}
+	data['dpid'] = dpid
+	data['port'] = port
+	if eth.ethertype == ether_types.ETH_TYPE_ARP:
+	    data['packet'] = parser.arp_to_dict(pkt)
+	else :
+	    data['packet'] = parser.packet_to_dict(pkt)
+	    data['id_packet'] = id_packet
+	    packets[id_packet] = msg
+            id_packet = id_packet + 1
+	data = json.dumps(data)					
+	self.client.packetIn(data)
 
     @set_ev_cls([ofp_event.EventOFPStatsReply,
                  ofp_event.EventOFPDescStatsReply,
