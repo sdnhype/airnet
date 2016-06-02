@@ -1,6 +1,5 @@
 """
 Utility class to build a packet (ARP) or modify another packet and send it to a switch
-
 (in an OF Packet-Out message)
 """
 from ryu.lib.packet import packet
@@ -23,10 +22,10 @@ class PacketParser(object):
     def send_arp(self,dp,data):
         port = int(data.get('port'))
         protos = data.get('packet')
-	protos = ast.literal_eval(str(protos))
-	protos = protos.get('arp')
-	packet = self.build_packet_arp(protos)        
-	packet.serialize()
+		protos = ast.literal_eval(str(protos))
+		protos = protos.get('arp')
+		packet = self.build_packet_arp(protos)        
+		packet.serialize()
         parser = dp.ofproto_parser
         ofproto = dp.ofproto
         data = packet.data
@@ -94,7 +93,7 @@ class PacketParser(object):
     {"src_mac":..,"dst_mac":..,"src_ip":..,"dst_ip":...,"opcode":..}
     """
     def build_packet_arp(self,data):
-	pkt = packet.Packet()
+		pkt = packet.Packet()
         mac_src = data.get('src_mac')
         mac_dst = data.get('dst_mac')
         ip_src = data.get('src_ip')
@@ -103,8 +102,8 @@ class PacketParser(object):
         ar = arp.arp_ip(opcode,mac_src,ip_src,mac_dst,ip_dst)
         type = ether_types.ETH_TYPE_ARP
         ether = ethernet.ethernet(ethertype=type,dst=mac_dst,src=mac_src)	
-	pkt.add_protocol(ether)
-	pkt.add_protocol(ar)
+		pkt.add_protocol(ether)
+		pkt.add_protocol(ar)
 	return pkt
     """
     retourne un dictionnaire sous la forme
@@ -112,15 +111,15 @@ class PacketParser(object):
     packet: est un packet ryu reçu avec Packet IN
     """
     def arp_to_dict(self,packet):
-	d = {}
-	ar = packet.get_protocol(arp.arp)
-	d['opcode'] = ar.opcode
-	d['src_mac'] = ar.src_mac
-	d['src_ip'] = ar.src_ip
-	d['dst_mac'] = ar.dst_mac
-	d['dst_ip'] = ar.dst_ip
-	retour = {}
-	retour['arp'] = d
+		d = {}
+		ar = packet.get_protocol(arp.arp)
+		d['opcode'] = ar.opcode
+		d['src_mac'] = ar.src_mac
+		d['src_ip'] = ar.src_ip
+		d['dst_mac'] = ar.dst_mac
+		d['dst_ip'] = ar.dst_ip
+		retour = {}
+		retour['arp'] = d
 	return retour    
 
     """
@@ -130,30 +129,30 @@ class PacketParser(object):
     packet: est un packet ryu reçu avec Packet IN
     """
     def packet_to_dict(self,packet):
-	retour = {}
-  	ip = packet.get_protocol(ipv4.ipv4)
-	if ip :
-	    d_ip = {}
-	    d_ip['src'] = ip.src
-	    d_ip['dst'] = ip.dst
-	    retour['ipv4'] = d_ip
-	ic = packet.get_protocol(icmp.icmp)
-	if ic :
-	    d_ic = {}
-	    retour['icmp'] = d_ic
-	tc = packet.get_protocol(tcp.tcp)
-	if tc :
-	    d_tc = {}
-	    d_tc['src_port'] = tc.src_port
-	    d_tc['dst_port'] = tc.dst_port
-	    retour['tcp'] = d_tc
-	ud = packet.get_protocol(udp.udp)
-	if ud :
-	    d_ud = {}
-	    d_ud['src_port'] = ud.src_port
-	    d_ud['dst_port'] = ud.dst_port
-	    retour['udp'] = d_ud
-	eth = packet.get_protocol(ethernet.ethernet)
-	retour['dl_src'] = eth.src
-	retour['dl_dst'] = eth.dst
-	return retour
+		retour = {}
+  		ip = packet.get_protocol(ipv4.ipv4)
+		if ip :
+	    	d_ip = {}
+	    	d_ip['src'] = ip.src
+	    	d_ip['dst'] = ip.dst
+	    	retour['ipv4'] = d_ip
+		ic = packet.get_protocol(icmp.icmp)
+		if ic :
+	    	d_ic = {}
+	    	retour['icmp'] = d_ic
+		tc = packet.get_protocol(tcp.tcp)
+		if tc :
+	    	d_tc = {}
+	    	d_tc['src_port'] = tc.src_port
+	    	d_tc['dst_port'] = tc.dst_port
+	    	retour['tcp'] = d_tc
+		ud = packet.get_protocol(udp.udp)
+		if ud :
+	   	 d_ud = {}
+	    	d_ud['src_port'] = ud.src_port
+	    	d_ud['dst_port'] = ud.dst_port
+	    	retour['udp'] = d_ud
+		eth = packet.get_protocol(ethernet.ethernet)
+		retour['dl_src'] = eth.src
+		retour['dl_dst'] = eth.dst
+		return retour
