@@ -1,5 +1,5 @@
-from proto.mapping import Mapping
-from constants import *
+from mapping import Mapping
+from usecases.constants import *
 
 """ 
 

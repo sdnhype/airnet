@@ -14,8 +14,9 @@ from stage_runtime import Runtime
 
 app = Flask(__name__)
 infra = Infrastructure()
-f1 = sys.argv[1]
-f2 = sys.argv[2]
+f1 = 'usecases.'+sys.argv[1]
+f2 = 'usecases.'+sys.argv[2]
+print f1
 runtime = Runtime(f1,f2,infra)
 
 @app.route('/Topo/Switch/enter',methods = ['POST'])
@@ -87,7 +88,7 @@ def handle_packet_in():
 
 def test():
 	time.sleep(10)
-	#runtime.infra.view()
+	runtime.infra.view()
 	runtime.enforce_policies()
 
 def main():

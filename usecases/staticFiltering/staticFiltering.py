@@ -1,7 +1,7 @@
 # Import language primitives
-from proto.language import *
+from stage_language import *
 # Import constants for all use cases
-from constants import *
+from usecases.constants import *
 
 """
                        WS   SSH_GW

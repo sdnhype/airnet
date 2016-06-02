@@ -17,6 +17,9 @@ WIFI_PRIV = "Wifi_Priv"
 CORP_NET = "Corporate_Net"
 USERS = "users"
 
+ADMIN_NET = "ADMIN_NET"
+GUEST_NET = "GUEST_NET"
+
 # Hosts
 
 WS = "WebServer"
@@ -31,11 +34,16 @@ HB = "HB"
 HC = "HC"
 HD = "HD"
 
+WEB_SERVER = "WEB_SERVER"
+DATA_BASE = "DATA_BASE"
+
 # Fabric
 
 FAB = "Fabric"
 FAB1 = "Fabric1"
 FAB2 = "Fabric2"
+
+FABRIC = "FABRIC"
 
 # Edges
 
@@ -50,6 +58,7 @@ ED = "ED"
 EW = "EW"
 IO = "IO"
 AC = "AC"
+WAP = "WAP"
 
 DM = "DM"
 
