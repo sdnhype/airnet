@@ -1,7 +1,8 @@
 from tools import *
 from ipaddr import IPv4Network
 # TODO replace POX's IPAddr class by another one... ?
-from pox.lib.addresses import IPAddr
+# from pox.lib.addresses import IPAddr
+from lib.addresses import IPAddr
 from classifier import Classifier, Rule, FabricRule, FabricClassifier
 import pdb
 

@@ -30,7 +30,8 @@ from ryu.app.wsgi import ControllerBase, WSGIApplication
 from ryu.topology import event, switches
 from rest_client import RyuTopologyClient
 from ryu.lib.packet import packet,ethernet,ether_types
-#pour envoyer des packetsOut
+
+# pour envoyer des packetsOut
 from ryu.app.packetParser import PacketParser
 
 LOG = logging.getLogger('ryu.app.ofctl_rest')
@@ -43,13 +44,14 @@ supported_ofctl = {
     ofproto_v1_4.OFP_VERSION: ofctl_v1_4,
 }
 
-#rajoute pour stocker des packets	 
+#rajoute pour stocker des packets    
 #dictionnaire qui contiendra les msg OpenFlow remontes comme PacketIn :{0:msg1,1:msg2,....}
 packets = {} 
 #cle des packets dans le dictionnaire precedent
 id_packet = 0
 
 class StatsController(ControllerBase):
+
     def __init__(self, req, link, data, **config):
         super(StatsController, self).__init__(req, link, data, **config)
         self.dpset = data['dpset']
@@ -161,9 +163,10 @@ class StatsController(ControllerBase):
 
         return Response(status=200)
 
-    #fonction pour envoyer des Packets Out    
+    # Fonction pour envoyer des Packets Out    
     def send_packet(self, req, **_kwargs):
-	sender = PacketParser()
+
+        sender = PacketParser()
         try:
             flow = ast.literal_eval(req.body)
         except SyntaxError:
@@ -180,21 +183,22 @@ class StatsController(ControllerBase):
         _ofctl = supported_ofctl.get(_ofp_version, None)
         if _ofctl is not None:
             if 'id_packet' not in flow:
-		#le packet Arp ne sont pas numerotes
-            	sender.send_arp(dp,flow)
-	    else:
-		global packets
-		id_pkt = int(flow.get('id_packet'))
-		if id_pkt in flow:
-		    msg = packets.get(id_pkt)
-		    #on supprime le paquet du dictionnaires des packets
-		    del packets[id_pkt]
-		    sender.send_packet(dp,flow,msg)
+                # le packet Arp ne sont pas numerotes
+                sender.send_arp(dp,flow)
         else:
-            LOG.debug('Unsupported OF protocol')
-            return Response(status=501)
+            global packets
+            id_pkt = int(flow.get('id_packet'))
+            if id_pkt in flow:
+                msg = packets.get(id_pkt)
+                #on supprime le paquet du dictionnaires des packets
+                del packets[id_pkt]
+                sender.send_packet(dp,flow,msg)
+            else:
+                LOG.debug('Unsupported OF protocol')
+                return Response(status=501)
 
 class RestStatsApi(app_manager.RyuApp):
+
     OFP_VERSIONS = [ofproto_v1_0.OFP_VERSION,
                     ofproto_v1_2.OFP_VERSION,
                     ofproto_v1_3.OFP_VERSION,
@@ -202,13 +206,14 @@ class RestStatsApi(app_manager.RyuApp):
     _CONTEXTS = {
         'dpset': dpset.DPSet,
         'wsgi': WSGIApplication,
-	'switches': switches.Switches
+    'switches': switches.Switches
     }
 
     def __init__(self, *args, **kwargs):
+
         super(RestStatsApi, self).__init__(*args, **kwargs)
-	self.client = RyuTopologyClient('localhost',9000)        
-	self.dpset = kwargs['dpset']
+        self.client = RyuTopologyClient('localhost',9000)        
+        self.dpset = kwargs['dpset']
         wsgi = kwargs['wsgi']
         self.waiters = {}
         self.data = {}
@@ -241,55 +246,61 @@ class RestStatsApi(app_manager.RyuApp):
 
     @set_ev_cls(event.EventSwitchEnter)
     def _event_switch_enter_handler(self, ev):
-    	msg = ev.switch.to_dict()
-    	self.client.switchEnter(msg)
+        msg = ev.switch.to_dict()
+        self.client.switchEnter(msg)
 
     @set_ev_cls(event.EventSwitchLeave)
     def _event_switch_leave_handler(self, ev):
-	msg = ev.switch.to_dict()
-	self.client.switchLeave(msg)
+        msg = ev.switch.to_dict()
+        self.client.switchLeave(msg)
 
     @set_ev_cls(event.EventLinkAdd)
     def _event_link_add_handler(self, ev):
-	msg = ev.link.to_dict()
-	self.client.linkAdd(msg)
+        msg = ev.link.to_dict()
+        self.client.linkAdd(msg)
 
     @set_ev_cls(event.EventLinkDelete)
     def _event_link_delete_handler(self, ev):
-	msg = ev.link.to_dict()
-	self.client.linkDelete(msg)
+        msg = ev.link.to_dict()
+        self.client.linkDelete(msg)
 
     @set_ev_cls(event.EventHostAdd)
     def _event_host_add_handler(self, ev):
-	msg = ev.host.to_dict()
-	self.client.hostAdd(msg)
+        msg = ev.host.to_dict()
+        self.client.hostAdd(msg)
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
-	msg = ev.msg
-	pkt = packet.Packet(data=msg.data)
-	eth = pkt.get_protocol(ethernet.ethernet)
-	if eth.ethertype == ether_types.ETH_TYPE_LLDP:
-	#on ignore tout ce qui est LLDP
-	    return
-	parser = PacketParser()
-	global id_packet
-	global packets
-	datapath = msg.datapath
-	dpid = datapath.id	
-	port = msg.in_port
-	data = {}
-	data['dpid'] = dpid
-	data['port'] = port
-	if eth.ethertype == ether_types.ETH_TYPE_ARP:
-	    data['packet'] = parser.arp_to_dict(pkt)
-	else :
-	    data['packet'] = parser.packet_to_dict(pkt)
-	    data['id_packet'] = id_packet
-	    packets[id_packet] = msg
+
+        msg = ev.msg
+        pkt = packet.Packet(data=msg.data)
+        eth = pkt.get_protocol(ethernet.ethernet)
+
+        # on ignore tout ce qui est LLDP
+        if eth.ethertype == ether_types.ETH_TYPE_LLDP:
+            return
+        
+        parser = PacketParser()
+
+        global id_packet
+        global packets
+        datapath = msg.datapath
+        dpid = datapath.id  
+        port = msg.in_port
+        data = {}
+        data['dpid'] = dpid
+        data['port'] = port
+        if eth.ethertype == ether_types.ETH_TYPE_ARP:
+            print("[DEGUG] PACKET_IN received: ARP packet")
+            data['packet'] = parser.arp_to_dict(pkt)
+        else:
+            print("[DEGUG] PACKET_IN received: IP packet")
+            data['packet'] = parser.packet_to_dict(pkt)
+            data['id_packet'] = id_packet
+            packets[id_packet] = msg
             id_packet = id_packet + 1
-	data = json.dumps(data)					
-	self.client.packetIn(data)
+        data = json.dumps(data)                 
+        self.client.packetIn(data)
 
     @set_ev_cls([ofp_event.EventOFPStatsReply,
                  ofp_event.EventOFPDescStatsReply,

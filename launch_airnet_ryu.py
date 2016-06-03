@@ -1,5 +1,4 @@
 """
-TODO: renommer en launch_airnet_ryu.py
 REST server to receive events emanating from RYU
 (based on the Flask micro web development framework: flask.pocoo.org)
 """
