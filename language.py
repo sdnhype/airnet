@@ -350,27 +350,50 @@ class modify(EdgePolicy):
         
     def apply(self, packet):
         """
+        EDIT Telly: le paquet peut etre un paquet pox ou un dictionnaire
         """
-        if "dl_src" in self.map:
-            packet.src = self.map["dl_src"]
-        if "dl_dst" in self.map:
-            packet.dst = self.map["dl_dst"]
-        ip = packet.find('ipv4')
-        if ip:
-            if hasattr(ip, "srcip"):
-                if "nw_src" in self.map:
-                    ip.srcip = IPAddr(self.map["nw_src"])
-            if hasattr(ip, "dstip"):
-                if "nw_dst" in self.map:
-                    ip.dstip = IPAddr(self.map["nw_dst"])
-        tcp = packet.find('tcp')
-        if tcp:
-            if hasattr(tcp, "srcport"):
-                if "tp_src" in self.map:
-                    tcp.srctp = self.map["tp_src"]
-            if hasattr(tcp, "dstport"):
-                if "tp_dst" in self.map:
-                    tcp.dsttp = self.map["tp_dst"]
+        import ast
+        if isinstance(packet, dict):
+            #ici il s'agit de {'dpid':..,'packet':{'ipv4':{......},'tcp':{....},...},'port':..}
+            protos = packet.get('packet')
+            protos = ast.literal_eval(str(protos))
+            if "dl_src" in self.map:
+                protos['dl_src'] = self.map["dl_src"]
+            if "dl_dst" in self.map:
+                protos['dl_dst'] = self.map["dl_dst"]
+            if 'ipv4' in protos:
+                ip = protos.get('ipv4')
+                ip['src'] = self.map["nw_src"]
+                ip['dst'] = self.map["nw_dst"]
+                protos['ipv4'] = ip
+            if 'tcp' in protos:
+                tcp = protos.get('tcp')
+                tcp['src_port'] = self.map["tp_src"]
+                tcp['dst_port'] = self.map["tp_dst"]
+                protos['tcp'] = tcp
+            packet['packet'] = unicode(protos)
+        else:
+        # End EDIT Telly
+            if "dl_src" in self.map:
+                packet.src = self.map["dl_src"]
+            if "dl_dst" in self.map:
+                packet.dst = self.map["dl_dst"]
+            ip = packet.find('ipv4')
+            if ip:
+                if hasattr(ip, "srcip"):
+                    if "nw_src" in self.map:
+                        ip.srcip = IPAddr(self.map["nw_src"])
+                if hasattr(ip, "dstip"):
+                    if "nw_dst" in self.map:
+                        ip.dstip = IPAddr(self.map["nw_dst"])
+            tcp = packet.find('tcp')
+            if tcp:
+                if hasattr(tcp, "srcport"):
+                    if "tp_src" in self.map:
+                        tcp.srctp = self.map["tp_src"]
+                if hasattr(tcp, "dstport"):
+                    if "tp_dst" in self.map:
+                        tcp.dsttp = self.map["tp_dst"]
                      
     def generateClassifier(self):
         return Classifier([Rule(identity, identity, {self})])

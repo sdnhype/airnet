@@ -1,20 +1,19 @@
-# from pox.core import core
+from pox.core import core
 from importlib import import_module
 import copy
 from language import identity
 from language import forward, drop, CompositionPolicy, match, DataFctPolicy, NetworkFunction, Policy, DynamicPolicy
 from classifier import Rule
 from collections import namedtuple
-#from pox_client import PoxClient
-from ryu_client import RyuClient
+from pox_client import PoxClient
 from ipaddr import IPv4Network
 from collections import namedtuple
 from tools import match_from_packet, countOfMessages 
 from threading import Timer
 import time
-import logging
+#import logging
 import pdb
-#from scipy.weave.catalog import intermediate_dir
+from scipy.weave.catalog import intermediate_dir
 #from Image import NONE
 
 #TODO: in_port field  
@@ -30,14 +29,7 @@ import pdb
 #TODO: private _functions and _var 
 #TODO: simplify algo : functions inside complex functions
 
-#log = core.getLogger()
-log = logging.getLogger("AirNet_runtime")
-formatter = logging.Formatter('%(levelname)s : %(message)s')
-log.setLevel(logging.DEBUG)
-log_handler = logging.StreamHandler()
-log_handler.setFormatter(formatter)
-log_handler.setLevel(logging.DEBUG)
-log.addHandler(log_handler)
+log = core.getLogger()
 
 class PeriodicTimer(object):
     """
@@ -71,13 +63,12 @@ class PeriodicTimer(object):
         
     def stop(self):
         self._timer.cancel()
-
+        
+            
 class Bucket(object):
     """
-    Edit Telly: ajout de runtime
     """
-    def __init__(self, filter, type, split, limit, every, runtime):
-        self.runtime = runtime
+    def __init__(self, filter, type, split, limit, every):
         self.match = filter
         self.limit = limit
         self.split = split
@@ -90,7 +81,7 @@ class Bucket(object):
             self.locked = False
         self.type = type
         if type == "stat":
-            self.timer = PeriodicTimer(every, limit, self.runtime.send_stat_request, filter)
+            self.timer = PeriodicTimer(every, limit, core.runtime.send_stat_request, filter)
             self.timer.start()
     
     def update_bucket_state(self):
@@ -101,7 +92,7 @@ class Bucket(object):
         """
         """
         self.data = stat
-        self.runtime.apply_stat_network_function(self.match, stat)
+        core.runtime.apply_stat_network_function(self.match, stat)
     
     def get_micro_flow(self, packet):
         packet_match = match_from_packet(packet)
@@ -113,7 +104,7 @@ class Bucket(object):
     def add_packet(self, dpid, packet_match, packet):        
         if self.limit is None:
             self.data.append(packet)
-            self.runtime.apply_network_function(dpid, self.match, packet_match, packet)
+            core.runtime.apply_network_function(dpid, self.match, packet_match, packet)
         else:
             if self.split is not None:
                 micro_flow = self.get_micro_flow(packet)
@@ -131,8 +122,8 @@ class Bucket(object):
                         self.locked[micro_flow] = True
                         micro_flow_match = copy.deepcopy(self.match)
                         micro_flow_match.map.update(micro_flow.map)
-                        self.runtime.micro_flow_limit_reached(micro_flow_match)
-                    self.runtime.apply_network_function(dpid, self.match, packet_match, packet)
+                        core.runtime.micro_flow_limit_reached(micro_flow_match)
+                    core.runtime.apply_network_function(dpid, self.match, packet_match, packet)
                 else:
                     print " micro-flow locked"
                     # TODO: add something to handle this lasts packets --> packets concurrency
@@ -142,8 +133,8 @@ class Bucket(object):
                     self.data.append(packet)
                     if self.nb_packets == self.limit:
                         self.locked = True
-                        self.runtime.flow_limit_reached(self.match)
-                    self.runtime.apply_network_function(dpid, self.match, packet_match, packet)
+                        core.runtime.flow_limit_reached(self.match)
+                    core.runtime.apply_network_function(dpid, self.match, packet_match, packet)
                 else:
                     print "flow locked"
                     # TODO: packets concurrency
@@ -155,9 +146,7 @@ class Runtime():
     """
     _core_name = "runtime"
     
-    # def __init__(self, control_program, mapping_program):
-    # EDIT Telly: adding infra
-    def __init__(self, control_program, mapping_program, infra):
+    def __init__(self, control_program, mapping_program):
         #TODO: put all global variables here.
         #mapping information
         log.info("starting compilation -- Time == " + str(int(round(time.time() * 1000))))
@@ -168,9 +157,7 @@ class Runtime():
         mapping_module = mapping_module.main()
         self.mapping = mapping_module
         # the graph corresponding to the physical infrastructure
-        # self.phy_topology = core.infrastructure.get_graph()
-        self.infra = infra
-        self.phy_topology = infra.get_graph()
+        self.phy_topology = core.infrastructure.get_graph()
 
         #virtual topology
         self.virtual_topology = main_module["virtual_topology"]
@@ -191,11 +178,9 @@ class Runtime():
         self.fabric_policies = main_module["fabric_policies"]
         self.fabric_policies = self.fabric_policies.compile()
         
-        # communication point with physical switches
-        # EL TODO: chose the controler in the class constructor
-        # self.nexus = PoxClient()
-        self.nexus = RyuClient(self)
-
+        #communication point with physical switches        
+        self.nexus = PoxClient()
+        
         self.main_module = main_module
         self._event_time = 0
         log.info("compilation finished -- Time == " + str(int(round(time.time() * 1000))))
@@ -225,7 +210,7 @@ class Runtime():
     def get_host_dlAddr(self, id):
         for host_ipAddr, host_name in self.mapping.hosts.iteritems():
             if host_name == id:
-                return self.infra.arp(host_ipAddr)
+                return core.infrastructure.arp(host_ipAddr)
             
     def nwAddr_to_host(self, nwAddr):
         for host_ipAddr, host_name in self.mapping.hosts.iteritems():
@@ -245,11 +230,11 @@ class Runtime():
         new_hosts = {}
         for edge in graph.edges:
             if edge[1] == "host":
-                edge_ipAddr = self.infra.rarp(edge[0])
+                edge_ipAddr = core.infrastructure.rarp(edge[0])
                 for host_ipAddr, host_name in self.mapping.hosts.iteritems():
                     # for hosts and networks
-                    if (edge_ipAddr == host_ipAddr or 
-                        IPv4Network(edge_ipAddr) in IPv4Network(host_ipAddr)):
+                    if (edge_ipAddr.toStr() == host_ipAddr or 
+                        IPv4Network(edge_ipAddr.toStr()) in IPv4Network(host_ipAddr)):
                         # vertices update
                         """
                         create a copy of graph.vertices because i need to update it
@@ -786,10 +771,6 @@ class Runtime():
     
     
     def enforce_drop_rule(self, rule, classifiers):
-        # EL DEBUG
-        log.debug("enforce drop rule on match:")
-        for m in rule.match.map:
-            log.debug("match field: " + m)
         match_switches_list = self.get_match_switches_list(rule.match)  
         for switch in match_switches_list:
             #Install on all corresponding switches, because we can have rules like match TCP==80
@@ -947,7 +928,7 @@ class Runtime():
             self.buckets.append(Bucket(filter=rule.match, type='packet', 
                                        limit=function.limit, 
                                        split=function.split,
-                                       every=None, runtime=self))
+                                       every=None))
         # add a rule that sends packets towards controller
         rule_actions = {forward("controller")}
         for act in actions:
@@ -980,12 +961,12 @@ class Runtime():
                 self.buckets.append(Bucket(filter=rule.match, type=function.type, 
                                        limit=function.limit, 
                                        split=function.split,
-                                       every=None, runtime=self))
+                                       every=None))
             elif function.type == "stat":
                 self.buckets.append(Bucket(filter=rule.match, type=function.type, 
                                        limit=function.limit, 
                                        split=function.split,
-                                       every=function.every, runtime=self))
+                                       every=function.every))
             else:
                 raise RuntimeError(str(rule.match) + " : dynamic function data type error")
            
@@ -1131,7 +1112,7 @@ class Runtime():
         """
         log.info("start enforcing policies -- Time == " + str(int(round(time.time() * 1000))))
         _enforcing_duration = int(round(time.time() * 1000))
-        graph = self.infra.get_graph()
+        graph = core.infrastructure.get_graph()
         self.topology_graph = self.resolve_graph_hosts(graph)
         self.physical_switches_classifiers = {}
         #edge means point, not virtual edge.
@@ -1155,7 +1136,7 @@ class Runtime():
     def handle_topology_change(self):
         """
         """
-        graph = self.infra.get_graph()
+        graph = core.infrastructure.get_graph()
         self.topology_graph = self.resolve_graph_hosts(graph)
         new_classifiers = self.create_classifiers()
         
@@ -1229,18 +1210,18 @@ class Runtime():
                 if fwd:
                     output = self.get_phy_switch_output_port(switch, fwd.output)
                     self.nexus.send_packet_out(switch, packet, output)
-
+                    
         dyc_rule = None
         for rule in self.nwFct_rules:
             if rule.match.map == bucket_match.map:
                 dyc_rule = rule
                 break
-
+                
         for act in dyc_rule.actions:
             if isinstance(act, modify):
                 act.apply(packet)
         result = dyc_rule.function.apply(packet)
-
+        
         if isinstance(result, Policy):
             self.add_new_policy(result)
             handle_using_new_policy(dpid, result, packet_match, packet)
@@ -1636,7 +1617,7 @@ class Runtime():
             if bucket.type == "stat":
                 bucket.timer.stop()
                  
-# launch function for POX
-# def launch(control_program, mapping_program):
-#    core.registerNew(Runtime, control_program, mapping_program)
+
+def launch(control_program, mapping_program):
+    core.registerNew(Runtime, control_program, mapping_program)
     

@@ -9,13 +9,13 @@ from stage_infrastructure import Infrastructure
 import thread
 import time
 import sys
-from stage_runtime import Runtime
+from runtime import Runtime
 
 app = Flask(__name__)
 infra = Infrastructure()
 f1 = 'usecases.'+sys.argv[1]
 f2 = 'usecases.'+sys.argv[2]
-print f1
+# print f1
 runtime = Runtime(f1,f2,infra)
 
 @app.route('/Topo/Switch/enter',methods = ['POST'])
@@ -75,6 +75,7 @@ def handle_host_add():
 	port = int(ports['port_no'])
 	infra._handle_host_tracker_HostEvent(dpid, port, mac, ipadrs, True)
 	if len(runtime.mapping.hosts) == len (infra.hosts):
+		# all hosts have been discovered, run enforce policies
 		thread.start_new_thread(test,())
 	return 'OK'
 

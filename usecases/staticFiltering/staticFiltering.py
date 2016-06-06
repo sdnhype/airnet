@@ -1,5 +1,5 @@
 # Import language primitives
-from stage_language import *
+from language import *
 # Import constants for all use cases
 from usecases.constants import *
 
