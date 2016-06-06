@@ -37,6 +37,9 @@ HD = "HD"
 WEB_SERVER = "WEB_SERVER"
 DATA_BASE = "DATA_BASE"
 
+INET1 = "inet1"
+USER1 = "user1"
+
 # Fabric
 
 FAB = "Fabric"

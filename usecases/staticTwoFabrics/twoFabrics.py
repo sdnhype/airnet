@@ -1,10 +1,14 @@
-from proto.language import *
-from constants import *
+from language import *
+from usecases.constants import *
 
 """
-INTERNET------|          |-----FAB1------E2-----WS
-              |----E1----|
-USERS---------|          |-----FAB2-----E3------SSH_GW
+INTERNET ---|      /------FAB1------E2-----WS
+            |----E1
+USERS ------|      \------FAB2------E3-----SSH_GW
+
+HTTP from * to WS          OK (via FAB1)
+ICMP from USERS to SSH_GW  OK (via FAB2)
+
 
 PS: mapping: twoFabrics_mapping(topo_2_fabrics.py) or twoFabrics_mapping_bis(topo_2_fabrics_bis.py)
 
@@ -22,7 +26,7 @@ def virtual_network():
     topo.addEdge(E2, 2)
     topo.addEdge(E3, 2)
     topo.addNetwork(INTERNET)
-    topo.addHost(USERS)
+    topo.addNetwork(USERS)
     topo.addHost(WS)
     topo.addHost(SSH_GW)
     topo.addLink((E1, 1),(INTERNET, 0))
@@ -32,7 +36,7 @@ def virtual_network():
     topo.addLink((E2, 1),(WS, 0))
     topo.addLink((E2, 2),(FAB1, 2))
     topo.addLink((E3, 1),(SSH_GW, 0))
-    topo.addLink((E2, 2),(FAB2, 2))
+    topo.addLink((E3, 2),(FAB2, 2))
     return topo
 
 def default_distribution_policy():
