@@ -2,11 +2,11 @@ from importlib import import_module
 import copy
 from stage_language import identity
 from stage_language import forward, drop, CompositionPolicy, match, DataFctPolicy, NetworkFunction, Policy, DynamicPolicy
-from stage_classifier import Rule
+from classifier import Rule
 from collections import namedtuple
 from ipaddr import IPv4Network
 from collections import namedtuple
-from stage_tools import match_from_packet, countOfMessages 
+from tools import match_from_packet, countOfMessages 
 from threading import Timer
 import time
 import pdb
@@ -73,9 +73,9 @@ class PeriodicTimer(object):
             
 class Bucket(object):
     """
-    ajout de runtime
+    Edit Telly: ajout de runtime
     """
-    def __init__(self, filter, type, split, limit, every,runtime):
+    def __init__(self, filter, type, split, limit, every, runtime):
         self.runtime = runtime
         self.match = filter
         self.limit = limit
@@ -771,6 +771,9 @@ class Runtime():
     
     
     def enforce_drop_rule(self, rule, classifiers):
+        log.debug("enforce drop rule on match:")
+        for m in rule.match.map:
+            log.debug("match field: " + m)
         match_switches_list = self.get_match_switches_list(rule.match)  
         for switch in match_switches_list:
             #Install on all corresponding switches, because we can have rules like match TCP==80
