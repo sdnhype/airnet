@@ -1,0 +1,86 @@
+
+************************
+*** AirNet use cases ***
+************************
+
+=======================
+== Static filtering  ==
+=======================
+
+-- with RYU
+
+$ ryu-manager --observe-links ryu/app/controller.py
+$ python launch_airnet_ryu.py staticFiltering.staticFiltering staticFiltering.staticFiltering_mapping
+
+-- with POX
+
+TODO
+
+-- Mininet
+
+$ sudo python topo_static_filtering.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> inet_h ping -c1 ws  ---> OK
+mininet> inet_h ping -c1 ssh_gw ---> KO
+mininet> inet_h ssh ssh_gw   ---> OK
+
+
+=======================
+== Static 2 fabrics ==
+=======================
+
+-- with RYU
+
+$ ryu-manager --observe-links ryu/app/controller.py
+$ python launch_airnet_ryu.py staticTwoFabrics.twoFabrics staticTwoFabrics.twoFabrics_mapping
+
+-- with POX
+
+TODO
+
+-- Mininet
+
+$ sudo python topo_2_fabrics.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> user ping -c1 ssh  ---> OK
+mininet> user ping -c1 ws   ---> KO
+mininet> inet ping -c1 ssh  ---> KO
+
+mininet> inet wget ws  ---> OK
+mininet> inet wget ssh ---> KO
+
+
+============================
+== Dynamic authentication ==
+============================
+
+-- with RYU
+
+$ ryu-manager --observe-links ryu/app/controller.py
+$ python launch_airnet_ryu.py dynAuthentication.dynAuth dynAuthentication.dynAuth_mapping
+
+-- with POX
+
+TODO
+
+-- Mininet
+
+$ sudo python topo_9sw_4hosts.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> users ping -c1 WS  ---> OK
+mininet> users ping -c1 CC  ---> OK 
+mininet> guests wget WS     ---> OK  (guests IP on whitelist)
+
+mininet> guests ping -c1 WS  ---> KO the first time : good!     
+mininet> guests ping -c1 WS  ---> OK the second time : XXX BUG ! not OK. TODO FIX.
+
+
+
+
+
