@@ -1,9 +1,22 @@
-from proto.mapping import Mapping
-from constants import *
+from mapping import Mapping
+from usecases.constants import *
+
 """
-mininet_topo: topo_fabrics_plus_GW
-h1---s1--s2---s3---s4---s5---s6---s7---s8---s9---h2
-TODO
+
+* Virtual topo:
+
+    C01(host) ---- E1 ---- FAB1 ---- E_GW ---- FAB2 ---- E2 ---- WS(host)
+
+* Mininet topo (edge_between_fabs_topo):
+
+    h1 --- s1---s2---s3---s4---s5---s6---s7---s8---s9 --- h2
+
+* Mapping
+
+    E1 -> s1, E_GW -> s5, E2 -> s9
+    FAB1 -> s2, s3, s4
+    FAB2 -> s6, s7, s8
+
 """
 
 class Mymapping(Mapping):

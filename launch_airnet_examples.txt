@@ -1,11 +1,17 @@
 
-************************
-*** AirNet use cases ***
-************************
+            ************************
+            *** AirNet use cases ***
+            ************************
 
-=======================
-== Static filtering  ==
-=======================
+
+******************************************************************************
+******************************************************************************
+
+======================= 
+== Static filtering  == 
+======================= 
+
+# usecases/staticFiltering/
 
 -- with RYU
 
@@ -26,10 +32,14 @@ mininet> inet_h ping -c1 ws  ---> OK
 mininet> inet_h ping -c1 ssh_gw ---> KO
 mininet> inet_h ssh ssh_gw   ---> OK
 
+******************************************************************************
+******************************************************************************
 
-=======================
-== Static 2 fabrics ==
-=======================
+======================  
+== Static 2 fabrics ==  
+======================  
+
+# usecases/staticTwoFabrics/
 
 -- with RYU
 
@@ -53,10 +63,40 @@ mininet> inet ping -c1 ssh  ---> KO
 mininet> inet wget ws  ---> OK
 mininet> inet wget ssh ---> KO
 
+******************************************************************************
+******************************************************************************
+
+======================================
+== Static edge gw between 2 fabrics ==
+======================================
+
+# usecases/staticEdgeGateway/
+
+-- with RYU
+
+$ ryu-manager --observe-links ryu/app/controller.py
+$ python launch_airnet_ryu.py staticEdgeGateway.edge_between_fabs staticEdgeGateway.edge_between_fabs_mapping
+
+-- with POX
+
+TODO
+
+-- Mininet
+
+$ sudo python edge_between_fabs_topo.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> C01 ping -c1 WS  ---> OK
+
+******************************************************************************
+******************************************************************************
 
 ============================
 == Dynamic authentication ==
 ============================
+
+# usecases/dynAuthentication/
 
 -- with RYU
 
@@ -78,9 +118,10 @@ mininet> users ping -c1 CC  ---> OK
 mininet> guests wget WS     ---> OK  (guests IP on whitelist)
 
 mininet> guests ping -c1 WS  ---> KO the first time : good!     
-mininet> guests ping -c1 WS  ---> OK the second time : XXX BUG ! not OK. TODO FIX.
+mininet> guests ping -c1 WS  ---> OK the second time : XXX BUG ! not OK. FIX ME!
 
-
+******************************************************************************
+******************************************************************************
 
 
 
