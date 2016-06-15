@@ -1,6 +1,9 @@
-from proto.language import *
+from language import *
 
 """
+
+* Virtual topo:
+
 ----------
 staff_net-|---|
 ----------    |
@@ -12,6 +15,13 @@ guests_net-|--|                 |                                   |--- WS1
 -----------                     |              |
 admins_net-|-----[admins_IO]----|              |---[admins_egress]--- DB
 -----------
+
+* Policies
+
+    admins_net <--> DB   FWD ALL FLOWS
+    staff_net  <--> WS1  FWD ALL FLOWS
+    guests_net <--> WS2  FWD ALL FLOWS
+
 
 """
 
@@ -67,6 +77,9 @@ def admins_egress_policy(VID):
     return i1 + i2 
 
 def fabric_policy():
+    
+    # ( catch() + catch() ) >> carry
+
     t1 = (catch(fabric="fabric", src="users_IO", flow="staff_in_flows") + 
             catch(fabric="fabric", src="users_IO", flow="guests_in_flows")) >> carry(dst="users_egress")
             

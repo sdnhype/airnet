@@ -66,6 +66,38 @@ mininet> inet wget ssh ---> KO
 ******************************************************************************
 ******************************************************************************
 
+=======================================
+== Static catch parallel composition ==
+=======================================
+
+# usecases/staticParallelCatch/
+
+-- with RYU
+
+$ ryu-manager --observe-links ryu/app/controller.py
+$ python launch_airnet_ryu.py staticParallelCatch.catchComposition staticParallelCatch.catchComposition_mapping
+
+-- with POX
+
+TODO
+
+-- Mininet
+
+$ sudo python catchComposition_topo.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> staff_net  ping -c1 WS1  OK
+mininet> guests_net ping -c1 WS2  OK
+mininet> admins_net ping -c1 DB   OK
+
+mininet> guests_net ping -c1 WS1  KO
+mininet> staff_net  ping -c1 DB   KO
+
+
+******************************************************************************
+******************************************************************************
+
 ======================================
 == Static edge gw between 2 fabrics ==
 ======================================
