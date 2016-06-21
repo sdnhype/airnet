@@ -16,11 +16,12 @@
 -- with RYU
 
 $ ryu-manager --observe-links ryu/app/controller.py
-$ python launch_airnet_ryu.py staticFiltering.staticFiltering staticFiltering.staticFiltering_mapping
+$ python launch_airnet_ryu.py staticFiltering.staticFiltering staticFiltering_mapping
 
 -- with POX
 
-TODO
+$ ./launch_airnet_pox.sh usecases.staticFiltering.staticFiltering usecases.staticFiltering.staticFiltering_mapping 
+POX> core.airnet.init()
 
 -- Mininet
 

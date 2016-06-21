@@ -10,11 +10,12 @@ then
     exit 1
 fi
 
-#POX_DIR=~/pox
-POX_DIR=~/These/pox
+POX_DIR=~/git/pox
+# POX_DIR=~/These/pox
+PYTHONPATH=$PYTHONPATH:$POX_DIR/ext/airnet
 
-CTRL_MODULE=proto.$1
-MAPPING_MODULE=proto.$2
+CTRL_MODULE=airnet.$1
+MAPPING_MODULE=airnet.$2
 
 # echo $CTRL_MODULE
 # echo $MAPPING_MODULE
@@ -25,6 +26,6 @@ $POX_DIR/pox.py log.level --INFO --openflow.of_01=ERROR --openflow.discovery=ERR
 	log --file=$CTRL_MODULE.log\
 	openflow.discovery --link_timeout=10 host_tracker --arpAware=3600 --arpReply=2 --pingLim=2 --timerInterval=3600 \
 	topology openflow.topology \
-	proto.infrastructure proto.runtime --control_program=$CTRL_MODULE --mapping_program=$MAPPING_MODULE \
-	proto.arp_proxy proto.airnet py
+	airnet.infrastructure airnet.runtime --control_program=$CTRL_MODULE --mapping_program=$MAPPING_MODULE \
+	airnet.arp_proxy airnet.airnet py
 

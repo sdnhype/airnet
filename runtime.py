@@ -1,12 +1,16 @@
-# from pox.core import core
+# For POX
+from pox.core import core
+from infrastructure import Infrastructure
+from pox_client import PoxClient
+# For RYU
+from ryu_client import RyuClient
+# For ALL
 from importlib import import_module
 import copy
 from language import identity
 from language import forward, drop, CompositionPolicy, match, DataFctPolicy, NetworkFunction, Policy, DynamicPolicy
 from classifier import Rule
 from collections import namedtuple
-#from pox_client import PoxClient
-from ryu_client import RyuClient
 from ipaddr import IPv4Network
 from collections import namedtuple
 from tools import match_from_packet, countOfMessages 
@@ -256,8 +260,7 @@ class Runtime():
                 edge_ipAddr = self.infra.rarp(edge[0])
                 for host_ipAddr, host_name in self.mapping.hosts.iteritems():
                     # for hosts and networks
-                    if (edge_ipAddr == host_ipAddr or 
-                        IPv4Network(edge_ipAddr) in IPv4Network(host_ipAddr)):
+                    if (edge_ipAddr == host_ipAddr or IPv4Network(edge_ipAddr) in IPv4Network(host_ipAddr)):
                         # vertices update
                         """
                         create a copy of graph.vertices because i need to update it
@@ -1658,5 +1661,6 @@ class Runtime():
                  
 # launch function for POX
 def launch(control_program, mapping_program):
-    core.registerNew(Runtime, control_program, mapping_program)
+    infra = Infrastructure()
+    core.registerNew(Runtime, control_program, mapping_program, infra, "POX")
     
