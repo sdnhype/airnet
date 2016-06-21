@@ -291,15 +291,17 @@ class RestStatsApi(app_manager.RyuApp):
         data['dpid'] = dpid
         data['port'] = port
         if eth.ethertype == ether_types.ETH_TYPE_ARP:
-            print("[DEGUG] PACKET_IN received: ARP packet")
+            print("[DEGUG] PACKET_IN received from sw " + str(dpid) + ": ARP packet")
             data['packet'] = parser.arp_to_dict(pkt)
         else:
-            print("[DEGUG] PACKET_IN received: IP packet")
+            print("[DEGUG] PACKET_IN received from sw " + str(dpid) + ": IP packet")
             data['packet'] = parser.packet_to_dict(pkt)
             data['id_packet'] = id_packet
             packets[id_packet] = msg
             id_packet = id_packet + 1
-        data = json.dumps(data)                 
+        data = json.dumps(data)
+        # debug
+        print(data)                
         self.client.packetIn(data)
 
     @set_ev_cls([ofp_event.EventOFPStatsReply,

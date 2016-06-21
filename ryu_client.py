@@ -417,7 +417,8 @@ class RyuClient(object):
 			data_arp = protos.get('arp')
 			if data_arp.get('opcode') == ARP_REQUEST:
 				self.install_arp(dpid,port,data_arp)
-		else: 
+		else:
+			print("Handling IP packetIn...") 
 			packet_match = self.match_from_packet(dpid,protos)
 			self.runtime.handle_packet_in(dpid, packet_match, packet)
 	
@@ -463,6 +464,7 @@ class RyuClient(object):
 		packet['dpid'] = dpid
 		packet['output'] = output
 		c = RecupStats('localhost',8080)
+		print("[DEBUG] ryu_client -- send_packet_out()")
 		c.sendPacket(packet)
 			
 	"""

@@ -134,7 +134,7 @@ class Bucket(object):
                         self.runtime.micro_flow_limit_reached(micro_flow_match)
                     self.runtime.apply_network_function(dpid, self.match, packet_match, packet)
                 else:
-                    print " micro-flow locked"
+                    print "micro-flow locked"
                     # TODO: add something to handle this lasts packets --> packets concurrency
             else:
                 if not self.locked:
@@ -157,7 +157,7 @@ class Runtime():
     
     # def __init__(self, control_program, mapping_program):
     # EDIT Telly: adding infra
-    def __init__(self, control_program, mapping_program, infra):
+    def __init__(self, control_program, mapping_program, infra, controller):
         #TODO: put all global variables here.
         #mapping information
         log.info("starting compilation -- Time == " + str(int(round(time.time() * 1000))))
@@ -179,9 +179,11 @@ class Runtime():
         self.user_edge_policies = main_module["edge_policies"]
         self.edge_policies = main_module["edge_policies"]
         
-        #Network functions
+        # Network functions
+        # nwFct_rules --> list of NwFctItem
         self.nwFct_rules = []
         self.buckets = []
+        # namedtuple: Tuples with Named Fields
         self.NwFctItem = namedtuple('NwFctItem', ['match', 'tag', 'function', 'actions'])
         
         # first resolve filters headers, in order to pop "src" and "dst"
@@ -194,7 +196,13 @@ class Runtime():
         # communication point with physical switches
         # EL TODO: chose the controler in the class constructor
         # self.nexus = PoxClient()
-        self.nexus = RyuClient(self)
+        if controller == "POX":
+            self.nexus = PoxClient()
+        elif controller == "RYU":
+            self.nexus = RyuClient(self)
+        else:
+            log.error("Unknown controller. Quitting.")
+            sys.exit()
 
         self.main_module = main_module
         self._event_time = 0
@@ -1210,7 +1218,7 @@ class Runtime():
                     break
             switch = 's' + str(dpid)
             if matching_rule.match == identity:
-                # if the new policy do not apply on the packet                
+                # if the new policy does not apply on the packet                
                 for edge_rule in self.edge_policies.rules:
                     if edge_rule.match.covers(packet_match):
                         for act in edge_rule.actions:    
@@ -1230,6 +1238,8 @@ class Runtime():
                     output = self.get_phy_switch_output_port(switch, fwd.output)
                     self.nexus.send_packet_out(switch, packet, output)
 
+        log.debug("runtime -- apply_network_function()")
+        # nwFct_rules --> list of NwFctItem (namedtuple)
         dyc_rule = None
         for rule in self.nwFct_rules:
             if rule.match.map == bucket_match.map:
@@ -1238,13 +1248,21 @@ class Runtime():
 
         for act in dyc_rule.actions:
             if isinstance(act, modify):
+                log.debug("runtime -- modify action")
                 act.apply(packet)
+        log.debug("runtime -- test 1")
+        print(type(dyc_rule))
+        print(type(packet))
+        # function is a field of the named tuple dyc_rule (NwFctItem)
         result = dyc_rule.function.apply(packet)
+        log.debug("runtime -- test 2")
 
         if isinstance(result, Policy):
+            log.debug("runtime -- net function result: new policy")
             self.add_new_policy(result)
             handle_using_new_policy(dpid, result, packet_match, packet)
         else:
+            log.debug("runtime -- net function result: new packet")
             fwd = self.get_dycRule_forward(dyc_rule)
             switch = 's' + str(dpid)
             output = self.get_phy_switch_output_port(switch, fwd.output)
@@ -1619,8 +1637,10 @@ class Runtime():
         
     def handle_packet_in(self, dpid, packet_match, packet):
         #pdb.set_trace()
+        log.debug("runtime -- handle_packet_in()")
         for bucket in self.buckets:
             if bucket.match.covers(packet_match):
+                log.debug("runtime -- found a bucket for that packet!")
                 bucket.add_packet(dpid, packet_match, packet)
                 
     def handle_flow_stats(self, stat):
@@ -1637,6 +1657,6 @@ class Runtime():
                 bucket.timer.stop()
                  
 # launch function for POX
-# def launch(control_program, mapping_program):
-#    core.registerNew(Runtime, control_program, mapping_program)
+def launch(control_program, mapping_program):
+    core.registerNew(Runtime, control_program, mapping_program)
     

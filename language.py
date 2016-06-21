@@ -537,6 +537,8 @@ class DynamicPolicy(NetworkFunction):
         return (isinstance(other, DynamicPolicy))
     
     def apply(self, packet):
+        print("applying dyn control policy")
+        print(type(self.callback))
         return self.callback(packet, **self.callback_kwargs)
     
       
