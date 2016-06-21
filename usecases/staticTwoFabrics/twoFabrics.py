@@ -1,5 +1,5 @@
-from language import *
-from usecases.constants import *
+from airnet.language import *
+from airnet.usecases.constants import *
 
 """
 INTERNET ---|      /------FAB1------E2-----WS

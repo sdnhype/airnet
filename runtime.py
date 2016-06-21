@@ -257,10 +257,14 @@ class Runtime():
         new_hosts = {}
         for edge in graph.edges:
             if edge[1] == "host":
+                # TODO. Depending on 'infrastructure' or 'stage_infrastructure',
+                # rarp function does not return the same type!
+                # stage_infra --> string. infra --> ipAddr object??
                 edge_ipAddr = self.infra.rarp(edge[0])
                 for host_ipAddr, host_name in self.mapping.hosts.iteritems():
                     # for hosts and networks
-                    if (edge_ipAddr == host_ipAddr or IPv4Network(edge_ipAddr) in IPv4Network(host_ipAddr)):
+                    # TOFIX. For infra: edge_ipAddr.toStr(). For stage_infra: edge_ipAddr
+                    if (edge_ipAddr.toStr() == host_ipAddr or IPv4Network(edge_ipAddr.toStr()) in IPv4Network(host_ipAddr)):
                         # vertices update
                         """
                         create a copy of graph.vertices because i need to update it

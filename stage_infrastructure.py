@@ -104,13 +104,13 @@ class Infrastructure(object):
         :prop _hwAddrs: ports in topology. POX HostEvent bug !!
                         switch, edge, join --> get switch hwAddr not host!
         """
-        self.linkNum = 0 #int
+        self.linkNum = 0          # int
         self.runtime_mode = False # prends pas ca en compte
-        self.hosts = {} #{EthAddr('f6:81:69:bf:be:85'): Phy_Host object}       
-        self.switches = {} #{1: Phy_Switch object}        
-        self.links = [] #[Phy_Link object]
-        self._hwAddrs = []  # POX bug ! when a link is down
-        self._deleted_links = [] #[Phy_Link object]
+        self.hosts = {}           # {EthAddr('f6:81:69:bf:be:85'): Phy_Host object}       
+        self.switches = {}        # {1: Phy_Switch object}        
+        self.links = []           # [Phy_Link objects]
+        self._hwAddrs = []        # POX bug ! when a link is down
+        self._deleted_links = []  # [Phy_Link objects]
     
     def nb(self):
         return len(self.switches.keys())
@@ -224,7 +224,8 @@ class Infrastructure(object):
         return None
             
     def rarp(self, hwAddr):
-        #work only for one ipAddr by host
+        """ Return ip address TYPE??? TODO """
+        # work only for one ipAddr by host
         for key, host in self.hosts.iteritems():
             if host.hwAddr == hwAddr:
                 return host.ip_addrs.keys()[0]
