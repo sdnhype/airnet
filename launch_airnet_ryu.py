@@ -15,8 +15,7 @@ app = Flask(__name__)
 infra = Infrastructure()
 f1 = 'usecases.'+sys.argv[1]
 f2 = 'usecases.'+sys.argv[2]
-# print f1
-runtime = Runtime(f1,f2,infra)
+runtime = Runtime(f1,f2,infra,"RYU")
 
 @app.route('/Topo/Switch/enter',methods = ['POST'])
 def handle_switch_enter():
