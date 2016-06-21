@@ -1,33 +1,57 @@
-from pox.core import core
-from proto.language import *
-from airnet_lib import host_dlAddr
+from language import *
+# TODO. Update airnet_lib
+# from usecases.airnet_lib import host_dlAddr
 import pdb
-public_nw_addr = "10.0.0.50"
-public_dl_addr = "00:26:55:42:9a:62"
+
+# public_nw_addr = "10.0.0.50"
+# public_dl_addr = "00:26:55:42:9a:62"
+PUB_WS_NW = "10.0.0.50"
+PUB_WS_DL = "00:26:55:42:9a:62"
+
+PRIV_WS1_NW = "10.0.0.11"
+PRIV_WS1_DL = "00:00:00:00:00:05"
+# PRIV_WS1_DL = host_dlAddr("WS1")
+
+PRIV_WS2_NW = "10.0.0.12"
+PRIV_WS2_DL = "00:00:00:00:00:06"
+# PRIV_WS2_DL = host_dlAddr("WS2")
+
 
 """
-     client1--|
-     client1--|                               |--- WS1
-              |-----[IO]---[ fabric ]---[LB]--|
-     client1--|                               |--- WS2
-     client2--|                              
+
+* Virtual topo
+
+    client1--|
+    client2--|                               |--- WS1
+             |-----[IO]---[ fabric ]---[LB]--|
+    client3--|                               |--- WS2
+    client4--|
+
+* Virtual Policies
+
+    Dyn load balancer on LB edge (based on the source address)
+
+
 """
+
+
 #Network function declaration
 @DynamicControlFct(data="packet", split=["nw_src"], limit=1)
 def Dynamic_LB(packet):
-    WS1_dl_addr = host_dlAddr("WS1")
-    WS2_dl_addr = host_dlAddr("WS2")
+    # WS1_dl_addr = host_dlAddr("WS1")
+    # WS2_dl_addr = host_dlAddr("WS2")
+    print("coucou")
     ip = packet.find('ipv4')
     host_ip_src = ip.srcip.toStr()
-    tocken = int(ip.srcip.toStr()[-2:]) % 2
-    if tocken == 1:
+    token = int(ip.srcip.toStr()[-2:]) % 2
+    if token == 1:
         print "flows coming from " + host_ip_src + " are redirected towards WS1 \n" 
-        new_policy = (match(edge="LB", nw_src=host_ip_src, nw_dst=public_nw_addr) >> 
-                      modify(nw_dst="10.0.0.11") >> modify(dl_dst = WS1_dl_addr) >> forward("WS1"))
+        new_policy = (match(edge="LB", nw_src=host_ip_src, nw_dst=PUB_WS_NW) >> 
+                      modify(nw_dst=PRIV_WS1_NW) >> modify(dl_dst=PRIV_WS1_DL) >> forward("WS1"))
     else:
         print "flows coming from " + host_ip_src + " are redirected towards WS2 \n"
-        new_policy = (match(edge="LB", nw_src=host_ip_src, nw_dst=public_nw_addr) >> 
-                      modify(nw_dst="10.0.0.12") >> modify(dl_dst = WS2_dl_addr) >> forward("WS2"))
+        new_policy = (match(edge="LB", nw_src=host_ip_src, nw_dst=PUB_WS_NW) >> 
+                      modify(nw_dst=PRIV_WS2_NW) >> modify(dl_dst=PRIV_WS2_DL) >> forward("WS2"))
     return new_policy
 
 #Virtual topology
@@ -54,7 +78,7 @@ def virtual_network():
 
 #Policies
 def IO_policy(VID):
-    i1 = match(edge=VID, nw_dst=public_nw_addr) >> tag("in_web_flows") >> forward("fabric")
+    i1 = match(edge=VID, nw_dst=PUB_WS_NW) >> tag("in_web_flows") >> forward("fabric")
     i2 = match(edge=VID, dst="client1")  >> forward("client1")
     i3 = match(edge=VID, dst="client2")  >> forward("client2")
     i4 = match(edge=VID, dst="client3")  >> forward("client3")
@@ -62,9 +86,10 @@ def IO_policy(VID):
     return i1 + i2 + i3 + i4 + i5
 
 def LB_policy(VID):
-    i1 = match(edge=VID, nw_src="192.168.0.0/16", nw_dst=public_nw_addr) >> Dynamic_LB() 
-    i2 = match(edge=VID, src="WS1", nw_dst="192.168.0.0/16") >> modify(nw_src=public_nw_addr) >> modify(dl_src=public_dl_addr) >>tag("out_web_flows") >> forward("fabric")
-    i3 = match(edge=VID, src="WS2", nw_dst="192.168.0.0/16") >> modify(nw_src=public_nw_addr) >>  modify(dl_src=public_dl_addr) >>tag("out_web_flows") >> forward("fabric") 
+    # Note. nw_src/nw_dst optional (192.168.0.0/16).
+    i1 = match(edge=VID, nw_src="192.168.0.0/16", nw_dst=PUB_WS_NW) >> Dynamic_LB()
+    i2 = match(edge=VID, src="WS1", nw_dst="192.168.0.0/16") >> modify(nw_src=PUB_WS_NW) >> modify(dl_src=PUB_WS_DL) >> tag("out_web_flows") >> forward("fabric")
+    i3 = match(edge=VID, src="WS2", nw_dst="192.168.0.0/16") >> modify(nw_src=PUB_WS_NW) >> modify(dl_src=PUB_WS_DL) >> tag("out_web_flows") >> forward("fabric") 
     return i1 + i2 + i3
 
 def fabric_policy(VID):
@@ -72,7 +97,7 @@ def fabric_policy(VID):
     t2 = catch(fabric=VID, src="LB", flow="out_web_flows") >> carry(dst="IO")
     return t1 + t2
 
-#Main function
+# Main function
 def main():
     in_network_functions = IO_policy("IO") + LB_policy("LB")
     transport_function = fabric_policy("fabric")
@@ -80,3 +105,4 @@ def main():
     return {"virtual_topology": topology, 
             "edge_policies": in_network_functions, 
             "fabric_policies": transport_function}
+

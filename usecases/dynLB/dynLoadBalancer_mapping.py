@@ -1,7 +1,20 @@
-from proto.mapping import Mapping
-"""
-mininet topology: topo_8sw_6hosts.py
+from mapping import Mapping
 
+"""
+
+* Virtual topo
+
+    client1--|
+    client2--|                               |--- WS1
+             |-----[IO]---[ fabric ]---[LB]--|
+    client3--|                               |--- WS2
+    client4--|
+
+* Virtual Policies
+
+    Dyn load balancer on LB edge (based on the source address)
+
+* Mininet topology: topo_8sw_6hosts.py
 
 client1---|
           |---[s1]---|
@@ -10,6 +23,12 @@ client2---|          |          |--[s5]--[s6]--|                 |---WS1
 client3---|          |          |-----[s4]-----|                 |---WS2
           |---[s2]---|
 client4---|
+
+* Mapping
+
+    IO -> s1, s2
+    FAB -> s3, s4, s5, s6, s7
+    LB -> s8
 
 """
 
