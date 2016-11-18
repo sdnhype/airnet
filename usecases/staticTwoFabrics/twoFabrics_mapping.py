@@ -1,5 +1,5 @@
-from airnet.mapping import Mapping
-from airnet.usecases.constants import *
+from mapping import Mapping
+from usecases.constants import *
 """
 
 mininet_topo: topo_2_fabrics.py

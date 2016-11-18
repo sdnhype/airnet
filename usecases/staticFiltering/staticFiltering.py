@@ -1,7 +1,7 @@
 # Import language primitives
-from airnet.language import *
+from language import *
 # Import constants for all use cases
-from airnet.usecases.constants import *
+from usecases.constants import *
 
 """
                        WS   SSH_GW

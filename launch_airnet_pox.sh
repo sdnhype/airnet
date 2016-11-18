@@ -12,7 +12,7 @@ fi
 
 POX_DIR=~/git/pox
 # POX_DIR=~/These/pox
-PYTHONPATH=$PYTHONPATH:$POX_DIR/ext/airnet
+export PYTHONPATH=$PYTHONPATH:$POX_DIR/ext/airnet
 
 CTRL_MODULE=airnet.$1
 MAPPING_MODULE=airnet.$2
