@@ -9,11 +9,11 @@ PUB_WS_NW = "10.0.0.50"
 PUB_WS_DL = "00:26:55:42:9a:62"
 
 PRIV_WS1_NW = "10.0.0.11"
-PRIV_WS1_DL = "00:00:00:00:00:05"
+PRIV_WS1_DL = "00:00:00:55:55:55"
 # PRIV_WS1_DL = host_dlAddr("WS1")
 
 PRIV_WS2_NW = "10.0.0.12"
-PRIV_WS2_DL = "00:00:00:00:00:06"
+PRIV_WS2_DL = "00:00:00:66:66:66"
 # PRIV_WS2_DL = host_dlAddr("WS2")
 
 
@@ -40,19 +40,20 @@ PRIV_WS2_DL = "00:00:00:00:00:06"
 def Dynamic_LB(packet):
     # WS1_dl_addr = host_dlAddr("WS1")
     # WS2_dl_addr = host_dlAddr("WS2")
-    print("coucou")
-    ip = packet.find('ipv4')
-    host_ip_src = ip.srcip.toStr()
-    token = int(ip.srcip.toStr()[-2:]) % 2
-    if token == 1:
+    ip = packet['packet']['ipv4']
+    host_ip_src = ip['src']
+    if Dynamic_LB.token == 1:
         print "flows coming from " + host_ip_src + " are redirected towards WS1 \n" 
         new_policy = (match(edge="LB", nw_src=host_ip_src, nw_dst=PUB_WS_NW) >> 
                       modify(nw_dst=PRIV_WS1_NW) >> modify(dl_dst=PRIV_WS1_DL) >> forward("WS1"))
+        Dynamic_LB.token = 2
     else:
         print "flows coming from " + host_ip_src + " are redirected towards WS2 \n"
         new_policy = (match(edge="LB", nw_src=host_ip_src, nw_dst=PUB_WS_NW) >> 
                       modify(nw_dst=PRIV_WS2_NW) >> modify(dl_dst=PRIV_WS2_DL) >> forward("WS2"))
+        Dynamic_LB.token = 1
     return new_policy
+Dynamic_LB.token =1
 
 #Virtual topology
 def virtual_network():

@@ -362,6 +362,23 @@ class modify(EdgePolicy):
             if "dl_dst" in self.map:
                 protos['dl_dst'] = self.map["dl_dst"]
             if 'ipv4' in protos:
+                ip = dict()
+                if "nw_src" in self.map:
+                    ip['src'] = self.map["nw_src"]
+                if "nw_dst" in self.map:
+                    ip['dst'] = self.map["nw_dst"]
+                protos['ipv4'] = ip
+            if 'tcp' in protos:
+                tcp = dict()
+                if 'src_port' in self.map:
+                    tcp['src_port'] = self.map["tp_src"]
+                if 'dst_port' in self.map:
+                    tcp['dst_port'] = self.map["tp_dst"]
+                protos['tcp'] = tcp
+            packet['packet'] = unicode(protos)
+            """
+            if 'ipv4' in protos:
+                pdb.set_trace()
                 ip = protos.get('ipv4')
                 ip['src'] = self.map["nw_src"]
                 ip['dst'] = self.map["nw_dst"]
@@ -372,6 +389,7 @@ class modify(EdgePolicy):
                 tcp['dst_port'] = self.map["tp_dst"]
                 protos['tcp'] = tcp
             packet['packet'] = unicode(protos)
+            """
         else:
         # End EDIT Telly
             if "dl_src" in self.map:

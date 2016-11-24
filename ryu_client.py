@@ -6,6 +6,7 @@ import httplib
 import json
 from language import identity, forward, modify, match
 import ast
+import pdb
 
 ARP_REQUEST = 1
 ARP_REPLY = 2
@@ -215,6 +216,7 @@ class RyuClient(object):
 					actions_mod.append({'type':'SET_DL_DST','dl_dst':act.map["dl_dst"]})
 				if "dl_src" in act.map:
 					actions_mod.append({'type':'SET_DL_SRC','dl_src':act.map["dl_src"]})
+		for act in actions:
 			if isinstance(act, forward):
 				if act.output == "OFPP_CONTROLLER":
 					act.output = 0xfffd #controller port

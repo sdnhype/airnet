@@ -83,13 +83,19 @@ def emptyNet(controller_ip, controller_port):
     net.addLink( s8, h6)
     
     # [EL] what is this?
-    net.public_WS = "10.0.0.21"
+    #net.public_WS = "10.0.0.21"
+
+    h5.setMAC("00:00:00:55:55:55")
+    h6.setMAC("00:00:00:66:66:66")
 
     info( '*** Starting network\n')
     net.start()
 
     # [EL] Insert static ARP entry because problem with proxy ARP in AirNet's Ryu version
-    h1.cmd( 'ip neigh add 10.0.0.50 lladdr 00:26:55:42:9a:62 dev client1-eth0' )
+    h1.cmd('ip neigh add 10.0.0.50 lladdr 00:26:55:42:9a:62 dev client1-eth0')
+    h2.cmd('ip neigh add 10.0.0.50 lladdr 00:26:55:42:9a:62 dev client2-eth0')
+    h3.cmd('ip neigh add 10.0.0.50 lladdr 00:26:55:42:9a:62 dev client3-eth0')
+    h4.cmd('ip neigh add 10.0.0.50 lladdr 00:26:55:42:9a:62 dev client4-eth0')
     
     net.pingAll(timeout=1)  
 
