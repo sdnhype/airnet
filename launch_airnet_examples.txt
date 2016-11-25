@@ -130,6 +130,8 @@ mininet> C01 ping -c1 WS  ---> OK
 == Dynamic authentication ==
 ============================
 
+##### TODO : first packet is not reinjected into the data plane
+
 # usecases/dynAuthentication/
 
 -- with RYU
@@ -156,6 +158,43 @@ mininet> guests ping -c1 WS  ---> OK the second time : XXX BUG ! not OK. FIX ME!
 
 ******************************************************************************
 ******************************************************************************
+
+============================
+== Dynamic Load Balancer  ==
+============================
+
+##### TODO : first packet is not reinjected into the data plane
+
+# usecases/dynLB/
+
+-- with RYU
+
+$ ryu-manager --observe-links ryu/app/controller.py
+$ python launch_airnet_ryu.py dynLB.dynLoadBalancer dynLB.dynLoadBalancer_mapping
+
+-- with POX
+
+TODO
+
+-- Mininet
+
+$ sudo python topo_8sw_6hosts.py 192.168.56.1 6633
+
+-- Tests
+
+#PUBLIC IP == 10.0.0.50
+
+mininet> client1 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received, 20% packet loss)
+mininet> client1 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 5 received, 0% packet loss)
+
+
+mininet> client2 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received, 20% packet loss)
+mininet> client3 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received, 20% packet loss)
+mininet> client4 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received, 20% packet loss)
+
+******************************************************************************
+******************************************************************************
+
 
 
 
