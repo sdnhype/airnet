@@ -13,8 +13,10 @@ from runtime import Runtime
 
 app = Flask(__name__)
 infra = Infrastructure()
-f1 = 'usecases.'+sys.argv[1]
-f2 = 'usecases.'+sys.argv[2]
+# f1 = 'examples.'+sys.argv[1]
+#f2 = 'examples.'+sys.argv[2]
+f1 = sys.argv[1]
+f2 = sys.argv[2]
 runtime = Runtime(f1,f2,infra,"RYU")
 
 @app.route('/Topo/Switch/enter',methods = ['POST'])
@@ -93,6 +95,6 @@ def test():
 def main():
 	#thread.start_new_thread(test,())
 	app.run(host='0.0.0.0', port=9000)
-	
+
 if __name__ == '__main__':
 	main()
