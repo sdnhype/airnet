@@ -1,5 +1,5 @@
 from mapping import Mapping
-from usecases.constants import *
+from constants import *
 """
 
 mininet_topo: topo_2_fabrics.py
