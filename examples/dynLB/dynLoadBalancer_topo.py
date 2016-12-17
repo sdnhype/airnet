@@ -52,10 +52,10 @@ def emptyNet(controller_ip, controller_port):
     h2 = net.addHost( 'client2' , ip='192.168.0.12/16', defaultRoute = 'via 192.168.0.12')
     h3 = net.addHost( 'client3' , ip='192.168.0.13/16', defaultRoute = 'via 192.168.0.13')
     h4 = net.addHost( 'client4' , ip='192.168.0.14/16', defaultRoute = "via 192.168.0.14")
-    h5 = net.addHost( 'WS1' , ip='10.0.0.11/16', defaultRoute = "via 10.0.0.11") 
+    h5 = net.addHost( 'WS1' , ip='10.0.0.11/16', defaultRoute = "via 10.0.0.11")
     h6 = net.addHost( 'WS2' , ip='10.0.0.12/16', defaultRoute = "via 10.0.0.12")
-    
-    
+
+
     info( '*** Adding switch\n' )
     s1 = net.addSwitch( 's1' )
     s2 = net.addSwitch( 's2' )
@@ -81,12 +81,14 @@ def emptyNet(controller_ip, controller_port):
     net.addLink( s7, s8)
     net.addLink( s8, h5)
     net.addLink( s8, h6)
-    
+
     # [EL] what is this?
     #net.public_WS = "10.0.0.21"
 
-    h5.setMAC("00:00:00:55:55:55")
-    h6.setMAC("00:00:00:66:66:66")
+    # h5.setMAC("00:00:00:55:55:55")
+    # h6.setMAC("00:00:00:66:66:66")
+    h5.setMAC("00:00:00:00:00:05")
+    h6.setMAC("00:00:00:00:00:06")
 
     info( '*** Starting network\n')
     net.start()
@@ -96,12 +98,12 @@ def emptyNet(controller_ip, controller_port):
     h2.cmd('ip neigh add 10.0.0.50 lladdr 00:26:55:42:9a:62 dev client2-eth0')
     h3.cmd('ip neigh add 10.0.0.50 lladdr 00:26:55:42:9a:62 dev client3-eth0')
     h4.cmd('ip neigh add 10.0.0.50 lladdr 00:26:55:42:9a:62 dev client4-eth0')
-    
-    net.pingAll(timeout=1)  
+
+    net.pingAll(timeout=1)
 
     info( '*** Running CLI\n' )
     CLI( net )
-    
+
     info( '*** Stopping network' )
     net.stop()
 
@@ -110,5 +112,4 @@ if __name__ == '__main__':
     if len(sys.argv) != 3:
         print 'Usage: ', sys.argv[0], ' controller_ip controller_port'
         sys.exit()
-    emptyNet(sys.argv[1], int(sys.argv[2])) 
-
+    emptyNet(sys.argv[1], int(sys.argv[2]))

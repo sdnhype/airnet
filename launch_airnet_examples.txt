@@ -7,9 +7,9 @@
 ******************************************************************************
 ******************************************************************************
 
-======================= 
-== Static filtering  == 
-======================= 
+=======================
+== Static filtering  ==
+=======================
 
 # usecases/staticFiltering/
 
@@ -20,7 +20,7 @@ $ python launch_airnet_ryu.py staticFiltering.staticFiltering staticFiltering.st
 
 -- with POX
 
-$ ./launch_airnet_pox.sh usecases.staticFiltering.staticFiltering usecases.staticFiltering.staticFiltering_mapping 
+$ ./launch_airnet_pox.sh usecases.staticFiltering.staticFiltering usecases.staticFiltering.staticFiltering_mapping
 POX> core.airnet.init()
 
 -- Mininet
@@ -36,9 +36,9 @@ mininet> inet_h ssh ssh_gw   ---> OK
 ******************************************************************************
 ******************************************************************************
 
-======================  
-== Static 2 fabrics ==  
-======================  
+======================
+== Static 2 fabrics ==
+======================
 
 # usecases/staticTwoFabrics/
 
@@ -150,10 +150,10 @@ $ sudo python topo_9sw_4hosts.py 192.168.56.1 6633
 -- Tests
 
 mininet> users ping -c1 WS  ---> OK
-mininet> users ping -c1 CC  ---> OK 
+mininet> users ping -c1 CC  ---> OK
 mininet> guests wget WS     ---> OK  (guests IP on whitelist)
 
-mininet> guests ping -c1 WS  ---> KO the first time : good!     
+mininet> guests ping -c1 WS  ---> KO the first time : good!
 mininet> guests ping -c1 WS  ---> OK the second time : XXX BUG ! not OK. FIX ME!
 
 ******************************************************************************
@@ -178,7 +178,7 @@ TODO
 
 -- Mininet
 
-$ sudo python topo_8sw_6hosts.py 192.168.56.1 6633
+$ sudo python dynLoadBalancer_topo.py 192.168.56.1 6633
 
 -- Tests
 
@@ -194,7 +194,3 @@ mininet> client4 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received,
 
 ******************************************************************************
 ******************************************************************************
-
-
-
-
