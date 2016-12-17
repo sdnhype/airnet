@@ -11,7 +11,7 @@ from language import identity
 from language import forward, drop, CompositionPolicy, match, DataFctPolicy, NetworkFunction, Policy, DynamicPolicy
 from classifier import Rule
 from collections import namedtuple
-from ipaddr import IPv4Network
+from lib.ipaddr import IPv4Network
 from collections import namedtuple
 from tools import match_from_packet, countOfMessages
 from threading import Timer

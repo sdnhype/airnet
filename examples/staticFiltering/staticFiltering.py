@@ -1,7 +1,7 @@
 # Import language primitives
 from language import *
 # Import constants for all use cases
-from usecases.constants import *
+from constants import *
 
 """
                        WS   SSH_GW
@@ -41,14 +41,14 @@ def virtual_network():
     topology.addEdge(EW,3)
     topology.addEdge(ED,3)
     topology.addEdge(EC,2)
-    
+
     topology.addHost(WS)
     topology.addHost(SSH_GW)
     topology.addNetwork(INTERNET)
     topology.addNetwork(WIFI_PUB)
     topology.addNetwork(WIFI_PRIV)
     topology.addNetwork(CORP_NET)
-    
+
     topology.addLink((EI,1),(INTERNET,0))
     topology.addLink((EI,2),(FAB,1))
     topology.addLink((EW,1),(FAB,2))
@@ -59,7 +59,7 @@ def virtual_network():
     topology.addLink((ED,3),(SSH_GW,0))
     topology.addLink((EC,1),(FAB,4))
     topology.addLink((EC,2),(CORP_NET))
-    
+
     return topology
 
 
@@ -92,19 +92,19 @@ def web_flows_policy():
     e1 = match(edge=EI, src=INTERNET,  dst=WS, nw_proto=TCP, tp_dst=HTTP) >> tag(WS_IN) >> forward(FAB)
     e2 = match(edge=EW, src=WIFI_PUB,  dst=WS, nw_proto=TCP, tp_dst=HTTP) >> tag(WS_IN) >> forward(FAB)
     e3 = match(edge=EW, src=WIFI_PRIV, dst=WS, nw_proto=TCP, tp_dst=HTTP) >> tag(WS_IN) >> forward(FAB)
-    
+
     # Edges -- web flows from the WebServer
     e4 = match(edge=ED, src=WS, dst=INTERNET, nw_proto=TCP, tp_src=HTTP) >> tag(WS_OUT_INET) >> forward(FAB)
     # below, a unique tag for the 2 wifi networks since they are connected to the same edge
     e5 = match(edge=ED, src=WS, dst=WIFI_PUB,  nw_proto=TCP, tp_src=HTTP) >> tag(WS_OUT_WIFI) >> forward(FAB)
     e6 = match(edge=ED, src=WS, dst=WIFI_PRIV, nw_proto=TCP, tp_src=HTTP) >> tag(WS_OUT_WIFI) >> forward(FAB)
-   
+
     # Fabric -- transport function
     f1 = catch(fabric=FAB, src=EI, flow=WS_IN) >> carry(dst=ED)
-    f2 = catch(fabric=FAB, src=EW, flow=WS_IN) >> carry(dst=ED)    
+    f2 = catch(fabric=FAB, src=EW, flow=WS_IN) >> carry(dst=ED)
     f3 = catch(fabric=FAB, src=ED, flow=WS_OUT_INET) >> carry(dst=EI)
     f4 = catch(fabric=FAB, src=ED, flow=WS_OUT_WIFI) >> carry(dst=EW)
-    
+
     # return a tuple of 2 elements: in_network policies and transport policies
     return (e1+e2+e3+e4+e5+e6, f1+f2+f3+f4)
 
@@ -123,13 +123,13 @@ def icmp_flows_policy():
     e2 = match(edge=EW, src=WIFI_PUB, dst=WS, nw_proto=ICMP) >> tag(ICMP_IN) >> forward(FAB)
     e3 = match(edge=EW, src=WIFI_PRIV, dst=WS, nw_proto=ICMP) >> tag(ICMP_IN) >> forward(FAB)
 
-    e4 = match(edge=ED, src=WS, dst=INTERNET, nw_proto=ICMP) >> tag(ICMP_OUT_INET) >> forward(FAB) 
-    e5 = match(edge=ED, src=WS, dst=WIFI_PUB, nw_proto=ICMP) >> tag(ICMP_OUT_WIFI) >> forward(FAB) 
+    e4 = match(edge=ED, src=WS, dst=INTERNET, nw_proto=ICMP) >> tag(ICMP_OUT_INET) >> forward(FAB)
+    e5 = match(edge=ED, src=WS, dst=WIFI_PUB, nw_proto=ICMP) >> tag(ICMP_OUT_WIFI) >> forward(FAB)
 
     # Fabric
     f1 = ( catch(fabric=FAB, src=EI, flow=ICMP_IN) + catch(fabric=FAB, src=EW, flow=ICMP_IN) ) >> carry(dst=ED)
-    f2 = catch(fabric=FAB, src=ED, flow=ICMP_OUT_INET) >> carry(dst=EI)   
-    f3 = catch(fabric=FAB, src=ED, flow=ICMP_OUT_WIFI) >> carry(dst=EW) 
+    f2 = catch(fabric=FAB, src=ED, flow=ICMP_OUT_INET) >> carry(dst=EI)
+    f3 = catch(fabric=FAB, src=ED, flow=ICMP_OUT_WIFI) >> carry(dst=EW)
 
     # return a tuple of 2 elements: in_network policies and transport policies
     return (e1+e2+e3+e4+e5, f1+f2+f3)
@@ -146,28 +146,28 @@ def ssh_flows_policy():
     SSH_OUT_WIFI = "ssh_out_wifi"
     AUTH_IN = "authenticated_flows_in"
     AUTH_OUT = "authenticated_flows_out"
-    
+
     # Edges -- ssh flows to the air lock (SSH_GW)
     e1 = match(edge=EI, src=INTERNET,  dst=SSH_GW, nw_proto=TCP, tp_dst=SSH) >> tag(SSH_IN) >> forward(FAB)
     e2 = match(edge=EW, src=WIFI_PUB,  dst=SSH_GW, nw_proto=TCP, tp_dst=SSH) >> tag(SSH_IN) >> forward(FAB)
     e3 = match(edge=EW, src=WIFI_PRIV, dst=SSH_GW, nw_proto=TCP, tp_dst=SSH) >> tag(SSH_IN) >> forward(FAB)
-    
+
     # Edges -- ssh flows from the air lock
     e4 = match(edge=ED, src=SSH_GW, dst=INTERNET,  nw_proto=TCP, tp_src=SSH) >> tag(SSH_OUT_INET) >> forward(FAB)
     e5 = match(edge=ED, src=SSH_GW, dst=WIFI_PUB,  nw_proto=TCP, tp_src=SSH) >> tag(SSH_OUT_WIFI) >> forward(FAB)
     e6 = match(edge=ED, src=SSH_GW, dst=WIFI_PRIV, nw_proto=TCP, tp_src=SSH) >> tag(SSH_OUT_WIFI) >> forward(FAB)
-   
+
     # Edges -- all flows from ssh gw to corportate net
     e7 = match(edge=ED, src=SSH_GW, dst=CORP_NET) >> tag(AUTH_IN) >> forward(FAB)
     e8 = match(edge=EC, src=CORP_NET, dst=SSH_GW) >> tag(AUTH_OUT) >> forward(FAB)
 
     # Fabric -- transport function
     f1 = catch(fabric=FAB, src=EI, flow=SSH_IN) >> carry(dst=ED)
-    f2 = catch(fabric=FAB, src=EW, flow=SSH_IN) >> carry(dst=ED)    
+    f2 = catch(fabric=FAB, src=EW, flow=SSH_IN) >> carry(dst=ED)
     f3 = catch(fabric=FAB, src=ED, flow=SSH_OUT_INET) >> carry(dst=EI)
     f4 = catch(fabric=FAB, src=ED, flow=SSH_OUT_WIFI) >> carry(dst=EW)
-    f5 = catch(fabric=FAB, src=ED, flow=AUTH_IN) >> carry(dst=EC)   
-    f6 = catch(fabric=FAB, src=EC, flow=AUTH_OUT) >> carry(dst=ED) 
+    f5 = catch(fabric=FAB, src=ED, flow=AUTH_IN) >> carry(dst=EC)
+    f6 = catch(fabric=FAB, src=EC, flow=AUTH_OUT) >> carry(dst=ED)
 
     # return a tuple of 2 elements: in_network policies and transport policies
     return (e1+e2+e3+e4+e5+e6+e7+e8, f1+f2+f3+f4+f5+f6)
@@ -186,10 +186,10 @@ def wifi_internet_policy():
     e2 = match(edge=EI, src=INTERNET, dst=WIFI_PRIV) >> tag(WIFI_IN) >> forward(FAB)
     e3 = match(edge=EW, src=WIFI_PUB, dst=INTERNET) >> tag(WIFI_OUT) >> forward(FAB)
     e4 = match(edge=EW, src=WIFI_PRIV, dst=INTERNET) >> tag(WIFI_OUT) >> forward(FAB)
-    
+
     # Fabric
-    f1 = catch(fabric=FAB, src=EI, flow=WIFI_IN) >> carry(dst=EW)   
-    f2 = catch(fabric=FAB, src=EW, flow=WIFI_OUT) >> carry(dst=EI) 
+    f1 = catch(fabric=FAB, src=EI, flow=WIFI_IN) >> carry(dst=EW)
+    f2 = catch(fabric=FAB, src=EW, flow=WIFI_OUT) >> carry(dst=EI)
 
     # return a tuple of 2 elements: in_network policies and transport policies
     return (e1+e2+e3+e4, f1+f2)
@@ -209,7 +209,7 @@ def main():
 
     in_net_fct_global = inf_base + inf_01 + inf_02 + inf_03 + inf_04
     transport_fct_global = tf_01 + tf_02 + tf_03 + tf_04
-    
-    return {"virtual_topology": topology, 
-            "edge_policies": in_net_fct_global, 
+
+    return {"virtual_topology": topology,
+            "edge_policies": in_net_fct_global,
             "fabric_policies": transport_fct_global}

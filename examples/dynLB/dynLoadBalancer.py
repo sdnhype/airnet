@@ -9,11 +9,11 @@ PUB_WS_NW = "10.0.0.50"
 PUB_WS_DL = "00:26:55:42:9a:62"
 
 PRIV_WS1_NW = "10.0.0.11"
-PRIV_WS1_DL = "00:00:00:55:55:55"
+PRIV_WS1_DL = "00:00:00:00:00:05"
 # PRIV_WS1_DL = host_dlAddr("WS1")
 
 PRIV_WS2_NW = "10.0.0.12"
-PRIV_WS2_DL = "00:00:00:66:66:66"
+PRIV_WS2_DL = "00:00:00:00:00:06"
 # PRIV_WS2_DL = host_dlAddr("WS2")
 
 
@@ -43,13 +43,13 @@ def Dynamic_LB(packet):
     ip = packet['packet']['ipv4']
     host_ip_src = ip['src']
     if Dynamic_LB.token == 1:
-        print "flows coming from " + host_ip_src + " are redirected towards WS1 \n" 
-        new_policy = (match(edge="LB", nw_src=host_ip_src, nw_dst=PUB_WS_NW) >> 
+        print "flows coming from " + host_ip_src + " are redirected towards WS1 \n"
+        new_policy = (match(edge="LB", nw_src=host_ip_src, nw_dst=PUB_WS_NW) >>
                       modify(nw_dst=PRIV_WS1_NW) >> modify(dl_dst=PRIV_WS1_DL) >> forward("WS1"))
         Dynamic_LB.token = 2
     else:
         print "flows coming from " + host_ip_src + " are redirected towards WS2 \n"
-        new_policy = (match(edge="LB", nw_src=host_ip_src, nw_dst=PUB_WS_NW) >> 
+        new_policy = (match(edge="LB", nw_src=host_ip_src, nw_dst=PUB_WS_NW) >>
                       modify(nw_dst=PRIV_WS2_NW) >> modify(dl_dst=PRIV_WS2_DL) >> forward("WS2"))
         Dynamic_LB.token = 1
     return new_policy
@@ -66,7 +66,7 @@ def virtual_network():
     topologie.addHost("client3")
     topologie.addHost("client4")
     topologie.addHost("WS1")
-    topologie.addHost("WS2") 
+    topologie.addHost("WS2")
     topologie.addLink(("IO",1),("client1",0))
     topologie.addLink(("IO",2),("client2",0))
     topologie.addLink(("IO",3),("client3",0))
@@ -90,7 +90,7 @@ def LB_policy(VID):
     # Note. nw_src/nw_dst optional (192.168.0.0/16).
     i1 = match(edge=VID, nw_src="192.168.0.0/16", nw_dst=PUB_WS_NW) >> Dynamic_LB()
     i2 = match(edge=VID, src="WS1", nw_dst="192.168.0.0/16") >> modify(nw_src=PUB_WS_NW) >> modify(dl_src=PUB_WS_DL) >> tag("out_web_flows") >> forward("fabric")
-    i3 = match(edge=VID, src="WS2", nw_dst="192.168.0.0/16") >> modify(nw_src=PUB_WS_NW) >> modify(dl_src=PUB_WS_DL) >> tag("out_web_flows") >> forward("fabric") 
+    i3 = match(edge=VID, src="WS2", nw_dst="192.168.0.0/16") >> modify(nw_src=PUB_WS_NW) >> modify(dl_src=PUB_WS_DL) >> tag("out_web_flows") >> forward("fabric")
     return i1 + i2 + i3
 
 def fabric_policy(VID):
@@ -102,8 +102,7 @@ def fabric_policy(VID):
 def main():
     in_network_functions = IO_policy("IO") + LB_policy("LB")
     transport_function = fabric_policy("fabric")
-    topology = virtual_network() 
-    return {"virtual_topology": topology, 
-            "edge_policies": in_network_functions, 
+    topology = virtual_network()
+    return {"virtual_topology": topology,
+            "edge_policies": in_network_functions,
             "fabric_policies": transport_function}
-
