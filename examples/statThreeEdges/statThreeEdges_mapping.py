@@ -1,5 +1,5 @@
-from language import *
-import statThreeEdges.names
+from mapping import Mapping
+from names import *
 
 """
 *** Virtual topo ***
@@ -46,15 +46,14 @@ class MyMapping(Mapping):
         self.addEdgeMap(E3, "s33")
         self.addFabricMap(FAB, "s1", "s2", "s3")
         self.addHostMap(A, "10.0.0.1")
-        self.addHostMap(B, "10.0.0.1")
-        self.addHostMap(C, "10.0.0.1")
-        self.addHostMap(D, "10.0.0.1")
-        self.addHostMap(E, "10.0.0.1")
-        self.addHostMap(F, "10.0.0.1")
-        self.addHostMap(G, "10.0.0.1")
-        self.addHostMap(H, "10.0.0.1")
-        self.addHostMap(I, "10.0.0.1")
-
+        self.addHostMap(B, "10.0.0.2")
+        self.addHostMap(C, "10.0.0.3")
+        self.addHostMap(D, "10.0.0.4")
+        self.addHostMap(E, "10.0.0.5")
+        self.addHostMap(F, "10.0.0.6")
+        self.addHostMap(G, "10.0.0.7")
+        self.addHostMap(H, "10.0.0.8")
+        self.addHostMap(I, "10.0.0.9")
 
 def main():
     return MyMapping()

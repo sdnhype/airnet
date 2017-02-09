@@ -1,5 +1,5 @@
 from language import *
-import statThreeEdges.names
+from names import *
 
 """
 * Virtual topo
@@ -99,21 +99,23 @@ def tag_edges():
     return tag_a + tag_b + tag_c + tag_d + tag_e + tag_f + tag_g + tag_h + tag_i
 
 # Generic transport policy
-def transport(tag, to_edge):
-    t = catch(fabric=FAB, flow=tag) >> carry(dst=to_edge)
+def transport(tag, from_edge, to_edge):
+    # DOEN'T WORK, TOO BAD...
+    # t = catch(fabric=FAB, flow=tag) >> carry(dst=to_edge)
+    t = catch(fabric=FAB, src=from_edge, flow=tag) >> carry(dst=to_edge)
     return t
 
 # Transport policies wihtin the fabric
 def fabric_policies():
-    t1 = transport(FOR_A, E1)
-    t2 = transport(FOR_B, E1)
-    t3 = transport(FOR_C, E1)
-    t4 = transport(FOR_D, E2)
-    t5 = transport(FOR_E, E2)
-    t6 = transport(FOR_F, E2)
-    t7 = transport(FOR_G, E3)
-    t8 = transport(FOR_H, E3)
-    t9 = transport(FOR_I, E3)
+    t1 = transport(FOR_A, E2, E1) + transport(FOR_A, E3, E1)
+    t2 = transport(FOR_B, E2, E1) + transport(FOR_B, E3, E1)
+    t3 = transport(FOR_C, E2, E1) + transport(FOR_C, E3, E1)
+    t4 = transport(FOR_D, E1, E2) + transport(FOR_D, E3, E2)
+    t5 = transport(FOR_E, E1, E2) + transport(FOR_E, E3, E2)
+    t6 = transport(FOR_F, E1, E2) + transport(FOR_F, E3, E2)
+    t7 = transport(FOR_G, E1, E3) + transport(FOR_G, E2, E3)
+    t8 = transport(FOR_H, E1, E3) + transport(FOR_G, E2, E3)
+    t9 = transport(FOR_I, E1, E3) + transport(FOR_G, E2, E3)
     return t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8 + t9
 
 
@@ -124,7 +126,7 @@ def main():
 
     topology = virtual_network()
     all_edges = distribute_edges() + tag_edges()
-    all_fabric = fabric_polices()
+    all_fabric = fabric_policies()
 
     return {"virtual_topology": topology,
             "edge_policies": all_edges,
