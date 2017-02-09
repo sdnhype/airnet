@@ -32,7 +32,7 @@ from rest_client import RyuTopologyClient
 from ryu.lib.packet import packet,ethernet,ether_types
 
 # pour envoyer des packetsOut
-from ryu.app.packetParser import PacketParser
+from packetParser import PacketParser
 
 LOG = logging.getLogger('ryu.app.ofctl_rest')
 
