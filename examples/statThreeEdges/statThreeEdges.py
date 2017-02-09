@@ -64,6 +64,10 @@ def virtual_network():
 # Policies
 # ==========
 
+# ============================================================================
+# STATIC POLICIES
+# ============================================================================
+
 # Generic distribution policy
 def distribute(VID, destination):
     p = match(edge=VID, dst=destination) >> forward(destination)
@@ -118,6 +122,26 @@ def fabric_policies():
     t9 = transport(FOR_I, E1, E3) + transport(FOR_G, E2, E3)
     return t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8 + t9
 
+
+# ============================================================================
+# DYNAMIC CONTROL POLICIES
+# ============================================================================
+
+"""
+@DynamicControlFct(data="stat", every=60, split=["nw_src"])
+def saveStat( stat ):
+    # TODO
+
+# Generic statistics policy
+def edgeStatForX(oneEdge, oneDestination):
+    match(edge=oneEdge, dst=destination) >> saveStat()
+
+def statPolicy():
+    s1 = edgeStatForX(E1, A) + edgeStatForX(E1, B) + edgeStatForX(E1, C)
+    s2 = edgeStatForX(E2, D) + edgeStatForX(E2, E) + edgeStatForX(E2, F)
+    s3 = edgeStatForX(E3, G) + edgeStatForX(E3, H) + edgeStatForX(E3, I)
+    return s1 + s2 + s3
+"""
 
 # ============================================================================
 # Main function
