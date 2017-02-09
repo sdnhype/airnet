@@ -190,3 +190,26 @@ mininet> client4 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received,
 
 ******************************************************************************
 ******************************************************************************
+
+=======================================
+== Statistics on Three Edges ==
+=======================================
+
+# examples/statThreeEdges/
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh statThreeEdges.statThreeEdges statThreeEdges.statThreeEdges_mapping
+
+-- Mininet
+
+$ sudo python statThreeEdges_topo.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> pingall --> OK
