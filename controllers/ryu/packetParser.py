@@ -12,7 +12,7 @@ class PacketParser(object):
 
     # def __init__(self):
     #     super(PacketParser, self).__init__()
-    
+
     """
     recoit les donnees arp contenues dans un dictionnaire construit le packet et l'envoie
     dp: datapath du switch
@@ -25,7 +25,7 @@ class PacketParser(object):
         protos = data.get('packet')
         protos = ast.literal_eval(str(protos))
         protos = protos.get('arp')
-        packet = self.build_packet_arp(protos)        
+        packet = self.build_packet_arp(protos)
         packet.serialize()
         parser = dp.ofproto_parser
         ofproto = dp.ofproto
@@ -44,7 +44,7 @@ class PacketParser(object):
     packet: un dictionnaire contenant les entetes du packet sous cette forme
     {"port":..,"output":..,"id_packet":..,"dpid":..,"packet": {"ipv4":{.....},"tcp":{....},"icmp":{...},
                                                                 "udp":{.....},"dl_src":...,"dl_dst":...}}
-    msg: donnees Openflow du packet 
+    msg: donnees Openflow du packet
     """
     def send_packet(self,dp,packet,msg):
 
@@ -74,7 +74,7 @@ class PacketParser(object):
         protos = ast.literal_eval(str(protos))
         if 'dl_src' in protos:
             actions.append(dp.ofproto_parser.OFPActionSetDlSrc(protos.get('dl_src')))
-        if 'dl_dst' in protos:  
+        if 'dl_dst' in protos:
             actions.append(dp.ofproto_parser.OFPActionSetDlDst(protos.get('dl_dst')))
         if 'ipv4' in protos:
             ip = protos.get('ipv4')
@@ -89,7 +89,7 @@ class PacketParser(object):
             actions.append(dp.ofproto_parser.OFPActionSetTpSrc(tp.get('src_port')))
             actions.append(dp.ofproto_parser.OFPActionSetTpDst(tp.get('dst_port')))
         return actions
-    
+
 
     """
     construit un packet arp de retour,
@@ -106,7 +106,7 @@ class PacketParser(object):
         opcode = data.get('opcode')
         ar = arp.arp_ip(opcode,mac_src,ip_src,mac_dst,ip_dst)
         type = ether_types.ETH_TYPE_ARP
-        ether = ethernet.ethernet(ethertype=type,dst=mac_dst,src=mac_src)   
+        ether = ethernet.ethernet(ethertype=type,dst=mac_dst,src=mac_src)
         pkt.add_protocol(ether)
         pkt.add_protocol(ar)
         return pkt
@@ -114,7 +114,7 @@ class PacketParser(object):
     """
     retourne un dictionnaire sous la forme
     {"arp":{"src_mac":..,"dst_mac":..,"src_ip":..,"dst_ip":...,"opcode":..}}
-    packet: est un packet ryu reçu avec Packet IN
+    packet: est un packet ryu recu avec Packet IN
     """
     def arp_to_dict(self,packet):
 
@@ -133,7 +133,7 @@ class PacketParser(object):
     retourne un dictionnaire de la forme
     {"ipv4":{.....},"tcp":{....},"icmp":{...},"udp":{.....},"dl_src":...,"dl_dst":...}
     pour chaque protocole present dans le paquet on recupere la source et la destination
-    packet: est un packet ryu reçu avec Packet IN
+    packet: est un packet ryu recu avec Packet IN
     """
     def packet_to_dict(self,packet):
 
@@ -156,16 +156,15 @@ class PacketParser(object):
             d_tc['src_port'] = tc.src_port
             d_tc['dst_port'] = tc.dst_port
             retour['tcp'] = d_tc
-        
+
         ud = packet.get_protocol(udp.udp)
         if ud:
             d_ud = {}
             d_ud['src_port'] = ud.src_port
             d_ud['dst_port'] = ud.dst_port
             retour['udp'] = d_ud
-        
+
         eth = packet.get_protocol(ethernet.ethernet)
         retour['dl_src'] = eth.src
         retour['dl_dst'] = eth.dst
         return retour
-
