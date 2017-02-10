@@ -51,14 +51,14 @@ class ConfigFlow(Client):
 
  	def __init__(self,host,port):
  		super(ConfigFlow,self).__init__(host,port,ConfigFlow.prefix_config)
-		 
+
  	""" teste """
  	def addFlow(self,data):
 	 	try:
  			self.send_request('POST','add',data)
 		except Exception:
 			print 'Add flow : Exception'
- 		 
+
  	def updateFlow(self,data):
 	 	try:
  			self.send_request('POST','modify_strict',data)
@@ -70,7 +70,7 @@ class ConfigFlow(Client):
 		 	self.send_request('POST','delete_strict',data)
 		except Exception:
 			print 'Delete flow : Exception'
-		 
+
  	def deleteAllFlow(self,dpid):
  		action = 'clear/'+'%s' %(dpid)
 		try:
@@ -81,14 +81,14 @@ class ConfigFlow(Client):
 class RecupStats(Client):
 	"""Client pour recuperer les stats et envoyer des packets"""
 	prefix_stat = 'stats'
-	
+
 	def __init__(self,host,port):
 		super(RecupStats,self).__init__(host,port,RecupStats.prefix_stat)
-		
+
 	def getStatsFlow(self,dpid,data=None):
 		action = 'flow/%s' % (dpid)
 		return self.send_request('GET',action,data)
-		
+
 	def sendPacket(self,data):
 		action = 'send'
 		try:
@@ -127,35 +127,35 @@ class Stat(object):
 			self._tp_dst = kwargs["tp_dst"]
 		except KeyError:
 			self._tp_dst = None
-	
+
 	@property
 	def byte_count(self):
 		return self._byte_count
-	
+
 	@property
 	def packet_count(self):
 		return self._packet_count
-    
+
 	@property
 	def nw_src(self):
 		return self._nw_src
-    
+
 	@property
 	def nw_dst(self):
 		return self._nw_dst
-    
+
 	@property
 	def dl_src(self):
 		return self._dl_src
-    
+
 	@property
 	def dl_dst(self):
 		return self._dl_dst
-    
+
 	@property
 	def tp_src(self):
 		return self._tp_src
-    
+
 	@property
 	def tp_dst(self):
 		return self._tp_dst
@@ -168,11 +168,11 @@ class RyuClient(object):
 		self.switches_rules_cpt = {}
 		self.runtime = runtime
 		self.runtime_mode = False #indique si on deja installe les 1eres regles
-	
+
 	"""
 	construit le dictionnaire de match de la regle OpenFlow
-	"""	
-	def build_match_field(self, src = None, dst = None,dl_src=None, dl_dst=None, 
+	"""
+	def build_match_field(self, src = None, dst = None,dl_src=None, dl_dst=None,
                           nw_src = None, nw_dst = None, tp_src=None, tp_dst=None, nw_proto= None, in_port=None):
 		match = {}
 		if src:
@@ -183,6 +183,8 @@ class RyuClient(object):
 			for ipAddr, host in self.runtime.mapping.hosts.iteritems():
 				if host == dst:
 					match['nw_dst'] = ipAddr
+		if dl_dst:
+			match['dl_dst'] = dl_dst
 		if dl_src:
 			match['dl_src'] = dl_src
 		if nw_src:
@@ -198,18 +200,18 @@ class RyuClient(object):
 		if nw_proto:
 			match['nw_proto'] = nw_proto
 		if in_port:
-			match['in_port'] = in_port   
+			match['in_port'] = in_port
 		return match
-	
+
 	"""
-	construit la liste des actions,chaque action etant un dictionnaire	
-	"""	
+	construit la liste des actions,chaque action etant un dictionnaire
+	"""
 	def build_action_fields(self,actions):
 		actions_mod = []
 		for act in actions:
 			if isinstance(act, modify):
 				if "nw_dst" in act.map:
-					actions_mod.append({'type':'SET_NW_DST','nw_dst':act.map["nw_dst"]})     
+					actions_mod.append({'type':'SET_NW_DST','nw_dst':act.map["nw_dst"]})
 				if "nw_src" in act.map:
 					actions_mod.append({'type':'SET_NW_SRC','nw_src':act.map["nw_src"]})
 				if "dl_dst" in act.map:
@@ -222,9 +224,9 @@ class RyuClient(object):
 					act.output = 0xfffd #controller port
 				actions_mod.append({'type':'OUTPUT','port':act.output})
 		return actions_mod
-	
+
 	"""
-	construit la liste des actions,chaque action etant un dictionnaire	
+	construit la liste des actions,chaque action etant un dictionnaire
 	"""
 	def build_action_fields_bis(self,actions):
 		actions_mod = []
@@ -239,7 +241,7 @@ class RyuClient(object):
 					act.output = 0xfffd #controller port
 				actions_mod.append({'type':'OUTPUT','port':act.output})
 		return actions_mod
-			
+
 	"""
 	installe les regles,utilise par le mode proactif
 	classifiers : dictionnaire des regles a installer
@@ -251,7 +253,7 @@ class RyuClient(object):
 			priority = len(rules)
 			self.switches_rules_cpt[switch] = len(rules)
 			for rule in rules:
-				data = {} #dictionnaire qui sera envoye 
+				data = {} #dictionnaire qui sera envoye
 				data['dpid'] = dpid
 				if rule.match != identity:
 					data['match'] = self.build_match_field(**rule.match.map)
@@ -261,7 +263,7 @@ class RyuClient(object):
 				priority = priority-1
 				c.addFlow(data)
 		self.runtime_mode = True
-		
+
 	"""
 	installe des nouvelles regles,utilise par le mode reactif
 	classifiers : dictionnaire des regles a installer
@@ -272,15 +274,15 @@ class RyuClient(object):
 			dpid = int(switch[1:])
 			for rule in rules:
 				priority = len(self.runtime.new_classifiers[switch]) - rule[1]
-				data = {} #dictionnaire qui sera envoye 
+				data = {} #dictionnaire qui sera envoye
 				data['dpid'] = dpid
 				data['match'] = self.build_match_field(**rule[0].match.map)
 				if not len(rule[0].actions) == 0:
 					data['actions'] = self.build_action_fields(rule[0].actions)
 				data['priority'] = priority
 				c.addFlow(data)
-			self.switches_rules_cpt[switch] += len(rules)	
-	
+			self.switches_rules_cpt[switch] += len(rules)
+
 	"""
 	installe des nouvelles regles,utilise par le mode dynamique
 	classifiers : dictionnaire des regles a installer
@@ -291,11 +293,11 @@ class RyuClient(object):
 			priority = self.switches_rules_cpt[switch] + len(rules)
 			dpid = int(switch[1:])
 			for rule in rules:
-				data = {} #dictionnaire qui sera envoye 
+				data = {} #dictionnaire qui sera envoye
 				data['dpid'] = dpid
 				data['match'] = self.build_match_field(**rule.match.map)
 				if not len(rule.actions) == 0:
-					data['actions'] = self.build_action_fields(rule.actions) 
+					data['actions'] = self.build_action_fields(rule.actions)
 				data['priority'] = priority
 				priority -= 1
 				c.addFlow(data)
@@ -303,14 +305,14 @@ class RyuClient(object):
 	"""
 	supprime des regles,utilise par le mode reactif
 	to_delete: dictionnaire des regles a supprimer
-	"""		
+	"""
 	def delete_rules(self, to_delete):
 		c = ConfigFlow('localhost',8080)
 		for switch, rules in to_delete.iteritems():
 			cpt_deleted_rules = 0
 			dpid = int(switch[1:])
 			for rule in rules:
-				data = {} #dictionnaire qui sera envoye 
+				data = {} #dictionnaire qui sera envoye
 				data['dpid'] = dpid
 				data['match'] = self.build_match_field(**rule[0].match.map)
 				if not len(rule[0].actions) == 0:
@@ -319,15 +321,15 @@ class RyuClient(object):
 				c.deleteFlow(data)
 				cpt_deleted_rules += 1
 			self.switches_rules_cpt[switch] -= cpt_deleted_rules
-			 
+
 	"""
 	modifie des regles,utilise par le mode reactif
-	to_modify est un dictionnaire contenant les regles a modifier 
+	to_modify est un dictionnaire contenant les regles a modifier
 	"""
 	def modifyExistingRules(self, to_modify):
 		c = ConfigFlow('localhost',8080)
 		def different_actions(act_list1, act_list2):
-			# test if they have same number of 
+			# test if they have same number of
 			for act1 in act_list1:
 				find = False
 				for act2 in act_list2:
@@ -337,12 +339,12 @@ class RyuClient(object):
 					return True
 				if len(act_list1) != len(act_list2):
 					return True
-				return False		
+				return False
 		def isSame(r1, r2):
 			if (r1.match == r2.match and
                 not different_actions(r1.actions, r2.actions)):
 				return True
-			return False	
+			return False
 		def modify_priority(old_r, new_r, switch):
 			to_delete = {switch:[]}
 			to_delete[switch].append(old_r)
@@ -350,7 +352,7 @@ class RyuClient(object):
 			to_add = {switch:[]}
 			to_add[switch].append(new_r)
 			self.installNewRules(to_add)
-			
+
 		for switch, rules in to_modify.iteritems():
 			dpid = int(switch[1:])
 			for new_r, old_r in rules:
@@ -358,17 +360,17 @@ class RyuClient(object):
 					if self.switches_rules_cpt[switch]-old_r[1] != len(self.runtime.new_classifiers[switch])-new_r[1]:
 						modify_priority(old_r, new_r, switch)
 				else:
-					data = {} #dictionnaire qui sera envoye 
+					data = {} #dictionnaire qui sera envoye
 					data['dpid'] = dpid
 					data['match'] = self.build_match_field(**new_r[0].match.map)
 					if not len(new_r[0].actions) == 0:
 						data['actions'] = self.build_action_fields_bis(new_r[0].actions)
 					data['priority'] = self.switches_rules_cpt[switch] - new_r[1]
 					c.updateFlow(data)
-	
+
 	"""
 	modifie des regles
-	to_modify est un dictionnaire contenant les regles a modifier 
+	to_modify est un dictionnaire contenant les regles a modifier
 	"""
 	def modify_existing_rules(self, to_modify):
 		c = ConfigFlow('localhost',8080)
@@ -383,7 +385,7 @@ class RyuClient(object):
 				data['priority'] = self.switches_rules_cpt[switch] - rule[1]
 				#TODO runtime.msgs
 				c.updateFlow(data)
-				
+
 	"""
 	envoie des requetes pour recevoir les stats sur un flow
 	switches est une liste de switch
@@ -400,9 +402,9 @@ class RyuClient(object):
 		for switch in switches:
 			dpid = int((switch[1:]))
 			request['dpid'] = dpid
-			s.getStatsFlow(self,dpid,request)	
-			#TODO comment transferer les donnees	
-	
+			s.getStatsFlow(self,dpid,request)
+			#TODO comment transferer les donnees
+
 	"""
 	gere les packet in
 	pour le moment seul le ARP est traite
@@ -420,10 +422,10 @@ class RyuClient(object):
 			if data_arp.get('opcode') == ARP_REQUEST:
 				self.install_arp(dpid,port,data_arp)
 		else:
-			print("Handling IP packetIn...") 
+			print("Handling IP packetIn...")
 			packet_match = self.match_from_packet(dpid,protos)
 			self.runtime.handle_packet_in(dpid, packet_match, packet)
-	
+
 	"""
 	fonction qui construit et envoie un packet ARP de reponse
 	protos est la liste des protocoles
@@ -457,7 +459,7 @@ class RyuClient(object):
 	au controleur ryu pour que celui-ci le delivre
 	switch: nom du switch sur lequel envoyer le paquet
 	output le numero de port du switch
-	packet: dictionnaire contenant les infos du paquet 
+	packet: dictionnaire contenant les infos du paquet
 	{"port":..,"id_packet":..,"dpid":..,"packet": {"ipv4":{.....},"tcp":{....},"icmp":{...},
                                                    "udp":{.....},"dl_src":...,"dl_dst":...}}
 	"""
@@ -468,13 +470,13 @@ class RyuClient(object):
 		c = RecupStats('localhost',8080)
 		print("[DEBUG] ryu_client -- send_packet_out()")
 		c.sendPacket(packet)
-			
+
 	"""
 	cree un match a partir des entete d'un paquet
 	dpid: numero du switch
 	protos: dictionnaires contenant les entetes des protocoles du packet
 	{"ipv4":{.....},"tcp":{....},"icmp":{...},"udp":{.....},"dl_src":...,"dl_dst":...}
-	"""		
+	"""
 	def match_from_packet(self,dpid, protos):
 		my_match = match()
 		if 'ipv4' in protos:
@@ -492,7 +494,7 @@ class RyuClient(object):
 			my_match.map["tp_dst"] = udp.get('dst_port')
 			my_match.map["nw_proto"] = 17
 		if 'icmp' in protos:
-			my_match.map["nw_proto"] = 1    
+			my_match.map["nw_proto"] = 1
 		#adding edge field in the match
 		switch = 's' + str(dpid)
 		edge = self.runtime.get_corresponding_virtual_edge(switch)
@@ -501,6 +503,3 @@ class RyuClient(object):
 		else:
 			return None
 		return my_match
-		
-						
-		

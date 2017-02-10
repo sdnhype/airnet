@@ -73,12 +73,25 @@ def distribute(VID, destination):
     p = match(edge=VID, dst=destination) >> forward(destination)
     return p
 
+# Generic MAC distribution policy
+def distribute_mac(VID, destination):
+    p = match(edge=VID, dl_dst=(globals()["MAC_"+destination])) >> forward(destination)
+    return p
+
 # Distribute traffic to the different members connected to the 3 edges
 def distribute_edges():
     distribute_e1 = distribute(E1, A) + distribute(E1, B) + distribute(E1, C)
     distribute_e2 = distribute(E2, D) + distribute(E2, E) + distribute(E2, F)
     distribute_e3 = distribute(E3, G) + distribute(E3, H) + distribute(E3, I)
     return distribute_e1 + distribute_e2 + distribute_e3
+
+# Distribute traffic (BASED ON MAC @) to the different members connected to the 3 edges
+def distribute_mac_edges():
+    distribute_e1 = distribute_mac(E1, A) + distribute_mac(E1, B) + distribute_mac(E1, C)
+    distribute_e2 = distribute_mac(E2, D) + distribute_mac(E2, E) + distribute_mac(E2, F)
+    distribute_e3 = distribute_mac(E3, G) + distribute_mac(E3, H) + distribute_mac(E3, I)
+    return distribute_e1 + distribute_e2 + distribute_e3
+
 
 # Generic tagging policy
 def set_tag(VID, destination, label):
@@ -149,7 +162,8 @@ def statPolicy():
 def main():
 
     topology = virtual_network()
-    all_edges = distribute_edges() + tag_edges()
+    # all_edges = distribute_edges() + tag_edges()
+    all_edges = distribute_mac_edges() + tag_edges()
     all_fabric = fabric_policies()
 
     return {"virtual_topology": topology,
