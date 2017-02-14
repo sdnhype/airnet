@@ -482,7 +482,10 @@ class NetworkFunction(EdgePolicy):
             self._type = decorator_kwargs["data"]
         except KeyError:
             self._type = None
-        self._limit = decorator_kwargs["limit"]
+        try:
+            self._limit = decorator_kwargs["limit"]
+        except KeyError:
+            self._limit = None
         try:
             self._split = decorator_kwargs["split"]
         except KeyError:
