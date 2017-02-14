@@ -1,5 +1,6 @@
 from language import *
 from names import *
+import datetime
 
 """
 * Virtual topo
@@ -140,21 +141,27 @@ def fabric_policies():
 # DYNAMIC CONTROL POLICIES
 # ============================================================================
 
-"""
+
 @DynamicControlFct(data="stat", every=60, split=["nw_src"])
 def saveStat( stat ):
-    # TODO
+    # Open log file
+    logFile = open("statsLog.txt", 'a')
+    time = datetime.datetime.now()
+    logFile.write('[%s] nw_src %s nw_dst %s | packet count %s \n' % (time, stat.nw_src, stat.nw_dst, stat.packet_count))
+    logFile.close()
+    return identity
 
 # Generic statistics policy
 def edgeStatForX(oneEdge, oneDestination):
-    match(edge=oneEdge, dst=destination) >> saveStat()
+    p = match(edge=oneEdge, dst=oneDestination) >> saveStat()
+    return p
 
 def statPolicy():
     s1 = edgeStatForX(E1, A) + edgeStatForX(E1, B) + edgeStatForX(E1, C)
     s2 = edgeStatForX(E2, D) + edgeStatForX(E2, E) + edgeStatForX(E2, F)
     s3 = edgeStatForX(E3, G) + edgeStatForX(E3, H) + edgeStatForX(E3, I)
     return s1 + s2 + s3
-"""
+
 
 # ============================================================================
 # Main function
@@ -163,7 +170,7 @@ def main():
 
     topology = virtual_network()
     # all_edges = distribute_edges() + tag_edges()
-    all_edges = distribute_mac_edges() + tag_edges()
+    all_edges = distribute_mac_edges() + tag_edges() + statPolicy()
     all_fabric = fabric_policies()
 
     return {"virtual_topology": topology,
