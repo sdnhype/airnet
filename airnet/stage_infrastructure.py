@@ -2,7 +2,31 @@ from graph import Graph
 from lib.ipaddr import IPv4Network
 from collections import namedtuple
 import copy
+import logging
 #from IPython.utils.path import link
+
+"""
+    LOGGER
+"""
+logger = logging.getLogger("Airnet_Infrastructure")
+formatter = logging.Formatter('%(asctime)s : %(name)s : [%(levelname)s] : %(message)s')
+
+#handler_critical = logging.FileHandler("log/critical.log",mode="a",encoding="utf-8")
+#handler_info = logging.StreamHandler()
+handler_debug = logging.FileHandler("log/infra/debug.log",mode="a",encoding="utf-8")
+
+#handler_critic.setLevel(logging.CRITICAL)
+handler_debug.setLevel(logging.DEBUG)
+#handler_info.setLevel(logging.INFO)
+
+#handler_critic.setFormatter(formatter)
+handler_debug.setFormatter(formatter)
+
+logger.setLevel(logging.DEBUG)
+
+#logger.addHandler(handler_critic)
+logger.addHandler(handler_debug)
+#logger.addHandler(handler_info)
 
 class Phy_Port(object):
     """
@@ -34,6 +58,7 @@ class Phy_Switch(object):
         """
         self.dpid = dpid
         self.ports = ports
+
         #TODO: forwarding table ? Purpose: nothing at the moment.
 
 
@@ -111,6 +136,7 @@ class Infrastructure(object):
         self.links = []           # [Phy_Link objects]
         self._hwAddrs = []        # POX bug ! when a link is down
         self._deleted_links = []  # [Phy_Link objects]
+        logger.debug("Physical infrastructure Container Fully Initialized")
 
     def nb(self):
         return len(self.switches.keys())
@@ -176,18 +202,33 @@ class Infrastructure(object):
         """
         TODO: must be compatible with graph class and the algorithm
         """
-        edges =set()
+        #
+        edges = set()
+        #
         vertices = {}
+
+        # For each host
         for host in self.hosts.values():
+            """
+                At the end of the loop, we get :
+                    edges = ("host",@macH1, @macH2...)
+                    vertices = {"@macH1":'sX'}
+            """
             edges.add(("{}".format(host.hwAddr), "host"))
             vertices["{}".format(host.hwAddr)] = []
+
             for link in self.links:
                 if link.entity1["type"] == "host_port":
                     if link.entity1["dpid"] == host.hwAddr:
                         vertices["{}".format(host.hwAddr)].append((1, "s{}".format(link.entity2["dpid"]), 1))
+                        logger.debug("Physical infrastructure Container Fully Initialized")
+
+        # For each switch
         for switch in self.switches.values():
+
             edges.add(("s{}".format(switch.dpid), "switch"))
             vertices["s{}".format(switch.dpid)] = []
+
             for link in self.links:
                 if link.entity1["type"] == "switch_port":
                     if link.entity1["dpid"] == switch.dpid:
@@ -217,7 +258,7 @@ class Infrastructure(object):
                                                   link.entity2["port"]))
 
     def arp(self, ipAddr):
-        #work only for one ipAddr by host
+        # work only for one ipAddr by host
         for key, host in self.hosts.iteritems():
             if (host.ip_addrs.keys()[0]) == ipAddr:
                 return host.hwAddr

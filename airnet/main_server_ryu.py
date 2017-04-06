@@ -12,11 +12,13 @@ import sys
 from runtime import Runtime
 
 app = Flask(__name__)
+
 infra = Infrastructure()
-# f1 = 'examples.'+sys.argv[1]
-#f2 = 'examples.'+sys.argv[2]
+
+# f1 = $CTRL_MODULE et f2 = MAPPING_MODULE
 f1 = sys.argv[1]
 f2 = sys.argv[2]
+
 runtime = Runtime(f1,f2,infra,"RYU")
 
 @app.route('/Topo/Switch/enter',methods = ['POST'])

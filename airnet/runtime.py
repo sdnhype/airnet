@@ -34,14 +34,28 @@ import pdb
 #TODO: private _functions and _var
 #TODO: simplify algo : functions inside complex functions
 
-#log = core.getLogger()
-log = logging.getLogger("AirNet_runtime")
-formatter = logging.Formatter('%(levelname)s : %(message)s')
-log.setLevel(logging.DEBUG)
-log_handler = logging.StreamHandler()
-log_handler.setFormatter(formatter)
-log_handler.setLevel(logging.DEBUG)
-log.addHandler(log_handler)
+"""
+    LOGGER
+"""
+logger = logging.getLogger("AirNet_runtime")
+formatter = logging.Formatter('%(asctime)s : %(name)s : [%(levelname)s] : %(message)s')
+
+#handler_critical = logging.FileHandler("log/critical.log",mode="a",encoding="utf-8")
+handler_info = logging.StreamHandler()
+handler_debug = logging.FileHandler("log/debug.log",mode="a",encoding="utf-8")
+
+#handler_critic.setLevel(logging.CRITICAL)
+handler_debug.setLevel(logging.DEBUG)
+handler_info.setLevel(logging.INFO)
+
+#handler_critic.setFormatter(formatter)
+handler_debug.setFormatter(formatter)
+
+logger.setLevel(logging.DEBUG)
+
+#logger.addHandler(handler_critic)
+logger.addHandler(handler_debug)
+logger.addHandler(handler_info)
 
 class PeriodicTimer(object):
     """
@@ -165,6 +179,7 @@ class Runtime():
         #TODO: put all global variables here.
         #mapping information
         log.info("starting compilation -- Time == " + str(int(round(time.time() * 1000))))
+        log.debug("starting compilation -- Time == " + str(int(round(time.time() * 1000))))
         _compilation_duration = int(round(time.time() * 1000))
         main_module = import_module(control_program)
         main_module = main_module.main()
@@ -211,8 +226,10 @@ class Runtime():
         self.main_module = main_module
         self._event_time = 0
         log.info("compilation finished -- Time == " + str(int(round(time.time() * 1000))))
+        log.debug("compilation finished -- Time == " + str(int(round(time.time() * 1000))))
         _compilation_duration = int(round(time.time() * 1000)) - _compilation_duration
         log.info("compilation DURATION == " + str(_compilation_duration))
+
 
     def resolve_match_headers(self, policy):
         """
