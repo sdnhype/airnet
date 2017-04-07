@@ -1,1 +1,167 @@
 2017-04-06 16:00:23,435 : Airnet_Infrastructure : [DEBUG] : Physical infrastructure Container Fully Initiliazed
+2017-04-07 08:56:52,234 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 08:57:16,048 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 08:57:16,052 -:- AirNet_runtime -:- [INFO] -:- Compilation finished After 4 units ?
+2017-04-07 08:57:33,474 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 08:57:33,478 -:- AirNet_runtime -:- [INFO] -:- Compilation finished After 4 units ?
+2017-04-07 09:00:35,717 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 09:00:35,721 -:- AirNet_runtime -:- [INFO] -:- Compilation finished -- Duration == 4
+2017-04-07 10:49:16,066 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 10:49:16,069 -:- AirNet_runtime -:- [INFO] -:- Compilation finished -- Duration == 3
+2017-04-07 11:01:04,042 : Airnet_Infrastructure : [DEBUG] : Physical infrastructure Informations Container Fully Initialized
+2017-04-07 11:01:04,042 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 11:01:04,048 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:01:04,049 -:- AirNet_runtime -:- [DEBUG] -:- Virtual Topology
+2017-04-07 11:01:04,050 -:- AirNet_runtime -:- [INFO] -:- Compilation finished -- Duration == 8
+2017-04-07 11:01:25,214 -:- AirNet_runtime -:- [INFO] -:- start enforcing policies -- Time == 1491555685214
+2017-04-07 11:01:25,214 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:01:25,218 -:- AirNet_runtime -:- [INFO] -:- number of rules initially installed == 4
+2017-04-07 11:01:25,273 -:- AirNet_runtime -:- [INFO] -:- policies enforcing finished -- Time == 1491555685274
+2017-04-07 11:01:25,273 -:- AirNet_runtime -:- [INFO] -:- enforcing proactive rules DURATION== 59
+2017-04-07 11:03:44,722 : Airnet_Infrastructure : [DEBUG] : Physical infrastructure Informations Container Fully Initialized
+2017-04-07 11:03:44,722 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 11:03:44,725 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:03:44,725 -:- AirNet_runtime -:- [DEBUG] -:- Virtual Topology
+2017-04-07 11:03:44,726 -:- AirNet_runtime -:- [INFO] -:- Compilation finished -- Duration == 4
+2017-04-07 11:05:21,914 : Airnet_Infrastructure : [DEBUG] : Physical infrastructure Informations Container Fully Initialized
+2017-04-07 11:05:21,914 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 11:05:21,915 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:05:21,915 -:- AirNet_runtime -:- [DEBUG] -:- Virtual Topology
+2017-04-07 11:05:21,916 -:- AirNet_runtime -:- [INFO] -:- Compilation finished -- Duration == 3
+2017-04-07 11:05:37,825 -:- AirNet_runtime -:- [INFO] -:- start enforcing policies -- Time == 1491555937825
+2017-04-07 11:05:37,825 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:05:37,830 -:- AirNet_runtime -:- [INFO] -:- number of rules initially installed == 8
+2017-04-07 11:05:37,846 -:- AirNet_runtime -:- [INFO] -:- policies enforcing finished -- Time == 1491555937846
+2017-04-07 11:05:37,846 -:- AirNet_runtime -:- [INFO] -:- enforcing proactive rules DURATION== 22
+2017-04-07 11:05:52,262 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:05:52,266 -:- AirNet_runtime -:- [INFO] -:- number of modified rules == 0
+2017-04-07 11:05:52,266 -:- AirNet_runtime -:- [INFO] -:- number of new installed rules == 0
+2017-04-07 11:05:52,267 -:- AirNet_runtime -:- [INFO] -:- number of deleted rules == 2
+2017-04-07 11:05:52,270 -:- AirNet_runtime -:- [INFO] -:- diffLists enforcing finished -- Time == 1491555952271
+2017-04-07 11:05:52,271 -:- AirNet_runtime -:- [INFO] -:- enforcing diffLists DURATION == 1491555952271
+2017-04-07 11:05:52,279 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:05:52,284 -:- AirNet_runtime -:- [INFO] -:- number of modified rules == 0
+2017-04-07 11:05:52,285 -:- AirNet_runtime -:- [INFO] -:- number of new installed rules == 0
+2017-04-07 11:05:52,286 -:- AirNet_runtime -:- [INFO] -:- number of deleted rules == 2
+2017-04-07 11:05:52,291 -:- AirNet_runtime -:- [INFO] -:- diffLists enforcing finished -- Time == 1491555952291
+2017-04-07 11:05:52,292 -:- AirNet_runtime -:- [INFO] -:- enforcing diffLists DURATION == 1491555952292
+2017-04-07 11:12:30,569 : Airnet_Infrastructure : [DEBUG] : Physical infrastructure Informations Container Fully Initialized
+2017-04-07 11:12:30,569 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 11:12:30,570 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:12:30,570 -:- AirNet_runtime -:- [DEBUG] -:- Virtual Topology
+2017-04-07 11:12:30,571 -:- AirNet_runtime -:- [INFO] -:- Compilation finished -- Duration == 2
+2017-04-07 11:12:45,231 -:- AirNet_runtime -:- [INFO] -:- start enforcing policies -- Time == 1491556365231
+2017-04-07 11:12:45,231 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:12:45,236 -:- AirNet_runtime -:- [INFO] -:- number of rules initially installed == 8
+2017-04-07 11:12:45,252 -:- AirNet_runtime -:- [INFO] -:- policies enforcing finished -- Time == 1491556365253
+2017-04-07 11:12:45,252 -:- AirNet_runtime -:- [INFO] -:- enforcing proactive rules DURATION== 21
+2017-04-07 11:12:58,352 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:12:58,357 -:- AirNet_runtime -:- [INFO] -:- number of modified rules == 0
+2017-04-07 11:12:58,357 -:- AirNet_runtime -:- [INFO] -:- number of new installed rules == 0
+2017-04-07 11:12:58,358 -:- AirNet_runtime -:- [INFO] -:- number of deleted rules == 2
+2017-04-07 11:12:58,361 -:- AirNet_runtime -:- [INFO] -:- diffLists enforcing finished -- Time == 1491556378361
+2017-04-07 11:12:58,361 -:- AirNet_runtime -:- [INFO] -:- enforcing diffLists DURATION == 1491556378361
+2017-04-07 11:12:58,370 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:12:58,375 -:- AirNet_runtime -:- [INFO] -:- number of modified rules == 0
+2017-04-07 11:12:58,375 -:- AirNet_runtime -:- [INFO] -:- number of new installed rules == 0
+2017-04-07 11:12:58,375 -:- AirNet_runtime -:- [INFO] -:- number of deleted rules == 2
+2017-04-07 11:12:58,378 -:- AirNet_runtime -:- [INFO] -:- diffLists enforcing finished -- Time == 1491556378379
+2017-04-07 11:12:58,378 -:- AirNet_runtime -:- [INFO] -:- enforcing diffLists DURATION == 1491556378379
+2017-04-07 11:12:58,427 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:12:58,431 -:- AirNet_runtime -:- [INFO] -:- number of modified rules == 0
+2017-04-07 11:12:58,432 -:- AirNet_runtime -:- [INFO] -:- number of new installed rules == 0
+2017-04-07 11:12:58,432 -:- AirNet_runtime -:- [INFO] -:- number of deleted rules == 0
+2017-04-07 11:12:58,432 -:- AirNet_runtime -:- [INFO] -:- diffLists enforcing finished -- Time == 1491556378432
+2017-04-07 11:12:58,432 -:- AirNet_runtime -:- [INFO] -:- enforcing diffLists DURATION == 1491556378433
+2017-04-07 11:12:58,438 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:12:58,445 -:- AirNet_runtime -:- [INFO] -:- number of modified rules == 0
+2017-04-07 11:12:58,445 -:- AirNet_runtime -:- [INFO] -:- number of new installed rules == 0
+2017-04-07 11:12:58,445 -:- AirNet_runtime -:- [INFO] -:- number of deleted rules == 0
+2017-04-07 11:12:58,445 -:- AirNet_runtime -:- [INFO] -:- diffLists enforcing finished -- Time == 1491556378446
+2017-04-07 11:12:58,445 -:- AirNet_runtime -:- [INFO] -:- enforcing diffLists DURATION == 1491556378446
+2017-04-07 11:12:58,454 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:12:58,459 -:- AirNet_runtime -:- [INFO] -:- number of modified rules == 0
+2017-04-07 11:12:58,460 -:- AirNet_runtime -:- [INFO] -:- number of new installed rules == 0
+2017-04-07 11:12:58,461 -:- AirNet_runtime -:- [INFO] -:- number of deleted rules == 0
+2017-04-07 11:12:58,461 -:- AirNet_runtime -:- [INFO] -:- diffLists enforcing finished -- Time == 1491556378461
+2017-04-07 11:12:58,461 -:- AirNet_runtime -:- [INFO] -:- enforcing diffLists DURATION == 1491556378461
+2017-04-07 11:12:58,468 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:12:58,472 -:- AirNet_runtime -:- [INFO] -:- number of modified rules == 0
+2017-04-07 11:12:58,472 -:- AirNet_runtime -:- [INFO] -:- number of new installed rules == 0
+2017-04-07 11:12:58,472 -:- AirNet_runtime -:- [INFO] -:- number of deleted rules == 0
+2017-04-07 11:12:58,473 -:- AirNet_runtime -:- [INFO] -:- diffLists enforcing finished -- Time == 1491556378473
+2017-04-07 11:12:58,473 -:- AirNet_runtime -:- [INFO] -:- enforcing diffLists DURATION == 1491556378473
+2017-04-07 11:13:15,775 : Airnet_Infrastructure : [DEBUG] : Physical infrastructure Informations Container Fully Initialized
+2017-04-07 11:13:15,775 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 11:13:15,776 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:13:15,776 -:- AirNet_runtime -:- [DEBUG] -:- Virtual Topology
+2017-04-07 11:13:15,778 -:- AirNet_runtime -:- [INFO] -:- Compilation finished -- Duration == 2
+2017-04-07 11:13:31,500 -:- AirNet_runtime -:- [INFO] -:- start enforcing policies -- Time == 1491556411501
+2017-04-07 11:13:31,501 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:13:31,505 -:- AirNet_runtime -:- [INFO] -:- number of rules initially installed == 8
+2017-04-07 11:13:31,522 -:- AirNet_runtime -:- [INFO] -:- policies enforcing finished -- Time == 1491556411522
+2017-04-07 11:13:31,522 -:- AirNet_runtime -:- [INFO] -:- enforcing proactive rules DURATION== 21
+2017-04-07 11:15:11,390 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:15:11,394 -:- AirNet_runtime -:- [INFO] -:- number of modified rules == 0
+2017-04-07 11:15:11,395 -:- AirNet_runtime -:- [INFO] -:- number of new installed rules == 0
+2017-04-07 11:15:11,395 -:- AirNet_runtime -:- [INFO] -:- number of deleted rules == 2
+2017-04-07 11:15:11,398 -:- AirNet_runtime -:- [INFO] -:- diffLists enforcing finished -- Time == 1491556511398
+2017-04-07 11:15:11,398 -:- AirNet_runtime -:- [INFO] -:- enforcing diffLists DURATION == 1491556511398
+2017-04-07 11:15:11,404 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:15:11,409 -:- AirNet_runtime -:- [INFO] -:- number of modified rules == 0
+2017-04-07 11:15:11,409 -:- AirNet_runtime -:- [INFO] -:- number of new installed rules == 0
+2017-04-07 11:15:11,409 -:- AirNet_runtime -:- [INFO] -:- number of deleted rules == 2
+2017-04-07 11:15:11,413 -:- AirNet_runtime -:- [INFO] -:- diffLists enforcing finished -- Time == 1491556511414
+2017-04-07 11:15:11,414 -:- AirNet_runtime -:- [INFO] -:- enforcing diffLists DURATION == 1491556511414
+2017-04-07 11:15:23,984 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:15:23,992 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:15:23,997 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:15:24,003 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:15:40,269 : Airnet_Infrastructure : [DEBUG] : Physical infrastructure Informations Container Fully Initialized
+2017-04-07 11:15:40,269 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 11:15:40,270 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:15:40,270 -:- AirNet_runtime -:- [DEBUG] -:- Virtual Topology
+2017-04-07 11:15:40,272 -:- AirNet_runtime -:- [INFO] -:- Compilation finished -- Duration == 2
+2017-04-07 11:15:55,501 -:- AirNet_runtime -:- [INFO] -:- start enforcing policies -- Time == 1491556555501
+2017-04-07 11:15:55,501 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:15:55,506 -:- AirNet_runtime -:- [INFO] -:- number of rules initially installed == 8
+2017-04-07 11:15:55,521 -:- AirNet_runtime -:- [INFO] -:- policies enforcing finished -- Time == 1491556555522
+2017-04-07 11:15:55,522 -:- AirNet_runtime -:- [INFO] -:- enforcing proactive rules DURATION== 20
+2017-04-07 11:20:00,068 : Airnet_Infrastructure : [DEBUG] : Physical infrastructure Informations Container Fully Initialized
+2017-04-07 11:20:00,069 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 11:20:00,069 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:20:00,069 -:- AirNet_runtime -:- [DEBUG] -:- Virtual Topology
+2017-04-07 11:20:00,071 -:- AirNet_runtime -:- [INFO] -:- Compilation finished -- Duration == 2
+2017-04-07 11:21:47,515 -:- AirNet_runtime -:- [INFO] -:- start enforcing policies -- Time == 1491556907515
+2017-04-07 11:21:47,515 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:24:35,713 : Airnet_Infrastructure : [DEBUG] : Physical infrastructure Informations Container Fully Initialized
+2017-04-07 11:24:35,713 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 11:24:35,714 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:24:35,714 -:- AirNet_runtime -:- [DEBUG] -:- Virtual Topology
+2017-04-07 11:24:35,715 -:- AirNet_runtime -:- [INFO] -:- Compilation finished -- Duration == 3
+2017-04-07 11:44:17,877 : Airnet_Infrastructure : [DEBUG] : Physical infrastructure Informations Container Fully Initialized
+2017-04-07 11:44:17,878 -:- AirNet_runtime -:- [INFO] -:- Starting Compilation --
+2017-04-07 11:44:17,879 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:44:17,879 -:- AirNet_runtime -:- [DEBUG] -:- Virtual Topology
+2017-04-07 11:44:17,881 -:- AirNet_runtime -:- [INFO] -:- Compilation finished -- Duration == 3
+2017-04-07 11:46:06,112 -:- AirNet_runtime -:- [INFO] -:- start enforcing policies -- Time == 1491558366112
+2017-04-07 11:46:06,112 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:46:06,117 -:- AirNet_runtime -:- [INFO] -:- number of rules initially installed == 8
+2017-04-07 11:46:06,133 -:- AirNet_runtime -:- [INFO] -:- policies enforcing finished -- Time == 1491558366134
+2017-04-07 11:46:06,134 -:- AirNet_runtime -:- [INFO] -:- enforcing proactive rules DURATION== 21
+2017-04-07 11:47:11,338 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:47:11,343 -:- AirNet_runtime -:- [INFO] -:- number of modified rules == 0
+2017-04-07 11:47:11,343 -:- AirNet_runtime -:- [INFO] -:- number of new installed rules == 0
+2017-04-07 11:47:11,343 -:- AirNet_runtime -:- [INFO] -:- number of deleted rules == 2
+2017-04-07 11:47:11,347 -:- AirNet_runtime -:- [INFO] -:- diffLists enforcing finished -- Time == 1491558431348
+2017-04-07 11:47:11,350 -:- AirNet_runtime -:- [INFO] -:- enforcing diffLists DURATION == 1491558431351
+2017-04-07 11:47:11,360 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:47:11,364 -:- AirNet_runtime -:- [INFO] -:- number of modified rules == 0
+2017-04-07 11:47:11,364 -:- AirNet_runtime -:- [INFO] -:- number of new installed rules == 0
+2017-04-07 11:47:11,364 -:- AirNet_runtime -:- [INFO] -:- number of deleted rules == 2
+2017-04-07 11:47:11,369 -:- AirNet_runtime -:- [INFO] -:- diffLists enforcing finished -- Time == 1491558431369
+2017-04-07 11:47:11,369 -:- AirNet_runtime -:- [INFO] -:- enforcing diffLists DURATION == 1491558431370
+2017-04-07 11:47:24,235 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:47:24,244 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:47:24,254 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized
+2017-04-07 11:47:24,259 : Airnet_Infrastructure : [DEBUG] : Graph SuccessFully Initialized

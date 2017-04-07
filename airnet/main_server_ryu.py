@@ -5,20 +5,20 @@ REST server to receive events emanating from RYU
 
 from flask import Flask
 from flask import json,request,Response
-from stage_infrastructure import Infrastructure
+from infrastructure import Infrastructure
 import thread
 import time
 import sys
 from runtime import Runtime
 
+# a Named WSGI Application
 app = Flask(__name__)
-
+# a Container for physical infrastructure Informations (goto-> Infrastructure.py)
 infra = Infrastructure()
-
 # f1 = $CTRL_MODULE et f2 = MAPPING_MODULE
 f1 = sys.argv[1]
 f2 = sys.argv[2]
-
+# launch the runtime module (goto-> runtime.py)
 runtime = Runtime(f1,f2,infra,"RYU")
 
 @app.route('/Topo/Switch/enter',methods = ['POST'])

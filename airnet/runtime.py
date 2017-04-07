@@ -1,10 +1,4 @@
-# For POX
-#from pox.core import core
-#from infrastructure import Infrastructure
-# from pox_client import PoxClient
-# For RYU
 from ryu_client import RyuClient
-# For ALL
 from importlib import import_module
 import copy
 from language import identity
@@ -18,8 +12,6 @@ from threading import Timer
 import time
 import logging
 import pdb
-#from scipy.weave.catalog import intermediate_dir
-#from Image import NONE
 
 #TODO: in_port field
 #TODO: routing inside edge's switch and between edges
@@ -38,9 +30,9 @@ import pdb
     LOGGER
 """
 logger = logging.getLogger("AirNet_runtime")
-formatter = logging.Formatter('%(asctime)s : %(name)s : [%(levelname)s] : %(message)s')
+formatter = logging.Formatter('%(asctime)s -:- %(name)s -:- [%(levelname)s] -:- %(message)s')
 
-#handler_critical = logging.FileHandler("log/critical.log",mode="a",encoding="utf-8")
+#handler_critical = logging.FileHandler("logger/critical.logger",mode="a",encoding="utf-8")
 handler_info = logging.StreamHandler()
 handler_debug = logging.FileHandler("log/debug.log",mode="a",encoding="utf-8")
 
@@ -169,7 +161,7 @@ class Bucket(object):
 
 class Runtime():
     """
-    The proactive and reactive cores
+        The proactive and reactive cores
     """
     _core_name = "runtime"
 
@@ -178,23 +170,28 @@ class Runtime():
     def __init__(self, control_program, mapping_program, infra, controller):
         #TODO: put all global variables here.
         #mapping information
-        log.info("starting compilation -- Time == " + str(int(round(time.time() * 1000))))
-        log.debug("starting compilation -- Time == " + str(int(round(time.time() * 1000))))
+
+        #logger.info("Starting Compilation -- Time == " + str(int(round(time.time() * 1000))))
+        logger.info("Starting Compilation --")
         _compilation_duration = int(round(time.time() * 1000))
+
         main_module = import_module(control_program)
         main_module = main_module.main()
+
         mapping_module = import_module(mapping_program)
         mapping_module = mapping_module.main()
         self.mapping = mapping_module
+
         # the graph corresponding to the physical infrastructure
         # self.phy_topology = core.infrastructure.get_graph()
         self.infra = infra
         self.phy_topology = infra.get_graph()
 
-        #virtual topology
+        # virtual topology
         self.virtual_topology = main_module["virtual_topology"]
+        logger.debug("Virtual Topology")
 
-        #edge and fabric control policies
+        # edge and fabric control policies
         self.user_edge_policies = main_module["edge_policies"]
         self.edge_policies = main_module["edge_policies"]
 
@@ -202,11 +199,13 @@ class Runtime():
         # nwFct_rules --> list of NwFctItem
         self.nwFct_rules = []
         self.buckets = []
+
         # namedtuple: Tuples with Named Fields
         self.NwFctItem = namedtuple('NwFctItem', ['match', 'tag', 'function', 'actions'])
 
         # first resolve filters headers, in order to pop "src" and "dst"
         self.resolve_match_headers(self.edge_policies)
+
         # then compile
         self.edge_policies = self.edge_policies.compile()
         self.fabric_policies = main_module["fabric_policies"]
@@ -214,21 +213,20 @@ class Runtime():
 
         # communication point with physical switches
         # EL TODO: chose the controler in the class constructor
-        # self.nexus = PoxClient()
         if controller == "POX":
             self.nexus = PoxClient()
         elif controller == "RYU":
             self.nexus = RyuClient(self)
         else:
-            log.error("Unknown controller. Quitting.")
+            logger.error("Controller Not Supported !! Leaving ")
             sys.exit()
 
         self.main_module = main_module
         self._event_time = 0
-        log.info("compilation finished -- Time == " + str(int(round(time.time() * 1000))))
-        log.debug("compilation finished -- Time == " + str(int(round(time.time() * 1000))))
+
         _compilation_duration = int(round(time.time() * 1000)) - _compilation_duration
-        log.info("compilation DURATION == " + str(_compilation_duration))
+        #logger.info("Compilation finished -- Time == " + str(int(round(time.time() * 1000))))
+        logger.info("Compilation finished -- Duration == " + str(_compilation_duration))
 
 
     def resolve_match_headers(self, policy):
@@ -819,9 +817,9 @@ class Runtime():
 
     def enforce_drop_rule(self, rule, classifiers):
         # EL DEBUG
-        log.debug("enforce drop rule on match:")
+        logger.debug("enforce drop rule on match:")
         for m in rule.match.map:
-            log.debug("match field: " + m)
+            logger.debug("match field: " + m)
         match_switches_list = self.get_match_switches_list(rule.match)
         for switch in match_switches_list:
             #Install on all corresponding switches, because we can have rules like match TCP==80
@@ -1161,7 +1159,7 @@ class Runtime():
         """
         Main proactive function
         """
-        log.info("start enforcing policies -- Time == " + str(int(round(time.time() * 1000))))
+        logger.info("start enforcing policies -- Time == " + str(int(round(time.time() * 1000))))
         _enforcing_duration = int(round(time.time() * 1000))
         graph = self.infra.get_graph()
         self.topology_graph = self.resolve_graph_hosts(graph)
@@ -1177,11 +1175,11 @@ class Runtime():
 
         self.physical_switches_classifiers = self.opt_physical_classifires(self.physical_switches_classifiers)
 
-        log.info("number of rules initially installed == " + str(countOfMessages(self.physical_switches_classifiers)))
+        logger.info("number of rules initially installed == " + str(countOfMessages(self.physical_switches_classifiers)))
         self.nexus.install_rules_on_dp(self.physical_switches_classifiers)
-        log.info("policies enforcing finished -- Time == " + str(int(round(time.time() * 1000))))
+        logger.info("policies enforcing finished -- Time == " + str(int(round(time.time() * 1000))))
         _enforcing_duration = int(round(time.time() * 1000)) - _enforcing_duration
-        log.info("enforcing proactive rules DURATION== " + str(_enforcing_duration))
+        logger.info("enforcing proactive rules DURATION== " + str(_enforcing_duration))
 
 
     def handle_topology_change(self):
@@ -1262,7 +1260,7 @@ class Runtime():
                     output = self.get_phy_switch_output_port(switch, fwd.output)
                     self.nexus.send_packet_out(switch, packet, output)
 
-        log.debug("runtime -- apply_network_function()")
+        logger.debug("runtime -- apply_network_function()")
         # nwFct_rules --> list of NwFctItem (namedtuple)
         dyc_rule = None
         for rule in self.nwFct_rules:
@@ -1272,21 +1270,21 @@ class Runtime():
 
         for act in dyc_rule.actions:
             if isinstance(act, modify):
-                log.debug("runtime -- modify action")
+                logger.debug("runtime -- modify action")
                 act.apply(packet)
-        log.debug("runtime -- test 1")
+        logger.debug("runtime -- test 1")
         print(type(dyc_rule))
         print(type(packet))
         # function is a field of the named tuple dyc_rule (NwFctItem)
         result = dyc_rule.function.apply(packet)
-        log.debug("runtime -- test 2")
+        logger.debug("runtime -- test 2")
 
         if isinstance(result, Policy):
-            log.debug("runtime -- net function result: new policy")
+            logger.debug("runtime -- net function result: new policy")
             self.add_new_policy(result)
             handle_using_new_policy(dpid, result, packet_match, packet)
         else:
-            log.debug("runtime -- net function result: new packet")
+            logger.debug("runtime -- net function result: new packet")
             fwd = self.get_dycRule_forward(dyc_rule)
             switch = 's' + str(dpid)
             output = self.get_phy_switch_output_port(switch, fwd.output)
@@ -1596,15 +1594,15 @@ class Runtime():
             to_add[switch] = diff_list.to_add
             to_delete[switch] = diff_list.to_delete
             to_modify[switch] = diff_list.to_modify
-        log.info("number of modified rules == " + str(countOfMessages(to_modify)))
+        logger.info("number of modified rules == " + str(countOfMessages(to_modify)))
         self.nexus.modifyExistingRules(to_modify)
-        log.info("number of new installed rules == " + str(countOfMessages(to_add)))
+        logger.info("number of new installed rules == " + str(countOfMessages(to_add)))
         self.nexus.installNewRules(to_add)
-        log.info("number of deleted rules == " + str(countOfMessages(to_delete)))
+        logger.info("number of deleted rules == " + str(countOfMessages(to_delete)))
         self.nexus.delete_rules(to_delete)
-        log.info("diffLists enforcing finished -- Time == " + str(int(round(time.time() * 1000))))
+        logger.info("diffLists enforcing finished -- Time == " + str(int(round(time.time() * 1000))))
         _enforce_diffList_duration = int(round(time.time() * 1000)) - self._event_time
-        log.info("enforcing diffLists DURATION == " + str(_enforce_diffList_duration))
+        logger.info("enforcing diffLists DURATION == " + str(_enforce_diffList_duration))
 
     def flow_limit_reached(self, fct_predicate):
         # first: remove fct item from nwFct_rules list
@@ -1661,10 +1659,10 @@ class Runtime():
 
     def handle_packet_in(self, dpid, packet_match, packet):
         #pdb.set_trace()
-        log.debug("runtime -- handle_packet_in()")
+        logger.debug("runtime -- handle_packet_in()")
         for bucket in self.buckets:
             if bucket.match.covers(packet_match):
-                log.debug("runtime -- found a bucket for that packet!")
+                logger.debug("runtime -- found a bucket for that packet!")
                 bucket.add_packet(dpid, packet_match, packet)
 
     def handle_flow_stats(self, stat):
