@@ -30,6 +30,12 @@ class FabricRule(object):
         self.actions = acts
         self.via_list = via_list
 
+    """
+        [FOR_DEBUG] Return a correct presentation of a rule
+    """
+    def __str__(self):
+        return "{} -- {} -- {}\n".format(self.flow,str(self.actions), str(self.via_list))
+
 class Classifier(object):
     """
     A classifier contains a list of rules, where the order of the list implies
@@ -283,6 +289,15 @@ class FabricClassifier(object):
             self.rules.extend(item.rules)
         else:
             raise TypeError
+
+    """
+        [FOR_DEBUG] !! Adding a method to return the current FabricClassifier (str) rules
+    """
+    def getLogRules(self):
+        str_Rules = ""
+        for rule in self.rules:
+            str_Rules += str(rule)
+        return str_Rules
 
     # FabricClassifiers Fusion
     def __add__(c1, c2):

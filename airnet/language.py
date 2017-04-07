@@ -632,7 +632,8 @@ class catch(FabricPolicy):
         #return Classifier([r1, r2])
         return FabricClassifier([FabricRule(self, {identity}, list())])
 
-
+    def __repr__(self):
+        return "fabric='{}' ,src='{}' flow='{}'".format(self.fabric,self.src,self.flow)
 
 class carry(FabricPolicy):
     """
@@ -649,6 +650,8 @@ class carry(FabricPolicy):
         else:
             self.constraints = None
 
+    def __repr__(self):
+        return "carry ({},{})".format(self.destination,str(self.constraints))
 
     def generateClassifier(self):
         return FabricClassifier([FabricRule(identity, {self}, list())])

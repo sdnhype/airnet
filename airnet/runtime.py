@@ -218,6 +218,7 @@ class Runtime():
         self.fabric_policies = main_module["fabric_policies"]
         logger.debug("Compiling Fabric Policies Main Module")
         self.fabric_policies = self.fabric_policies.compile()
+        logger.debug("Fabric Rules Generated : \n\n****\n{}****\n".format(self.fabric_policies.getLogRules()))
 
         # communication point with physical switches
         # EL TODO: chose the controler in the class constructor
