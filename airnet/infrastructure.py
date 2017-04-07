@@ -131,6 +131,7 @@ class Infrastructure(object):
         self.links = []           # [Phy_Link objects]
         self._hwAddrs = []        # POX bug ! when a link is down
         self._deleted_links = []  # [Phy_Link objects]
+
         logger.debug("Physical infrastructure Informations Container Fully Initialized")
 
     def nb(self):
@@ -230,7 +231,7 @@ class Infrastructure(object):
                         else:
                             vertices["s{}".format(switch.dpid)].append((1, "s{}".format(link.entity2["dpid"]), link.entity1["port"]))
 
-        logger.debug("Graph SuccessFully Initialized")
+        logger.debug("Graph Components Initialized")
         return Graph(vertices, edges)
 
     def view(self):

@@ -177,6 +177,9 @@ class drop(Policy):
     def __repr__(self):
         return "drop"
 
+    def __str__(self):
+        return "drop"
+
 ################ Edge policies ####################
 
 
@@ -336,6 +339,9 @@ class forward(EdgePolicy):
 
     def __repr__(self):
         return "forward to " + str(self.output)
+
+    def __str__(self):
+        return "forward ('{}'')" + str(self.output)
 
 
 

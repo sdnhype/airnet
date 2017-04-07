@@ -161,7 +161,7 @@ class Bucket(object):
 
 class Runtime():
     """
-        The proactive and reactive cores
+        Instatiation of the Proactive and Reactive Core
     """
     _core_name = "runtime"
 
@@ -175,9 +175,11 @@ class Runtime():
         logger.info("Starting Compilation --")
         _compilation_duration = int(round(time.time() * 1000))
 
+        logger.debug("Obtaining Control Program -- {}".format(control_program))
         main_module = import_module(control_program)
         main_module = main_module.main()
 
+        logger.debug("Obtaining Mapping Program -- {}".format(mapping_program))
         mapping_module = import_module(mapping_program)
         mapping_module = mapping_module.main()
         self.mapping = mapping_module
@@ -189,11 +191,12 @@ class Runtime():
 
         # virtual topology
         self.virtual_topology = main_module["virtual_topology"]
-        logger.debug("Virtual Topology")
+        logger.debug("Getting Virtual Topology")
 
         # edge and fabric control policies
-        self.user_edge_policies = main_module["edge_policies"]
+        #self.user_edge_policies = main_module["edge_policies"]
         self.edge_policies = main_module["edge_policies"]
+        logger.debug("Getting Edge Policies")
 
         # Network functions
         # nwFct_rules --> list of NwFctItem
@@ -206,9 +209,14 @@ class Runtime():
         # first resolve filters headers, in order to pop "src" and "dst"
         self.resolve_match_headers(self.edge_policies)
 
-        # then compile
+        # then compile edge_policies --> return a Classifier object
+        logger.debug("Compiling Edge Policies Main Module")
         self.edge_policies = self.edge_policies.compile()
+        logger.debug("Edge Rules Generated : \n\n****\n{}****\n".format(self.edge_policies.getLogRules()))
+
+        # compile also fabric_policies --> return a FabricClassifier object
         self.fabric_policies = main_module["fabric_policies"]
+        logger.debug("Compiling Fabric Policies Main Module")
         self.fabric_policies = self.fabric_policies.compile()
 
         # communication point with physical switches
