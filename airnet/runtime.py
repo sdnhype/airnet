@@ -9,6 +9,7 @@ from lib.ipaddr import IPv4Network
 from collections import namedtuple
 from tools import match_from_packet, countOfMessages
 from threading import Timer
+from log import Logger
 import time
 import logging
 import pdb
@@ -26,27 +27,11 @@ import pdb
 #TODO: private _functions and _var
 #TODO: simplify algo : functions inside complex functions
 
-"""
-    LOGGER
-"""
-logger = logging.getLogger("AirNet_runtime")
-formatter = logging.Formatter('%(asctime)s -:- %(name)s -:- [%(levelname)s] -:- %(message)s')
-
-#handler_critical = logging.FileHandler("logger/critical.logger",mode="a",encoding="utf-8")
+# LOGGER CONSTRUCTION
 handler_info = logging.StreamHandler()
-handler_debug = logging.FileHandler("log/debug.log",mode="a",encoding="utf-8")
-
-#handler_critic.setLevel(logging.CRITICAL)
-handler_debug.setLevel(logging.DEBUG)
 handler_info.setLevel(logging.INFO)
 
-#handler_critic.setFormatter(formatter)
-handler_debug.setFormatter(formatter)
-
-logger.setLevel(logging.DEBUG)
-
-#logger.addHandler(handler_critic)
-logger.addHandler(handler_debug)
+logger = Logger("Airnet_Runtime").getLog()
 logger.addHandler(handler_info)
 
 class PeriodicTimer(object):
@@ -171,7 +156,6 @@ class Runtime():
         #TODO: put all global variables here.
         #mapping information
 
-        #logger.info("Starting Compilation -- Time == " + str(int(round(time.time() * 1000))))
         logger.info("Starting Compilation --")
         _compilation_duration = int(round(time.time() * 1000))
 
@@ -185,7 +169,6 @@ class Runtime():
         self.mapping = mapping_module
 
         # the graph corresponding to the physical infrastructure
-        # self.phy_topology = core.infrastructure.get_graph()
         self.infra = infra
         self.phy_topology = infra.get_graph()
 
@@ -212,13 +195,13 @@ class Runtime():
         # then compile edge_policies --> return a Classifier object
         logger.debug("Compiling Edge Policies Main Module")
         self.edge_policies = self.edge_policies.compile()
-        logger.debug("Edge Rules Generated : \n\n****\n{}****\n".format(self.edge_policies.getLogRules()))
+        logger.debug("Edge Rules Generated : ************\n{}************\n".format(self.edge_policies.getLogRules()))
 
         # compile also fabric_policies --> return a FabricClassifier object
         self.fabric_policies = main_module["fabric_policies"]
         logger.debug("Compiling Fabric Policies Main Module")
         self.fabric_policies = self.fabric_policies.compile()
-        logger.debug("Fabric Rules Generated : \n\n****\n{}****\n".format(self.fabric_policies.getLogRules()))
+        logger.debug("Fabric Rules Generated : ************\n{}************\n".format(self.fabric_policies.getLogRules()))
 
         # communication point with physical switches
         # EL TODO: chose the controler in the class constructor

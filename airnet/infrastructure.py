@@ -2,31 +2,10 @@ from graph import Graph
 from lib.ipaddr import IPv4Network
 from collections import namedtuple
 import copy
-import logging
-#from IPython.utils.path import link
+from log import Logger
 
-"""
-    LOGGER
-"""
-logger = logging.getLogger("Airnet_Infrastructure")
-formatter = logging.Formatter('%(asctime)s : %(name)s : [%(levelname)s] : %(message)s')
-
-#handler_critical = logging.FileHandler("log/critical.log",mode="a",encoding="utf-8")
-#handler_info = logging.StreamHandler()
-handler_debug = logging.FileHandler("log/debug.log",mode="a",encoding="utf-8")
-
-#handler_critic.setLevel(logging.CRITICAL)
-handler_debug.setLevel(logging.DEBUG)
-#handler_info.setLevel(logging.INFO)
-
-#handler_critic.setFormatter(formatter)
-handler_debug.setFormatter(formatter)
-
-logger.setLevel(logging.DEBUG)
-
-#logger.addHandler(handler_critic)
-logger.addHandler(handler_debug)
-#logger.addHandler(handler_info)
+# LOGGER CONSTRUCTION
+logger = Logger("Airnet_Infrastructure").getLog()
 
 class Phy_Port(object):
     """
@@ -132,7 +111,7 @@ class Infrastructure(object):
         self._hwAddrs = []        # POX bug ! when a link is down
         self._deleted_links = []  # [Phy_Link objects]
 
-        logger.debug("Physical infrastructure Informations Container Fully Initialized")
+        logger.debug("Physical infrastructure Container Fully Initialized")
 
     def nb(self):
         return len(self.switches.keys())

@@ -341,7 +341,7 @@ class forward(EdgePolicy):
         return "forward to " + str(self.output)
 
     def __str__(self):
-        return "forward ('{}'')" + str(self.output)
+        return "forward ('{}'')".format(self.output)
 
 
 

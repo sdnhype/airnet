@@ -19,7 +19,7 @@ class Rule(object):
         [FOR_DEBUG] Return a correct presentation of a rule
     """
     def __str__(self):
-        return "{} -- {} -- {}\n".format(self.match, self.label,str(self.actions))
+        return "{} -- {} -- {}\n".format(self.match, self.label,self.actions)
 
 class FabricRule(object):
     """
