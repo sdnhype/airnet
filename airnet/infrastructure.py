@@ -1,15 +1,15 @@
 from graph import Graph
 from lib.ipaddr import IPv4Network
 from collections import namedtuple
-import copy
 from log import Logger
+import copy
 
 # LOGGER CONSTRUCTION
 logger = Logger("Airnet_Infrastructure").getLog()
 
 class Phy_Port(object):
     """
-    Physical port
+        Physical port
     """
     def __init__(self, id, name, number, addr):
         """
@@ -23,10 +23,9 @@ class Phy_Port(object):
         self.hwAddr = addr
         self.name = name
 
-
 class Phy_Switch(object):
     """
-    physical switch
+        physical switch
     """
     def __init__(self, dpid, ports):
         """
@@ -39,7 +38,6 @@ class Phy_Switch(object):
         self.ports = ports
 
         #TODO: forwarding table ? Purpose: nothing at the moment.
-
 
 class Phy_Link(object):
     """
@@ -69,7 +67,6 @@ class Phy_Link(object):
             return True
         return False
 
-
 class Phy_Host(object):
     """
     physical host
@@ -89,19 +86,17 @@ class Phy_Host(object):
 
 class Infrastructure(object):
     """
-    physical infrastructure
+        Logical Containers are used here to describe the physical infrastructure
+        components
     """
-    _core_name = "infrastructure"
-
     def __init__(self):
         """
-            Initialize physical topology components
+            Initialize physical topology components in logical containers
 
         :hosts: dict of hosts in physical topology
-        :switches: dict of swithes in physical topology
+        :switches: dict of switches in physical topology
         :links: list of links connecting equipments
-        :_hwAddrs: ports in topology. POX HostEvent bug !!
-                        switch, edge, join --> get switch hwAddr not host!
+        :_hwAddrs: ports in topology
         """
         self.linkNum = 0          # int
         self.runtime_mode = False # prends pas ca en compte
@@ -111,7 +106,7 @@ class Infrastructure(object):
         self._hwAddrs = []        # POX bug ! when a link is down
         self._deleted_links = []  # [Phy_Link objects]
 
-        logger.debug("Physical infrastructure Container Fully Initialized")
+        logger.debug("Logical containers for physical components fully initialized")
 
     def nb(self):
         return len(self.switches.keys())
@@ -123,62 +118,80 @@ class Infrastructure(object):
         return False
 
     def _handle_SwitchJoin(self, dpid, ports):
-        assert dpid not in self.switches.keys()
+        # we assume that a new switch can't be in the list of switches
+        assert (dpid not in self.switches.keys()), "Switch-{} has already joined".format(dpid)
         switch_ports = {}
+        # for each port described in the json file
         for port in ports:
+            # we create a list of Physical Ports
             switch_ports[int(port['port_no'])] = Phy_Port(int(port['dpid'],16), port['name'],
                                                   int(port['port_no']),  port['hw_addr'])
+            # we add that port to the MAC @ list
             self._hwAddrs.append(port['hw_addr'])
+        # we create the physical switch object then
         self.switches[dpid] = Phy_Switch(dpid, switch_ports)
+        logger.debug("Switch-{} has joined ".format(dpid))
 
     def _handle_SwitchLeave(self, dpid):
-        assert dpid in self.switches.keys()
+        # we assume that only a registered switch can leave
+        assert (dpid in self.switches.keys()), "Switch-{} has not joined yet".format(dpid)
+        # for each port of the registered switch
         for port in self.switches[dpid].ports.values():
+            # delete it address from the list of hardware addresses
             for hwAddr in self._hwAddrs:
                 if hwAddr == port.hwAddr:
                     self._hwAddrs.remove(hwAddr)
+        # then delete the switch
         del self.switches[dpid]
+        logger.debug("Switch-{} has left ".format(dpid))
 
-    def _handle_LinkEvent(self, dpid1, port1, dpid2, port2, added):
-        """
-        LinkEvents are raised by POX only for switch to switch links
-        """
+    # toAdd parameter is a boolean which determines if the link is to add or to remove
+    def _handle_LinkEvent(self, dpid1, port1, dpid2, port2, toAdd):
 
         entity1 = {"type": "switch_port", "dpid": dpid1,
                    "port": port1}
         entity2 = {"type": "switch_port", "dpid": dpid2,
                    "port": port2}
+
         link = Phy_Link(entity1, entity2)
 
-        if added:
+        if toAdd:
             self.links.append(link)
-            #core.runtime.handle_topology_change()
         else:
             for lnk in self.links:
                 if lnk == link:
                     self.links.remove(lnk)
-                    #core.runtime.handle_topology_change()
 
     def _handle_host_tracker_HostEvent(self, dpid, port, macaddr, ipAddrs, join):
-        if macaddr not in self._hwAddrs:
-            if join:
-                self.hosts[macaddr] = Phy_Host(dpid, port, macaddr, ipAddrs)
-                entity1 = {"type": "host_port",
-                           "dpid": macaddr, "port": 1}
-                entity2 = {"type": "switch_port",
-                           "dpid": dpid, "port": port}
-                self.links.append(Phy_Link(entity1, entity2))
-                self.links.append(Phy_Link(entity2, entity1))
-            #else:
-                #TODO
+        entity1 = {"type": "host_port", "dpid": macaddr, "port": 1}
+        entity2 = {"type": "switch_port", "dpid": dpid, "port": port}
+
+        if join:
+            assert(macaddr not in self._hwAddrs), "Host with address {} has already joined"
+            # add a physical to the hosts dictionnary
+            self.hosts[macaddr] = Phy_Host(dpid, port, macaddr, ipAddrs)
+            # create link between host and switch (and switch to host by the same way)
+            self.links.append(Phy_Link(entity1, entity2))
+            self.links.append(Phy_Link(entity2, entity1))
+            logger.debug("Host-{} has joined ".format(macaddr))
+        else : # remove the host here
+            assert(macaddr in self._hwAddrs), "Host with address {} has not joined yet"
+            # remove from _hwAddrs
+            self._hwAddrs.remove(macaddr)
+            # remove from hosts[macaddr]
+            del self.hosts[macaddr]
+            # remove from links
+            del self.links[Phy_Link(entity1, entity2)]
+            del self.links[Phy_Link(entity2, entity1)]
+            logger.debug("Host-{} has left ".format(macaddr))
 
     def get_graph(self):
         """
         TODO: must be compatible with graph class and the algorithm
         """
-        #
+        # links
         edges = set()
-        #
+        # summits
         vertices = {}
 
         # For each host
@@ -216,15 +229,14 @@ class Infrastructure(object):
     def view(self):
         print "\n----- Switches -----"
         for switch in self.switches.values():
-            print "switch dpid {}, ports {}".format(switch.dpid,
-                                                len(switch.ports.keys()))
+            print "Switch-{}, Ports {}".format(switch.dpid, len(switch.ports.keys()))
             for port in switch.ports.values():
                 print "    {}".format(port.hwAddr)
-        print "----- Hosts -----"
+        print "\n----- Hosts -----"
         for host in self.hosts.values():
-            print "host macAddr: {}, ipAddrs: {}".format(host.hwAddr,
-                                                         host.ip_addrs.keys())
-        print "----- Links -----"
+            print "MacAddr: {}, ipAddrs: {}".format(host.hwAddr,host.ip_addrs.keys())
+
+        print "\n----- Links -----"
         for link in self.links:
             print ("(dpid: {}, port: {}) /"
                    " (dpid: {}, port: {})".format(link.entity1["dpid"],
@@ -253,7 +265,6 @@ class Infrastructure(object):
             for adjacent_edge in adjacent_edges:
                 if (adjacent_edge[1] == hwAddr.toStr()):
                     return output(edge_key, adjacent_edge[2])
-
 
     def resolve_ARP_request(self, packet):
 

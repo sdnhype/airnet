@@ -2,11 +2,8 @@
 Code executed by AirNet to interact with a remote RYU controller
 (via REST API)
 """
-import httplib
-import json
 from language import identity, forward, modify, match
-import ast
-import pdb
+import ast, pdb, httplib, json
 
 ARP_REQUEST = 1
 ARP_REPLY = 2

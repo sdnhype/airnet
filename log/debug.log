@@ -1,37 +1,12 @@
-2017-04-10 09:40:11,254 : Airnet_Infrastructure : [DEBUG] : Physical infrastructure Container Fully Initialized
-2017-04-10 09:40:11,254 : Airnet_Runtime : [INFO] : Starting Compilation --
-2017-04-10 09:40:11,254 : Airnet_Runtime : [DEBUG] : Obtaining Control Program -- toyExample.toyExample
-2017-04-10 09:40:11,254 : Airnet_Runtime : [DEBUG] : Obtaining Mapping Program -- toyExample.toyExample_mapping
-2017-04-10 09:40:11,255 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
-2017-04-10 09:40:11,255 : Airnet_Runtime : [DEBUG] : Getting Virtual Topology
-2017-04-10 09:40:11,255 : Airnet_Runtime : [DEBUG] : Getting Edge Policies
-2017-04-10 09:40:11,255 : Airnet_Runtime : [DEBUG] : Compiling Edge Policies Main Module
-2017-04-10 09:40:11,256 : Airnet_Runtime : [DEBUG] : Edge Rules Generated : 
-
-****
-match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([forward to HA])
-match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB])
-match {'nw_proto': 1, 'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to Fabric])
-match {'nw_proto': 1, 'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to Fabric])
-identity -- identity -- set([])
-****
-
-2017-04-10 09:40:11,257 : Airnet_Runtime : [DEBUG] : Compiling Fabric Policies Main Module
-2017-04-10 09:40:11,257 : Airnet_Runtime : [DEBUG] : Fabric Rules Generated : ************
-fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
-fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
-************
-
-2017-04-10 09:40:11,257 : Airnet_Runtime : [INFO] : Compilation finished -- Duration == 3
-2017-04-10 09:42:42,912 : Airnet_Infrastructure : [DEBUG] : Physical infrastructure Container Fully Initialized
-2017-04-10 09:42:42,913 : Airnet_Runtime : [INFO] : Starting Compilation --
-2017-04-10 09:42:42,913 : Airnet_Runtime : [DEBUG] : Obtaining Control Program -- toyExample.toyExample
-2017-04-10 09:42:42,914 : Airnet_Runtime : [DEBUG] : Obtaining Mapping Program -- toyExample.toyExample_mapping
-2017-04-10 09:42:42,914 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
-2017-04-10 09:42:42,914 : Airnet_Runtime : [DEBUG] : Getting Virtual Topology
-2017-04-10 09:42:42,914 : Airnet_Runtime : [DEBUG] : Getting Edge Policies
-2017-04-10 09:42:42,915 : Airnet_Runtime : [DEBUG] : Compiling Edge Policies Main Module
-2017-04-10 09:42:42,916 : Airnet_Runtime : [DEBUG] : Edge Rules Generated : ************
+2017-04-10 12:42:37,127 : Airnet_Infrastructure : [DEBUG] : Logical containers for physical components fully initialized
+2017-04-10 12:42:37,127 : Airnet_Runtime : [INFO] : Starting Compilation --
+2017-04-10 12:42:37,127 : Airnet_Runtime : [DEBUG] : Obtaining Control Program -- toyExample.toyExample
+2017-04-10 12:42:37,128 : Airnet_Runtime : [DEBUG] : Obtaining Mapping Program -- toyExample.toyExample_mapping
+2017-04-10 12:42:37,128 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
+2017-04-10 12:42:37,128 : Airnet_Runtime : [DEBUG] : Getting Virtual Topology
+2017-04-10 12:42:37,128 : Airnet_Runtime : [DEBUG] : Getting Edge Policies
+2017-04-10 12:42:37,129 : Airnet_Runtime : [DEBUG] : Compiling Edge Policies Main Module
+2017-04-10 12:42:37,130 : Airnet_Runtime : [DEBUG] : Edge Rules Generated : ************
 match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([forward to HA])
 match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB])
 match {'nw_proto': 1, 'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to Fabric])
@@ -39,15 +14,106 @@ match {'nw_proto': 1, 'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -
 identity -- identity -- set([])
 ************
 
-2017-04-10 09:42:42,916 : Airnet_Runtime : [DEBUG] : Compiling Fabric Policies Main Module
-2017-04-10 09:42:42,916 : Airnet_Runtime : [DEBUG] : Fabric Rules Generated : ************
+2017-04-10 12:42:37,130 : Airnet_Runtime : [DEBUG] : Compiling Fabric Policies Main Module
+2017-04-10 12:42:37,130 : Airnet_Runtime : [DEBUG] : Fabric Rules Generated : ************
 fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
 fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
 ************
 
-2017-04-10 09:42:42,916 : Airnet_Runtime : [INFO] : Compilation finished -- Duration == 4
-2017-04-10 09:44:41,750 : Airnet_Runtime : [INFO] : start enforcing policies -- Time == 1491810281751
-2017-04-10 09:44:41,751 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
-2017-04-10 09:44:41,755 : Airnet_Runtime : [INFO] : number of rules initially installed == 8
-2017-04-10 09:44:41,772 : Airnet_Runtime : [INFO] : policies enforcing finished -- Time == 1491810281773
-2017-04-10 09:44:41,772 : Airnet_Runtime : [INFO] : enforcing proactive rules DURATION== 22
+2017-04-10 12:42:37,130 : Airnet_Runtime : [INFO] : Compilation finished -- Duration == 3
+2017-04-10 12:42:41,933 : Airnet_Infrastructure : [DEBUG] : Switch-1 has joined 
+2017-04-10 12:42:41,988 : Airnet_Infrastructure : [DEBUG] : Switch-2 has joined 
+2017-04-10 12:42:42,042 : Airnet_Infrastructure : [DEBUG] : Switch-3 has joined 
+2017-04-10 12:42:42,098 : Airnet_Infrastructure : [DEBUG] : Switch-4 has joined 
+2017-04-10 12:42:42,163 : Airnet_Infrastructure : [DEBUG] : Host-9e:ed:e3:b5:de:14 has joined 
+2017-04-10 12:42:43,192 : Airnet_Infrastructure : [DEBUG] : Host-7e:08:6e:b6:d8:4c has joined 
+2017-04-10 12:42:53,202 : Airnet_Runtime : [INFO] : start enforcing policies -- Time == 1491820973203
+2017-04-10 12:42:53,203 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
+2017-04-10 12:42:53,208 : Airnet_Runtime : [INFO] : number of rules initially installed == 8
+2017-04-10 12:42:53,226 : Airnet_Runtime : [INFO] : policies enforcing finished -- Time == 1491820973227
+2017-04-10 12:42:53,227 : Airnet_Runtime : [INFO] : enforcing proactive rules DURATION== 24
+2017-04-10 13:43:52,224 : Airnet_Infrastructure : [DEBUG] : Logical containers for physical components fully initialized
+2017-04-10 13:43:52,224 : Airnet_Runtime : [INFO] : Starting Compilation --
+2017-04-10 13:43:52,224 : Airnet_Runtime : [DEBUG] : Obtaining Control Program -- toyExample.toyExample
+2017-04-10 13:43:52,225 : Airnet_Runtime : [DEBUG] : Obtaining Mapping Program -- toyExample.toyExample_mapping
+2017-04-10 13:43:52,225 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
+2017-04-10 13:43:52,225 : Airnet_Runtime : [DEBUG] : Getting Virtual Topology
+2017-04-10 13:43:52,225 : Airnet_Runtime : [DEBUG] : Getting Edge Policies
+2017-04-10 13:43:52,226 : Airnet_Runtime : [DEBUG] : Compiling Edge Policies Main Module
+2017-04-10 13:43:52,227 : Airnet_Runtime : [DEBUG] : Edge Rules Generated : ************
+match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([forward to HA])
+match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB])
+match {'nw_proto': 1, 'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to Fabric])
+match {'nw_proto': 1, 'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to Fabric])
+identity -- identity -- set([])
+************
+
+2017-04-10 13:43:52,227 : Airnet_Runtime : [DEBUG] : Compiling Fabric Policies Main Module
+2017-04-10 13:43:52,227 : Airnet_Runtime : [DEBUG] : Fabric Rules Generated : ************
+fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+************
+
+2017-04-10 13:43:52,227 : Airnet_Runtime : [INFO] : Compilation finished -- Duration == 2
+2017-04-10 13:43:57,034 : Airnet_Infrastructure : [DEBUG] : Switch-1 has joined 
+2017-04-10 13:43:57,039 : Airnet_Infrastructure : [DEBUG] : Switch-2 has joined 
+2017-04-10 13:43:57,050 : Airnet_Infrastructure : [DEBUG] : Switch-3 has joined 
+2017-04-10 13:43:57,064 : Airnet_Infrastructure : [DEBUG] : Switch-4 has joined 
+2017-04-10 13:43:57,085 : Airnet_Infrastructure : [DEBUG] : Host-0e:30:84:10:b7:2f has joined 
+2017-04-10 13:43:58,122 : Airnet_Infrastructure : [DEBUG] : Host-f6:19:6f:83:f6:76 has joined 
+2017-04-10 13:44:08,125 : Airnet_Runtime : [INFO] : start enforcing policies -- Time == 1491824648125
+2017-04-10 13:44:08,125 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
+2017-04-10 13:44:08,130 : Airnet_Runtime : [INFO] : number of rules initially installed == 8
+2017-04-10 13:44:08,148 : Airnet_Runtime : [INFO] : policies enforcing finished -- Time == 1491824648149
+2017-04-10 13:44:08,148 : Airnet_Runtime : [INFO] : enforcing proactive rules DURATION== 23
+2017-04-10 13:44:23,623 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
+2017-04-10 13:44:23,628 : Airnet_Runtime : [INFO] : number of modified rules == 0
+2017-04-10 13:44:23,628 : Airnet_Runtime : [INFO] : number of new installed rules == 0
+2017-04-10 13:44:23,628 : Airnet_Runtime : [INFO] : number of deleted rules == 2
+2017-04-10 13:44:23,637 : Airnet_Runtime : [INFO] : diffLists enforcing finished -- Time == 1491824663637
+2017-04-10 13:44:23,639 : Airnet_Runtime : [INFO] : enforcing diffLists DURATION == 1491824663640
+2017-04-10 13:44:23,646 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
+2017-04-10 13:44:23,650 : Airnet_Runtime : [INFO] : number of modified rules == 0
+2017-04-10 13:44:23,650 : Airnet_Runtime : [INFO] : number of new installed rules == 0
+2017-04-10 13:44:23,650 : Airnet_Runtime : [INFO] : number of deleted rules == 2
+2017-04-10 13:44:23,655 : Airnet_Runtime : [INFO] : diffLists enforcing finished -- Time == 1491824663655
+2017-04-10 13:44:23,655 : Airnet_Runtime : [INFO] : enforcing diffLists DURATION == 1491824663655
+2017-04-10 13:44:23,849 : Airnet_Infrastructure : [DEBUG] : Switch-4 has left 
+2017-04-10 13:44:23,858 : Airnet_Infrastructure : [DEBUG] : Switch-3 has left 
+2017-04-10 13:44:23,865 : Airnet_Infrastructure : [DEBUG] : Switch-2 has left 
+2017-04-10 13:44:23,879 : Airnet_Infrastructure : [DEBUG] : Switch-1 has left 
+2017-04-10 13:46:56,546 : Airnet_Infrastructure : [DEBUG] : Logical containers for physical components fully initialized
+2017-04-10 13:46:56,547 : Airnet_Runtime : [INFO] : Starting Compilation --
+2017-04-10 13:46:56,547 : Airnet_Runtime : [DEBUG] : Obtaining Control Program -- toyExample.toyExample
+2017-04-10 13:46:56,547 : Airnet_Runtime : [DEBUG] : Obtaining Mapping Program -- toyExample.toyExample_mapping
+2017-04-10 13:46:56,547 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
+2017-04-10 13:46:56,548 : Airnet_Runtime : [DEBUG] : Getting Virtual Topology
+2017-04-10 13:46:56,548 : Airnet_Runtime : [DEBUG] : Getting Edge Policies
+2017-04-10 13:46:56,548 : Airnet_Runtime : [DEBUG] : Compiling Edge Policies Main Module
+2017-04-10 13:46:56,550 : Airnet_Runtime : [DEBUG] : Edge Rules Generated : ************
+match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([forward to HA])
+match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB])
+match {'nw_proto': 1, 'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to Fabric])
+match {'nw_proto': 1, 'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to Fabric])
+identity -- identity -- set([])
+************
+
+2017-04-10 13:46:56,550 : Airnet_Runtime : [DEBUG] : Compiling Fabric Policies Main Module
+2017-04-10 13:46:56,550 : Airnet_Runtime : [DEBUG] : Fabric Rules Generated : ************
+fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+************
+
+2017-04-10 13:46:56,550 : Airnet_Runtime : [INFO] : Compilation finished -- Duration == 3
+2017-04-10 13:47:01,102 : Airnet_Infrastructure : [DEBUG] : Switch-1 has joined 
+2017-04-10 13:47:01,162 : Airnet_Infrastructure : [DEBUG] : Switch-2 has joined 
+2017-04-10 13:47:01,231 : Airnet_Infrastructure : [DEBUG] : Switch-3 has joined 
+2017-04-10 13:47:01,284 : Airnet_Infrastructure : [DEBUG] : Switch-4 has joined 
+2017-04-10 13:47:01,355 : Airnet_Infrastructure : [DEBUG] : Host-8e:6c:ee:11:0d:a6 has joined 
+2017-04-10 13:47:02,394 : Airnet_Infrastructure : [DEBUG] : Host-9e:f5:02:f5:42:bd has joined 
+2017-04-10 13:47:12,233 : Airnet_Infrastructure : [DEBUG] : Switch-4 has left 
+2017-04-10 13:47:12,238 : Airnet_Infrastructure : [DEBUG] : Switch-3 has left 
+2017-04-10 13:47:12,254 : Airnet_Infrastructure : [DEBUG] : Switch-2 has left 
+2017-04-10 13:47:12,279 : Airnet_Infrastructure : [DEBUG] : Switch-1 has left 
+2017-04-10 13:47:12,402 : Airnet_Runtime : [INFO] : start enforcing policies -- Time == 1491824832402
+2017-04-10 13:47:12,402 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized

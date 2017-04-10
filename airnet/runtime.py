@@ -1,18 +1,13 @@
 from ryu_client import RyuClient
 from importlib import import_module
-import copy
-from language import identity
-from language import forward, drop, CompositionPolicy, match, DataFctPolicy, NetworkFunction, Policy, DynamicPolicy
+from language import identity, forward, drop, CompositionPolicy, match, DataFctPolicy, NetworkFunction, Policy, DynamicPolicy
 from classifier import Rule
 from collections import namedtuple
 from lib.ipaddr import IPv4Network
-from collections import namedtuple
 from tools import match_from_packet, countOfMessages
 from threading import Timer
 from log import Logger
-import time
-import logging
-import pdb
+import copy, time, logging, pdb
 
 #TODO: in_port field
 #TODO: routing inside edge's switch and between edges
@@ -150,13 +145,12 @@ class Runtime():
     """
     _core_name = "runtime"
 
-    # def __init__(self, control_program, mapping_program):
     # EDIT Telly: adding infra
     def __init__(self, control_program, mapping_program, infra, controller):
         #TODO: put all global variables here.
         #mapping information
 
-        logger.info("Starting Compilation --")
+        logger.info("Compilation Started --")
         _compilation_duration = int(round(time.time() * 1000))
 
         logger.debug("Obtaining Control Program -- {}".format(control_program))
@@ -218,7 +212,7 @@ class Runtime():
 
         _compilation_duration = int(round(time.time() * 1000)) - _compilation_duration
         #logger.info("Compilation finished -- Time == " + str(int(round(time.time() * 1000))))
-        logger.info("Compilation finished -- Duration == " + str(_compilation_duration))
+        logger.info("Compilation Finished -- Duration == " + str(_compilation_duration) + "ms")
 
 
     def resolve_match_headers(self, policy):
@@ -1149,14 +1143,16 @@ class Runtime():
 
     def enforce_policies(self):
         """
-        Main proactive function
+            Main proactive function
         """
-        logger.info("start enforcing policies -- Time == " + str(int(round(time.time() * 1000))))
+        logger.info("Enforcing Proactive Policies Started -- Time == " + str(int(round(time.time() * 1000))))
         _enforcing_duration = int(round(time.time() * 1000))
+
         graph = self.infra.get_graph()
         self.topology_graph = self.resolve_graph_hosts(graph)
         self.physical_switches_classifiers = {}
-        #edge means point, not virtual edge.
+
+        # edge means point or summit, not virtual edge.
         for edge in self.topology_graph.edges:
             # verify that the edge is a switch, not a host
             if edge[1] == "switch":
@@ -1669,8 +1665,3 @@ class Runtime():
         for bucket in self.buckets:
             if bucket.type == "stat":
                 bucket.timer.stop()
-
-# launch function for POX
-def launch(control_program, mapping_program):
-    infra = Infrastructure()
-    core.registerNew(Runtime, control_program, mapping_program, infra, "POX")
