@@ -19,7 +19,7 @@ class Rule(object):
         [FOR_DEBUG] Return a correct presentation of a rule
     """
     def __str__(self):
-        return "{} -- {} -- {}\n".format(self.match, self.label,self.actions)
+        return "{} -- {} -- {}".format(self.match, self.label,self.actions)
 
 class FabricRule(object):
     """
@@ -34,7 +34,7 @@ class FabricRule(object):
         [FOR_DEBUG] Return a correct presentation of a rule
     """
     def __str__(self):
-        return "{} -- {} -- {}\n".format(self.flow,str(self.actions), str(self.via_list))
+        return "{} -- {} -- {}".format(self.flow,str(self.actions), str(self.via_list))
 
 class Classifier(object):
     """
@@ -64,7 +64,7 @@ class Classifier(object):
     def getLogRules(self):
         str_Rules = ""
         for rule in self.rules:
-            str_Rules += str(rule)
+            str_Rules = str_Rules + str(rule) + "\n"
         return str_Rules
 
 
@@ -296,7 +296,7 @@ class FabricClassifier(object):
     def getLogRules(self):
         str_Rules = ""
         for rule in self.rules:
-            str_Rules += str(rule)
+            str_Rules = str_Rules + str(rule) + "\n"
         return str_Rules
 
     # FabricClassifiers Fusion

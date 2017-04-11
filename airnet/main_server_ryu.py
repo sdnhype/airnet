@@ -104,7 +104,8 @@ def handle_packet_in():
 	return 'OK'
 
 def test():
-	time.sleep(10)
+	#time.sleep(10)
+	time.sleep(2)
 	runtime.infra.view()
 	runtime.enforce_policies()
 
