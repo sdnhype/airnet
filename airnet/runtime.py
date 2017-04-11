@@ -482,18 +482,13 @@ class Runtime():
 
         self.policies_to_physical_rules(self.edge_policies, self.physical_switches_classifiers)
 
+        self.physical_switches_classifiers = self.opt_physical_classifires(self.physical_switches_classifiers)
+
         # For debug
-        logger.debug("\n\n *** Rules Before Composition ")
+        logger.debug("\n\n *** Physical Rules Generated ")
         for edge in self.topology_graph.edges :
             if edge[1] == "switch":
                 logger.debug("\n ----- %s Rules : \n%s" % (edge[0], "\n".join([str(j) for j in self.physical_switches_classifiers[edge[0]]])))
-
-        self.physical_switches_classifiers = self.opt_physical_classifires(self.physical_switches_classifiers)
-
-        logger.debug("\n\n *** Rules After Composition ")
-        for edge in self.topology_graph.edges :
-            if edge[1] == "switch":
-                logger.debug("\n ----- %s Rules : %s" % (edge[0], "\n".join([str(j) for j in self.physical_switches_classifiers[edge[0]]])))
 
         logger.info("\n# Rules Initially Installed == " + str(countOfMessages(self.physical_switches_classifiers)))
         self.nexus.install_rules_on_dp(self.physical_switches_classifiers)
