@@ -1,46 +1,28 @@
 """
-Send events to AirNet via REST API (thanks to rest_client.py module)
-(switch enter, switch leave, link add, host add, etc.)
-and also RYU's REST API
-EDIT Telly Diallo: Adding  /stats/send  URI  (POST method)
-URI linked to send_packet() function to generate an OF Packet-Out message (by relying on the packet_parser utility class)
+    Send events to AirNet via REST API (thanks to rest_client.py module)
+    (switch enter, switch leave, link add, host add, etc.)
+    and also RYU's REST API
+    EDIT Telly Diallo: Adding  /stats/send  URI  (POST method)
+    URI linked to send_packet() function to generate an OF Packet-Out message (by relying on the packet_parser utility class)
 """
 
-import logging
-
-import json
-import ast
 # HTTP/JSON Response
 from webob import Response
-
 from ryu.base import app_manager
-from ryu.controller import ofp_event
-from ryu.controller import dpset
-from ryu.controller.handler import MAIN_DISPATCHER
-from ryu.controller.handler import set_ev_cls
-from ryu.ofproto import ofproto_v1_0
-from ryu.ofproto import ofproto_v1_2
-from ryu.ofproto import ofproto_v1_3
-from ryu.ofproto import ofproto_v1_4
-from ryu.lib import ofctl_v1_0
-from ryu.lib import ofctl_v1_2
-from ryu.lib import ofctl_v1_3
-from ryu.lib import ofctl_v1_4
-"""
-    ControllerBase ??
-"""
+from ryu.controller import ofp_event, dpset
+from ryu.controller.handler import MAIN_DISPATCHER, set_ev_cls
+from ryu.ofproto import ofproto_v1_0, ofproto_v1_2, ofproto_v1_3, ofproto_v1_4
+from ryu.lib import ofctl_v1_0, ofctl_v1_2, ofctl_v1_3, ofctl_v1_4
 from ryu.app.wsgi import ControllerBase, WSGIApplication
-
 from ryu.topology import event, switches
 from rest_client import RyuTopologyClient
 from ryu.lib.packet import packet,ethernet,ether_types
-
 from packetParser import PacketParser
+from log import Logger
+import logging, json, ast
 
-"""
-    ??
-"""
-LOG = logging.getLogger('ryu.app.ofctl_rest')
+#LOG = logging.getLogger('ryu.app.ofctl_rest')
+logger = Logger("airnet_interface").getLog()
 
 # supported ofctl versions in this restful app
 supported_ofctl = {
@@ -63,47 +45,31 @@ class StatsController(ControllerBase):
     """
 
     def __init__(self, req, link, data, **config):
-        """
-            ??
-        """
         super(StatsController, self).__init__(req, link, data, **config)
+
         # get the set of switches managed by the controller
         self.dpset = data['dpset']
-        """
-            ??
-        """
         self.waiters = data['waiters']
 
     def get_flow_stats(self, req, dpid, **_kwargs):
-
-        """
-            Requete vide ??
-        """
-
         if req.body == '':
             flow = {}
-
         else:
-
             try:
                 # Python syntax verification
                 flow = ast.literal_eval(req.body)
-
             except SyntaxError:
-                LOG.debug('invalid syntax %s', req.body)
+                logger.debug('Invalid syntax %s', req.body)
                 return Response(status=400)
 
         # Invalid type of switch # (dapath id)
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('Invalid dpid %s', dpid)
             return Response(status=400)
 
         # datapath object obtained from the dpid field
         dp = self.dpset.get(int(dpid))
 
-        """
-
-        """
         if dp is None:
             return Response(status=404)
 
@@ -114,18 +80,11 @@ class StatsController(ControllerBase):
         _ofctl = supported_ofctl.get(_ofp_version, None)
 
         if _ofctl is not None:
-            """
-                ??
-            """
             flows = _ofctl.get_flow_stats(dp, self.waiters, flow)
-
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
-        """
-
-        """
         body = json.dumps(flows)
         return Response(content_type='application/json', body=body)
 
@@ -281,6 +240,7 @@ class RestStatsApi(app_manager.RyuApp):
 
         super(RestStatsApi, self).__init__(*args, **kwargs)
 
+        # REST Server Parameters
         self.client = RyuTopologyClient('localhost',9000)
 
         self.dpset = kwargs['dpset']
@@ -324,37 +284,48 @@ class RestStatsApi(app_manager.RyuApp):
 
     @set_ev_cls(event.EventSwitchEnter)
     def _event_switch_enter_handler(self, ev):
+        logger.debug("*** Switch-{} Entering ".format(ev.switch.dp.id))
+
+        # convert switch object informations to a dict
         msg = ev.switch.to_dict()
+
+        logger.debug("\n{}".format("\n".join([str(porti) for porti in msg['ports']])))
         self.client.switchEnter(msg)
 
     @set_ev_cls(event.EventSwitchLeave)
     def _event_switch_leave_handler(self, ev):
+        logger.debug("*** Switch-{} Leaving ".format(ev.switch.dp.id))
         msg = ev.switch.to_dict()
         self.client.switchLeave(msg)
 
     @set_ev_cls(event.EventLinkAdd)
     def _event_link_add_handler(self, ev):
+        logger.debug("*** Adding Link \n{}".format(str(ev.link)))
         msg = ev.link.to_dict()
         self.client.linkAdd(msg)
 
     @set_ev_cls(event.EventLinkDelete)
     def _event_link_delete_handler(self, ev):
+        logger.debug("*** Deleting Link \n{}".format(str(ev.link)))
         msg = ev.link.to_dict()
         self.client.linkDelete(msg)
 
     @set_ev_cls(event.EventHostAdd)
     def _event_host_add_handler(self, ev):
+        logger.debug("*** Host {} Entering ".format(str(ev.host.mac)))
         msg = ev.host.to_dict()
         self.client.hostAdd(msg)
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
-
+        # get the msg
         msg = ev.msg
+        # get the packet information
         pkt = packet.Packet(data=msg.data)
+        # get the layer 2 header
         eth = pkt.get_protocol(ethernet.ethernet)
 
-        # on ignore tout ce qui est LLDP
+        # ignore LLDP packets
         if eth.ethertype == ether_types.ETH_TYPE_LLDP:
             return
 
@@ -362,24 +333,35 @@ class RestStatsApi(app_manager.RyuApp):
 
         global id_packet
         global packets
+
+        # get the switch which send the packet
         datapath = msg.datapath
+        # get the switch's id
         dpid = datapath.id
+        #
         port = msg.in_port
+        # Initialize a dictionnary
         data = {}
+        # Fulfill it with the switch information
         data['dpid'] = dpid
         data['port'] = port
+
+        # if it's an arp packet
         if eth.ethertype == ether_types.ETH_TYPE_ARP:
-            print("[DEBUG] PACKET_IN received from sw " + str(dpid) + ": ARP packet")
+            logger.debug("PACKET_IN : Received an ARP packet from sw-{}".format(str(dpid)))
+            # convert the arp packet into a dictionnary
             data['packet'] = parser.arp_to_dict(pkt)
         else:
-            print("[DEBUG] PACKET_IN received from sw " + str(dpid) + ": IP packet")
+            logger.debug("PACKET_IN : Received an IP packet from sw-{}".format(str(dpid)))
             data['packet'] = parser.packet_to_dict(pkt)
+            # Packet Numbering
             data['id_packet'] = id_packet
+            # Packet Storage
             packets[id_packet] = msg
             id_packet = id_packet + 1
+        # Packet contents are formatted in json
         data = json.dumps(data)
-        # debug
-        print(data)
+        logger.debug("{}".format(data))
         self.client.packetIn(data)
 
     @set_ev_cls([ofp_event.EventOFPStatsReply,
@@ -399,6 +381,7 @@ class RestStatsApi(app_manager.RyuApp):
                  ofp_event.EventOFPGroupDescStatsReply,
                  ofp_event.EventOFPPortDescStatsReply
                  ], MAIN_DISPATCHER)
+
     def stats_reply_handler(self, ev):
         msg = ev.msg
         dp = msg.datapath

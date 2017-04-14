@@ -91,6 +91,7 @@ class Classifier(object):
                         part2 = str(r2.label)
                         errorMsg = "tag intersection error: " + part1 + " and " + part2
                         raise AssertionError(errorMsg)
+                # there is a mistake here
                 else:
                     if r1.label is identity:
                         label = r2.label

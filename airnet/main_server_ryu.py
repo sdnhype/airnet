@@ -25,7 +25,7 @@ f2 = sys.argv[2]
 # launch the runtime module (goto -> runtime.py)
 runtime = Runtime(f1,f2,infra,"RYU")
 
-# switch entering event
+# received a switch enter event from ryu
 @app.route('/Topo/Switch/enter',methods = ['POST'])
 def handle_switch_enter():
 	# get the content of json file received
@@ -37,7 +37,7 @@ def handle_switch_enter():
 	infra._handle_SwitchJoin(dpid,ports)
 	return 'OK'
 
-# switch leaving event
+# received a switch leave event from ryu
 @app.route('/Topo/Switch/leave',methods = ['POST'])
 def handle_switch_leave():
 	data = request.json
@@ -45,7 +45,7 @@ def handle_switch_leave():
 	infra._handle_SwitchLeave(dpid)
 	return 'OK'
 
-# switch to switch link add event
+# received a switch-to-switch link add event from ryu
 @app.route('/Topo/Link/add',methods = ['POST'])
 def handle_link_add():
 	data = request.json
@@ -62,6 +62,7 @@ def handle_link_add():
 		runtime.handle_topology_change()
 	return 'OK'
 
+# received a switch-to-switch link deletion event from ryu
 @app.route('/Topo/Link/delete',methods = ['POST'])
 def handle_link_delete():
 	data = request.json
@@ -76,6 +77,7 @@ def handle_link_delete():
 		runtime.handle_topology_change()
 	return 'OK'
 
+# received a host add event from ryu
 @app.route('/Topo/Host/add',methods = ['POST'])
 def handle_host_add():
 	data = request.json
@@ -96,6 +98,7 @@ def handle_host_add():
 		thread.start_new_thread(test,())
 	return 'OK'
 
+# received a packet in event from ryu
 @app.route('/Topo/Packet/in',methods = ['POST'])
 def handle_packet_in():
 	if runtime.nexus.runtime_mode:

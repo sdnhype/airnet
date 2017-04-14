@@ -1,7 +1,5 @@
 from tools import *
 from lib.ipaddr import IPv4Network
-# TODO replace POX's IPAddr class by another one... ?
-# from pox.lib.addresses import IPAddr
 from lib.addresses import IPAddr
 from classifier import Classifier, Rule, FabricRule, FabricClassifier
 import pdb
@@ -568,6 +566,8 @@ class DynamicPolicy(NetworkFunction):
         print(type(self.callback))
         return self.callback(packet, **self.callback_kwargs)
 
+    def __repr__(self):
+        return "DynamicPolicy()"
 
 def DataFct(**decorator_kwargs):
     def data_fct_decorator(fct ):
@@ -695,7 +695,6 @@ class via(FabricPolicy):
 class CompositionPolicy(EdgePolicy):
     """
     Abstract class for policy composition (edge and fabric)
-
     :param policies: the policies ( a list) to be combined
     """
     def __init__(self, policies):

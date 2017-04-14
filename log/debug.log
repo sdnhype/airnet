@@ -1,146 +1,98 @@
-2017-04-11 14:27:39,612 : Airnet_Infrastructure : [DEBUG] : Logical containers for physical components fully initialized
-2017-04-11 14:27:39,612 : Airnet_Runtime : [INFO] : Compilation Started --
-2017-04-11 14:27:39,612 : Airnet_Runtime : [DEBUG] : Obtaining Control Program -- toyExample.toyExample_bis
-2017-04-11 14:27:39,613 : Airnet_Runtime : [DEBUG] : Obtaining Mapping Program -- toyExample.toyExample_mapping
-2017-04-11 14:27:39,613 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
-2017-04-11 14:27:39,613 : Airnet_Runtime : [DEBUG] : Getting Virtual Topology
-2017-04-11 14:27:39,613 : Airnet_Runtime : [DEBUG] : Getting Edge Policies
-2017-04-11 14:27:39,614 : Airnet_Runtime : [DEBUG] : Compiling Edge Policies Main Module
-2017-04-11 14:27:39,615 : Airnet_Runtime : [DEBUG] : Edge Rules Generated : 
+2017-04-14 11:34:02,512 : Airnet_Infrastructure : [DEBUG] : Logical containers for physical components fully initialized
+2017-04-14 11:34:02,512 : Airnet_Runtime : [INFO] : Compilation Started --
+2017-04-14 11:34:02,512 : Airnet_Runtime : [DEBUG] : Obtaining Control Program -- statThreeEdges.statThreeEdges
+2017-04-14 11:34:02,514 : Airnet_Runtime : [DEBUG] : Obtaining Mapping Program -- statThreeEdges.statThreeEdges_mapping
+2017-04-14 11:34:02,515 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
+2017-04-14 11:34:02,515 : Airnet_Runtime : [DEBUG] : Getting Virtual Topology
+2017-04-14 11:34:02,515 : Airnet_Runtime : [DEBUG] : Getting Edge Policies
+2017-04-14 11:34:02,517 : Airnet_Runtime : [DEBUG] : Compiling Edge Policies Main Module
+2017-04-14 11:34:02,701 : Airnet_Runtime : [DEBUG] : Edge Rules Generated : 
 ************
-match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([forward to HA])
-match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB])
-match {'edge': 'E1', 'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to Fabric])
-match {'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to Fabric])
-match {'edge': 'E1', 'nw_src': '10.0.0.11', 'tp_dst': 80} -- identity -- set([])
-match {'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==flow_out -- set([forward to Fabric])
+match {'dl_dst': '00:00:00:00:00:01', 'edge': 'E1', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to A, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:01', 'edge': 'E1', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to A, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:01', 'edge': 'E1', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to A, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:01', 'edge': 'E1'} -- identity -- set([forward to A])
+match {'dl_dst': '00:00:00:00:00:02', 'edge': 'E1', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to B, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:02', 'edge': 'E1', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to B, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:02', 'edge': 'E1', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to B, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:02', 'edge': 'E1'} -- identity -- set([forward to B])
+match {'dl_dst': '00:00:00:00:00:03', 'edge': 'E1', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to C, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:03', 'edge': 'E1', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to C, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:03', 'edge': 'E1', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to C, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:03', 'edge': 'E1'} -- identity -- set([forward to C])
+match {'dl_dst': '00:00:00:00:00:04', 'edge': 'E2', 'nw_dst': '10.0.0.4'} -- identity -- set([DynamicPolicy(), forward to D])
+match {'dl_dst': '00:00:00:00:00:04', 'edge': 'E2', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to D, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:04', 'edge': 'E2', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to D, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:04', 'edge': 'E2'} -- identity -- set([forward to D])
+match {'dl_dst': '00:00:00:00:00:05', 'edge': 'E2', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to E, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:05', 'edge': 'E2', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to E, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:05', 'edge': 'E2', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to E, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:05', 'edge': 'E2'} -- identity -- set([forward to E])
+match {'dl_dst': '00:00:00:00:00:06', 'edge': 'E2', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to F, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:06', 'edge': 'E2', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to F, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:06', 'edge': 'E2', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to F, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:06', 'edge': 'E2'} -- identity -- set([forward to F])
+match {'dl_dst': '00:00:00:00:00:07', 'edge': 'E3', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to G, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:07', 'edge': 'E3', 'nw_dst': '10.0.0.8'} -- identity -- set([DynamicPolicy(), forward to G])
+match {'dl_dst': '00:00:00:00:00:07', 'edge': 'E3', 'nw_dst': '10.0.0.9'} -- identity -- set([DynamicPolicy(), forward to G])
+match {'dl_dst': '00:00:00:00:00:07', 'edge': 'E3'} -- identity -- set([forward to G])
+match {'dl_dst': '00:00:00:00:00:08', 'edge': 'E3', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to H, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:08', 'edge': 'E3', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to H, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:08', 'edge': 'E3', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to H, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:08', 'edge': 'E3'} -- identity -- set([forward to H])
+match {'dl_dst': '00:00:00:00:00:09', 'edge': 'E3', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to I, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:09', 'edge': 'E3', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to I, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:09', 'edge': 'E3', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to I, DynamicPolicy()])
+match {'dl_dst': '00:00:00:00:00:09', 'edge': 'E3'} -- identity -- set([forward to I])
+match {'edge': 'E2', 'nw_dst': '10.0.0.1'} -- flowID==for_A -- set([forward to FAB])
+match {'edge': 'E3', 'nw_dst': '10.0.0.1'} -- flowID==for_A -- set([forward to FAB])
+match {'edge': 'E2', 'nw_dst': '10.0.0.2'} -- flowID==for_B -- set([forward to FAB])
+match {'edge': 'E3', 'nw_dst': '10.0.0.2'} -- flowID==for_B -- set([forward to FAB])
+match {'edge': 'E2', 'nw_dst': '10.0.0.3'} -- flowID==for_C -- set([forward to FAB])
+match {'edge': 'E3', 'nw_dst': '10.0.0.3'} -- flowID==for_C -- set([forward to FAB])
+match {'edge': 'E1', 'nw_dst': '10.0.0.4'} -- flowID==for_D -- set([forward to FAB])
+match {'edge': 'E3', 'nw_dst': '10.0.0.4'} -- flowID==for_D -- set([forward to FAB])
+match {'edge': 'E1', 'nw_dst': '10.0.0.5'} -- flowID==for_E -- set([forward to FAB])
+match {'edge': 'E3', 'nw_dst': '10.0.0.5'} -- flowID==for_E -- set([forward to FAB])
+match {'edge': 'E1', 'nw_dst': '10.0.0.6'} -- flowID==for_F -- set([forward to FAB])
+match {'edge': 'E3', 'nw_dst': '10.0.0.6'} -- flowID==for_F -- set([forward to FAB])
+match {'edge': 'E2', 'nw_dst': '10.0.0.7'} -- flowID==for_G -- set([forward to FAB])
+match {'edge': 'E1', 'nw_dst': '10.0.0.7'} -- flowID==for_G -- set([forward to FAB])
+match {'edge': 'E2', 'nw_dst': '10.0.0.8'} -- flowID==for_H -- set([forward to FAB])
+match {'edge': 'E1', 'nw_dst': '10.0.0.8'} -- flowID==for_H -- set([forward to FAB])
+match {'edge': 'E2', 'nw_dst': '10.0.0.9'} -- flowID==for_I -- set([forward to FAB])
+match {'edge': 'E1', 'nw_dst': '10.0.0.9'} -- flowID==for_I -- set([forward to FAB])
+match {'edge': 'E1', 'nw_dst': '10.0.0.1'} -- identity -- set([DynamicPolicy()])
+match {'edge': 'E1', 'nw_dst': '10.0.0.2'} -- identity -- set([DynamicPolicy()])
+match {'edge': 'E1', 'nw_dst': '10.0.0.3'} -- identity -- set([DynamicPolicy()])
+match {'edge': 'E2', 'nw_dst': '10.0.0.4'} -- identity -- set([DynamicPolicy()])
+match {'edge': 'E2', 'nw_dst': '10.0.0.5'} -- identity -- set([DynamicPolicy()])
+match {'edge': 'E2', 'nw_dst': '10.0.0.6'} -- identity -- set([DynamicPolicy()])
+match {'edge': 'E3', 'nw_dst': '10.0.0.7'} -- identity -- set([DynamicPolicy()])
+match {'edge': 'E3', 'nw_dst': '10.0.0.8'} -- identity -- set([DynamicPolicy()])
+match {'edge': 'E3', 'nw_dst': '10.0.0.9'} -- identity -- set([DynamicPolicy()])
 identity -- identity -- set([])
 ************
-2017-04-11 14:27:39,615 : Airnet_Runtime : [DEBUG] : Compiling Fabric Policies Main Module
-2017-04-11 14:27:39,615 : Airnet_Runtime : [DEBUG] : Fabric Rules Generated : 
+2017-04-14 11:34:02,701 : Airnet_Runtime : [DEBUG] : Compiling Fabric Policies Main Module
+2017-04-14 11:34:02,702 : Airnet_Runtime : [DEBUG] : Fabric Rules Generated : 
 ************
-fabric='Fabric' ,src='E1' flow='flow_in' -- set([carry (E2,{})]) -- []
-fabric='Fabric' ,src='E2' flow='flow_out' -- set([carry (E1,{})]) -- []
+fabric='FAB' ,src='E2' flow='for_A' -- set([carry (E1,{})]) -- []
+fabric='FAB' ,src='E3' flow='for_A' -- set([carry (E1,{})]) -- []
+fabric='FAB' ,src='E2' flow='for_B' -- set([carry (E1,{})]) -- []
+fabric='FAB' ,src='E3' flow='for_B' -- set([carry (E1,{})]) -- []
+fabric='FAB' ,src='E2' flow='for_C' -- set([carry (E1,{})]) -- []
+fabric='FAB' ,src='E3' flow='for_C' -- set([carry (E1,{})]) -- []
+fabric='FAB' ,src='E1' flow='for_D' -- set([carry (E2,{})]) -- []
+fabric='FAB' ,src='E3' flow='for_D' -- set([carry (E2,{})]) -- []
+fabric='FAB' ,src='E1' flow='for_E' -- set([carry (E2,{})]) -- []
+fabric='FAB' ,src='E3' flow='for_E' -- set([carry (E2,{})]) -- []
+fabric='FAB' ,src='E1' flow='for_F' -- set([carry (E2,{})]) -- []
+fabric='FAB' ,src='E3' flow='for_F' -- set([carry (E2,{})]) -- []
+fabric='FAB' ,src='E1' flow='for_G' -- set([carry (E3,{})]) -- []
+fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+fabric='FAB' ,src='E1' flow='for_H' -- set([carry (E3,{})]) -- []
+fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+fabric='FAB' ,src='E1' flow='for_I' -- set([carry (E3,{})]) -- []
+fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
 ************
-2017-04-11 14:27:39,615 : Airnet_Runtime : [INFO] : Compilation Finished -- Duration == 3ms
-2017-04-11 14:27:45,092 : Airnet_Infrastructure : [DEBUG] : Switch-1 has joined 
-2017-04-11 14:27:45,145 : Airnet_Infrastructure : [DEBUG] : Switch-2 has joined 
-2017-04-11 14:27:45,211 : Airnet_Infrastructure : [DEBUG] : Switch-3 has joined 
-2017-04-11 14:27:45,286 : Airnet_Infrastructure : [DEBUG] : Switch-4 has joined 
-2017-04-11 14:27:45,357 : Airnet_Infrastructure : [DEBUG] : Host-8a:90:d6:15:41:99 has joined 
-2017-04-11 14:27:46,395 : Airnet_Infrastructure : [DEBUG] : Host-c6:5d:11:6e:fb:a2 has joined 
-2017-04-11 14:27:48,397 : Airnet_Runtime : [INFO] : Proactive Core Policies Enforcement Started --
-2017-04-11 14:27:48,398 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
-2017-04-11 14:27:48,398 : Airnet_Runtime : [DEBUG] : Replaced hwAddrs in topology graph by symbolic names
-2017-04-11 14:27:48,398 : Airnet_Runtime : [DEBUG] : One classifier initialized for each switch in topology graph
-2017-04-11 14:27:48,398 : Airnet_Runtime : [DEBUG] : 
-*** Egress Rule :
-2017-04-11 14:27:48,398 : Airnet_Runtime : [DEBUG] : match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([forward to HA])
-2017-04-11 14:27:48,399 : Airnet_Runtime : [DEBUG] : Adjacents Switches Found : s1
-2017-04-11 14:27:48,399 : Airnet_Runtime : [DEBUG] : Destination found : HA
-2017-04-11 14:27:48,399 : Airnet_Runtime : [DEBUG] : Physical Rule Generated match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
-2017-04-11 14:27:48,399 : Airnet_Runtime : [DEBUG] : 
-*** Egress Rule :
-2017-04-11 14:27:48,400 : Airnet_Runtime : [DEBUG] : match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB])
-2017-04-11 14:27:48,400 : Airnet_Runtime : [DEBUG] : Adjacents Switches Found : s4
-2017-04-11 14:27:48,400 : Airnet_Runtime : [DEBUG] : Destination found : HB
-2017-04-11 14:27:48,400 : Airnet_Runtime : [DEBUG] : Physical Rule Generated match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
-2017-04-11 14:27:48,401 : Airnet_Runtime : [DEBUG] : 
-*** Ingress Rule :
-2017-04-11 14:27:48,401 : Airnet_Runtime : [DEBUG] : match {'edge': 'E1', 'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to Fabric])
-2017-04-11 14:27:48,401 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
-2017-04-11 14:27:48,404 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
-2017-04-11 14:27:48,405 : Airnet_Runtime : [DEBUG] : Physical Rule Generated match {'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to 1])
-2017-04-11 14:27:48,405 : Airnet_Runtime : [DEBUG] : 
-*** Ingress Rule :
-2017-04-11 14:27:48,405 : Airnet_Runtime : [DEBUG] : match {'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to Fabric])
-2017-04-11 14:27:48,405 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
-2017-04-11 14:27:48,405 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
-2017-04-11 14:27:48,405 : Airnet_Runtime : [DEBUG] : Physical Rule Generated match {'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to 1])
-2017-04-11 14:27:48,405 : Airnet_Runtime : [DEBUG] : 
-*** Drop Rule :
-2017-04-11 14:27:48,406 : Airnet_Runtime : [DEBUG] : match {'edge': 'E1', 'nw_src': '10.0.0.11', 'tp_dst': 80} -- identity -- set([])
-2017-04-11 14:27:48,406 : Airnet_Runtime : [DEBUG] : enforce drop rule on match:
-2017-04-11 14:27:48,406 : Airnet_Runtime : [DEBUG] : match field: edge
-2017-04-11 14:27:48,406 : Airnet_Runtime : [DEBUG] : match field: nw_src
-2017-04-11 14:27:48,406 : Airnet_Runtime : [DEBUG] : match field: tp_dst
-2017-04-11 14:27:48,406 : Airnet_Runtime : [DEBUG] : Physical Rule Generated match {'nw_src': '10.0.0.11', 'tp_dst': 80} -- identity -- set([])
-2017-04-11 14:27:48,406 : Airnet_Runtime : [DEBUG] : 
-*** Ingress Rule :
-2017-04-11 14:27:48,406 : Airnet_Runtime : [DEBUG] : match {'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==flow_out -- set([forward to Fabric])
-2017-04-11 14:27:48,406 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
-2017-04-11 14:27:48,407 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
-2017-04-11 14:27:48,407 : Airnet_Runtime : [DEBUG] : Physical Rule Generated match {'nw_dst': '10.0.0.11'} -- flowID==flow_out -- set([forward to 1])
-2017-04-11 14:27:48,407 : Airnet_Runtime : [DEBUG] : Enforcing Fabric Policies
-2017-04-11 14:27:48,407 : Airnet_Runtime : [DEBUG] : 
-*** Fabric Rule :
-2017-04-11 14:27:48,407 : Airnet_Runtime : [DEBUG] : fabric='Fabric' ,src='E1' flow='flow_in' -- set([carry (E2,{})]) -- []
-2017-04-11 14:27:48,407 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
-2017-04-11 14:27:48,407 : Airnet_Runtime : [DEBUG] : Ingress Match List : [(match {'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'}, 's2'), (match {'nw_dst': '172.16.0.50'}, 's2')]
-2017-04-11 14:27:48,408 : Airnet_Runtime : [DEBUG] : 
-*** Fabric Rule :
-2017-04-11 14:27:48,408 : Airnet_Runtime : [DEBUG] : fabric='Fabric' ,src='E2' flow='flow_out' -- set([carry (E1,{})]) -- []
-2017-04-11 14:27:48,408 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
-2017-04-11 14:27:48,408 : Airnet_Runtime : [DEBUG] : Ingress Match List : [(match {'nw_dst': '10.0.0.11'}, 's3')]
-2017-04-11 14:27:48,409 : Airnet_Runtime : [DEBUG] : 
-
- *** Physical Rules Generated 
-2017-04-11 14:27:48,409 : Airnet_Runtime : [DEBUG] : 
- ----- s3 Rules : 
-match {'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
-match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
-match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 1])
-2017-04-11 14:27:48,409 : Airnet_Runtime : [DEBUG] : 
- ----- s4 Rules : 
-match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
-match {'nw_dst': '10.0.0.11'} -- flowID==flow_out -- set([forward to 1])
-2017-04-11 14:27:48,409 : Airnet_Runtime : [DEBUG] : 
- ----- s2 Rules : 
-match {'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
-match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
-match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 1])
-2017-04-11 14:27:48,409 : Airnet_Runtime : [DEBUG] : 
- ----- s1 Rules : 
-match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
-match {'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to 1])
-match {'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to 1])
-match {'nw_src': '10.0.0.11', 'tp_dst': 80} -- identity -- set([])
-2017-04-11 14:27:48,409 : Airnet_Runtime : [INFO] : 
-# Rules Initially Installed == 12
-2017-04-11 14:27:48,457 : Airnet_Runtime : [INFO] : Proactive Core Policies Enforcement Finished -- Duration == 59
-2017-04-11 14:28:11,026 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
-2017-04-11 14:28:11,028 : Airnet_Runtime : [DEBUG] : 
-*** Fabric Rule :
-2017-04-11 14:28:11,028 : Airnet_Runtime : [DEBUG] : fabric='Fabric' ,src='E1' flow='flow_in' -- set([carry (E2,{})]) -- []
-2017-04-11 14:28:11,028 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
-2017-04-11 14:28:11,028 : Airnet_Runtime : [DEBUG] : Ingress Match List : []
-2017-04-11 14:28:11,028 : Airnet_Runtime : [DEBUG] : 
-*** Fabric Rule :
-2017-04-11 14:28:11,028 : Airnet_Runtime : [DEBUG] : fabric='Fabric' ,src='E2' flow='flow_out' -- set([carry (E1,{})]) -- []
-2017-04-11 14:28:11,028 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
-2017-04-11 14:28:11,028 : Airnet_Runtime : [DEBUG] : Ingress Match List : [(match {'nw_dst': '10.0.0.11'}, 's3')]
-2017-04-11 14:28:11,034 : Airnet_Runtime : [INFO] : number of modified rules == 0
-2017-04-11 14:28:11,035 : Airnet_Runtime : [INFO] : number of new installed rules == 0
-2017-04-11 14:28:11,035 : Airnet_Runtime : [INFO] : number of deleted rules == 4
-2017-04-11 14:28:11,045 : Airnet_Runtime : [INFO] : diffLists enforcing finished -- Time == 1491913691046
-2017-04-11 14:28:11,046 : Airnet_Runtime : [INFO] : enforcing diffLists DURATION == 1491913691046
-2017-04-11 14:28:11,052 : Airnet_Infrastructure : [DEBUG] : Graph Components Initialized
-2017-04-11 14:28:11,055 : Airnet_Runtime : [DEBUG] : 
-*** Fabric Rule :
-2017-04-11 14:28:11,055 : Airnet_Runtime : [DEBUG] : fabric='Fabric' ,src='E1' flow='flow_in' -- set([carry (E2,{})]) -- []
-2017-04-11 14:28:11,055 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
-2017-04-11 14:28:11,055 : Airnet_Runtime : [DEBUG] : Ingress Match List : []
-2017-04-11 14:28:11,055 : Airnet_Runtime : [DEBUG] : 
-*** Fabric Rule :
-2017-04-11 14:28:11,055 : Airnet_Runtime : [DEBUG] : fabric='Fabric' ,src='E2' flow='flow_out' -- set([carry (E1,{})]) -- []
-2017-04-11 14:28:11,055 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
-2017-04-11 14:28:11,055 : Airnet_Runtime : [DEBUG] : Ingress Match List : [(match {'nw_dst': '10.0.0.11'}, 's3')]
-2017-04-11 14:28:11,059 : Airnet_Runtime : [INFO] : number of modified rules == 0
-2017-04-11 14:28:11,059 : Airnet_Runtime : [INFO] : number of new installed rules == 0
-2017-04-11 14:28:11,059 : Airnet_Runtime : [INFO] : number of deleted rules == 2
-2017-04-11 14:28:11,071 : Airnet_Runtime : [INFO] : diffLists enforcing finished -- Time == 1491913691072
-2017-04-11 14:28:11,071 : Airnet_Runtime : [INFO] : enforcing diffLists DURATION == 1491913691072
-2017-04-11 14:28:11,321 : Airnet_Infrastructure : [DEBUG] : Switch-4 has left 
-2017-04-11 14:28:11,332 : Airnet_Infrastructure : [DEBUG] : Switch-3 has left 
-2017-04-11 14:28:11,340 : Airnet_Infrastructure : [DEBUG] : Switch-2 has left 
-2017-04-11 14:28:11,368 : Airnet_Infrastructure : [DEBUG] : Switch-1 has left 
+2017-04-14 11:34:02,702 : Airnet_Runtime : [INFO] : Compilation Finished -- Duration == 190ms

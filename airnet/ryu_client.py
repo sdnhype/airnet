@@ -5,11 +5,18 @@ Code executed by AirNet to interact with a remote RYU controller
 from language import identity, forward, modify, match
 import ast, pdb, httplib, json
 
+# **************** CODE AUDIT *******************
+#TODO: REACTIVE Core Policies
+#TODO: Remove build_action_fields_bis on #236
+#TODO: Why stats Prefix on #57
+
 ARP_REQUEST = 1
 ARP_REPLY = 2
 
 class Client(object):
-	"""Client de base qui permet d'envoyer des requetes et recevoir des resultats du controleur"""
+	"""
+		Sends requests and receives responses from the SDN controller
+	"""
 	def __init__(self,host,port,prefix):
 		super(Client, self).__init__()
 		self.host = host
@@ -42,14 +49,16 @@ class Client(object):
 			return res.read()
 		except Exception:
 			return None
+
 class ConfigFlow(Client):
- 	"""Client pour configurer les Flows sur les switches"""
+ 	"""
+		Push Flow to the physical switches through the REST API
+	"""
  	prefix_config = 'stats/flowentry'
 
  	def __init__(self,host,port):
  		super(ConfigFlow,self).__init__(host,port,ConfigFlow.prefix_config)
 
- 	""" teste """
  	def addFlow(self,data):
 	 	try:
  			self.send_request('POST','add',data)
@@ -157,21 +166,21 @@ class Stat(object):
 	def tp_dst(self):
 		return self._tp_dst
 
-
 class RyuClient(object):
 	"""
 	"""
 	def __init__(self,runtime):
 		self.switches_rules_cpt = {}
 		self.runtime = runtime
-		self.runtime_mode = False #indique si on deja installe les 1eres regles
+		self.runtime_mode = False # Proactive rules are not installed yet
 
-	"""
-	construit le dictionnaire de match de la regle OpenFlow
-	"""
 	def build_match_field(self, src = None, dst = None,dl_src=None, dl_dst=None,
                           nw_src = None, nw_dst = None, tp_src=None, tp_dst=None, nw_proto= None, in_port=None):
+		"""
+			Construct OF MATCH fields in a dictionary
+		"""
 		match = {}
+
 		if src:
 			for ipAddr, host in self.runtime.mapping.hosts.iteritems():
 				if host == src:
@@ -200,10 +209,10 @@ class RyuClient(object):
 			match['in_port'] = in_port
 		return match
 
-	"""
-	construit la liste des actions,chaque action etant un dictionnaire
-	"""
 	def build_action_fields(self,actions):
+		"""
+			Construct OF ACTIONS fields dictionary
+		"""
 		actions_mod = []
 		for act in actions:
 			if isinstance(act, modify):
@@ -223,7 +232,7 @@ class RyuClient(object):
 		return actions_mod
 
 	"""
-	construit la liste des actions,chaque action etant un dictionnaire
+		For What ?
 	"""
 	def build_action_fields_bis(self,actions):
 		actions_mod = []
@@ -239,26 +248,38 @@ class RyuClient(object):
 				actions_mod.append({'type':'OUTPUT','port':act.output})
 		return actions_mod
 
-	"""
-	installe les regles,utilise par le mode proactif
-	classifiers : dictionnaire des regles a installer
-	"""
 	def install_rules_on_dp(self, classifiers):
+		"""
+			Push Proactive Rules on the controller through the REST API
+			Rules are taken from classifiers (dictionary --> sw1 : [r1,r2,r3...], sw2 :...)
+		"""
 		c = ConfigFlow('localhost',8080)
+
 		for switch, rules in classifiers.iteritems():
+			# get the switch id
 			dpid = int(switch[1:])
+			# set the highest priority
 			priority = len(rules)
+			# set the current switch number of rules
 			self.switches_rules_cpt[switch] = len(rules)
+			# for each rule
 			for rule in rules:
-				data = {} #dictionnaire qui sera envoye
+				# initialize a dictionary
+				data = {}
+				# affect rules values to the dictionary
 				data['dpid'] = dpid
+				# the following is for every rule except the default one (identity -- identity -- drop)
 				if rule.match != identity:
 					data['match'] = self.build_match_field(**rule.match.map)
+					# if there is at least one action
 					if not len(rule.actions) == 0:
 						data['actions'] = self.build_action_fields(rule.actions)
+				# set a degressive priority
 				data['priority'] = priority
 				priority = priority-1
+				# push the dictionary
 				c.addFlow(data)
+		# First rules are installed
 		self.runtime_mode = True
 
 	"""

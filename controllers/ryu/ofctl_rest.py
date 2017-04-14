@@ -863,14 +863,14 @@ class StatsController(ControllerBase):
 
         return Response(status=200)
 
-    #fonction pour envoyer des Packets Out    
+    #fonction pour envoyer des Packets Out
     def send_packet(self, req, **_kwargs):
         try:
             flow = ast.literal_eval(req.body)
         except SyntaxError:
             LOG.debug('invalid syntax %s', req.body)
             return Response(status=400)
-	
+
         dpid = flow.get('dpid')
 
         if type(dpid) == str and not dpid.isdigit():
