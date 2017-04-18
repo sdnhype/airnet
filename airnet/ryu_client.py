@@ -3,7 +3,7 @@ Code executed by AirNet to interact with a remote RYU controller
 (via REST API)
 """
 from language import identity, forward, modify, match
-import ast, pdb, httplib, json
+import ast, pdb, httplib, json, copy
 
 # **************** CODE AUDIT *******************
 #TODO: REACTIVE Core Policies
@@ -92,7 +92,7 @@ class RecupStats(Client):
 		super(RecupStats,self).__init__(host,port,RecupStats.prefix_stat)
 
 	def getStatsFlow(self,dpid,data=None):
-		action = 'flow/%s' % (dpid)
+		action = 'flow/%d' % (dpid)
 		return self.send_request('GET',action,data)
 
 	def sendPacket(self,data):
@@ -413,14 +413,19 @@ class RyuClient(object):
 		"""
 		"""
 		s = RecupStats('localhost',8080)
+
 		_target_match = copy.deepcopy(target_match)
+
 		_target_match.map.pop("edge")
+
 		request = {}
+
 		request['match'] = self.build_match_field(**_target_match.map)
+
 		for switch in switches:
 			dpid = int((switch[1:]))
 			request['dpid'] = dpid
-			s.getStatsFlow(self,dpid,request)
+			s.getStatsFlow(dpid,request)
 			#TODO comment transferer les donnees
 
 	"""

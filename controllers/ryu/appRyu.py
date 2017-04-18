@@ -1,4 +1,4 @@
-# ryu application qui envoie les evenements a notre serveur 
+# ryu application qui envoie les evenements a notre serveur
 # elle s'abonne aux evenements concernes et utilise le client REST pour les envoyer
 
 from ryu.base import app_manager
@@ -27,7 +27,7 @@ class AppRyu(app_manager.RyuApp):
 	def _event_switch_enter_handler(self, ev):
     		msg = ev.switch.to_dict()
     		self.client.switchEnter(msg)
-	
+
 	@set_ev_cls(event.EventSwitchLeave)
 	def _event_switch_leave_handler(self, ev):
 		msg = ev.switch.to_dict()
@@ -54,10 +54,10 @@ class AppRyu(app_manager.RyuApp):
 		pkt = packet.Packet(msg.data)
 		eth = pkt.get_protocol(ethernet.ethernet)
 		if eth.ethertype != ether_types.ETH_TYPE_ARP:
-		#on ignore tout ce qui n'est pas ARP pour le moment
+		# on ignore tout ce qui n'est pas ARP pour le moment
 			return
 		datapath = msg.datapath
-		dpid = datapath.id	
+		dpid = datapath.id
 		port = msg.in_port
 		data = pkt.__str__()
 		data = data[:-1] #pour enlever la derniere parenthese fermante
@@ -66,17 +66,13 @@ class AppRyu(app_manager.RyuApp):
 		for res in result:
 			res = res.replace("(",': {"') # on simule un dictionnaire pour chaque protocole
 			res = res.replace("'",'"') # on remplace ' par "
-			res = res.replace("=",'":') # on remplace = par ": pour la fin de la cle 
+			res = res.replace("=",'":') # on remplace = par ": pour la fin de la cle
 			res = res.replace(",",',"') #on remplace , par ," pour le debut de chaque cle
 			res = res + "}"
-			proto.append(res)			
+			proto.append(res)
 		data = {}
 		data["dpid"] = dpid
 		data["port_in"] = port
 		data["packet"] = proto
-		data = json.dumps(data)					
-		self.client.packetIn(data)	
-
-
-
-
+		data = json.dumps(data)
+		self.client.packetIn(data)

@@ -1255,6 +1255,8 @@ class Runtime():
         """
         """
         edge_switches = self.get_edge_physical_corresponding(target_match.map["edge"])
+        # For debug stat
+        logger.debug("STAT********* {}".format(type(edge_switches)))
         self.nexus.send_stat_request(edge_switches, target_match)
 
     def apply_stat_network_function(self, bucket_match, stat):

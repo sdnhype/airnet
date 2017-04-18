@@ -19,6 +19,7 @@ from rest_client import RyuTopologyClient
 from ryu.lib.packet import packet,ethernet,ether_types
 from packetParser import PacketParser
 from log import Logger
+from pprint import pprint
 import logging, json, ast
 
 #LOG = logging.getLogger('ryu.app.ofctl_rest')
@@ -86,6 +87,12 @@ class StatsController(ControllerBase):
             return Response(status=501)
 
         body = json.dumps(flows)
+
+        # For debug
+        print("Stat_Data {}".format(body))
+        #trash_data = json.load(body)
+        #pprint(trash_data)
+
         return Response(content_type='application/json', body=body)
 
     def mod_flow_entry(self, req, cmd, **_kwargs):
@@ -237,7 +244,6 @@ class RestStatsApi(app_manager.RyuApp):
     }
 
     def __init__(self, *args, **kwargs):
-
         super(RestStatsApi, self).__init__(*args, **kwargs)
 
         # REST Server Parameters

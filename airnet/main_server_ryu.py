@@ -11,7 +11,7 @@ from log import Logger
 import thread,time,sys
 
 # log events in a special file
-logger = Logger("Main","log/event.log").getLog()
+#logger = Logger("Main","log/event.log").getLog()
 
 # WSGI Application
 app = Flask(__name__)
@@ -108,7 +108,7 @@ def handle_packet_in():
 
 def test():
 	#time.sleep(10)
-	time.sleep(2)
+	time.sleep(10)
 	runtime.infra.view()
 	runtime.enforce_policies()
 

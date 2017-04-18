@@ -223,7 +223,7 @@ class Infrastructure(object):
                         else:
                             vertices["s{}".format(switch.dpid)].append((1, "s{}".format(link.entity2["dpid"]), link.entity1["port"]))
 
-        logger.debug("Graph Components Initialized")
+        logger.debug("Graph Components Actualized")
         return Graph(vertices, edges)
 
     def view(self):

@@ -2,10 +2,13 @@
 import pdb
 import sys
 """
-
-users---[s1]----|          |---[s5]---[s6]---|          |---[s8]---WS
-	            |---[s3]---|                 |---[s7]---| 
-guests---[s2]---|          |--------[s4] ----|          |---[s9]---CC
+							  [s5]-------[s6]
+							 /			 /	 \
+						 [s4]	     [s8]	  [s11] --- WS
+NETA---[s1]----|        /	 \       /
+	            |---[s3]      [s7]---
+CO1----[s2]----|        \
+ 						 [s9] ---- [s10]------[s12] --- SSH_GW
 
 """
 
@@ -28,8 +31,8 @@ def emptyNet(controller_ip, controller_port):
 	h2 = net.addHost( 'C01' , ip= '170.146.9.11/24', defaultRoute = "via 170.146.9.11")
 	h3 = net.addHost( 'WS', ip='170.146.15.11/24', defaultRoute='via 170.146.15.11')
 	h4 = net.addHost( 'SSH_GW' , ip= '170.146.16.11/24', defaultRoute = "via 170.146.16.11")
-	
-	
+
+
 	info( '*** Adding switch\n' )
 	s1 = net.addSwitch( 's1' )
 	s2 = net.addSwitch( 's2' )
@@ -39,7 +42,7 @@ def emptyNet(controller_ip, controller_port):
 	s6 = net.addSwitch( 's6' )
 	s7 = net.addSwitch( 's7' )
 	s8 = net.addSwitch( 's8' )
-	s9 = net.addSwitch( 's9') 
+	s9 = net.addSwitch( 's9')
 	s10 = net.addSwitch( 's10')
 	s11 = net.addSwitch( 's11')
 	s12 = net.addSwitch( 's12')
@@ -61,15 +64,15 @@ def emptyNet(controller_ip, controller_port):
 	net.addLink(s2, h2)
 	net.addLink(s11, h3)
 	net.addLink(s12, h4)
-	
+
 	info( '*** Starting network\n')
 	net.start()
-	
-	net.pingAll(timeout=1)	
+
+	net.pingAll(timeout=1)
 
 	info( '*** Running CLI\n' )
 	CLI( net )
-	
+
 	info( '*** Stopping network' )
 	net.stop()
 
@@ -79,4 +82,3 @@ if __name__ == '__main__':
 		print 'Usage: ', sys.argv[0], ' controller_ip controller_port'
 		sys.exit()
 	emptyNet(sys.argv[1], int(sys.argv[2]))
-
