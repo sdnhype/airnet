@@ -1,21 +1,24 @@
 """
-Code executed by AirNet to interact with a remote RYU controller
-(via REST API)
+	Airnet Hypervisor REST Client
+	Interacts with RYU REST Server
 """
 from language import identity, forward, modify, match
+from generic_classes import Stat_object
 import ast, pdb, httplib, json, copy
 
-# **************** CODE AUDIT *******************
-#TODO: REACTIVE Core Policies
-#TODO: Remove build_action_fields_bis on #236
-#TODO: Why stats Prefix on #57
+# **************** CODE AUDIT  by Mayoro *******************
+#TODO: change prefix_config on #64
+#TODO: sendPacket utility on #111
+#TODO: which installNewRules to delete on #220 and #243
+#TODO: which modifyExistingRules to delete on #280 and #322
+#TODO: mapping 1 edge --> n switches to handle in send_stat_request on #337
 
 ARP_REQUEST = 1
 ARP_REPLY = 2
 
 class Client(object):
 	"""
-		Sends requests and receives responses from the SDN controller
+		Corresponds to the RYU REST Server to which requests are sent
 	"""
 	def __init__(self,host,port,prefix):
 		super(Client, self).__init__()
@@ -24,13 +27,20 @@ class Client(object):
 		self.prefix = '/'+prefix+'/'
 
 	def send_request(self,method,action,data=None):
+		"""
+			Send requests through the httplib library
+		"""
+		# initiate the connection
 		conn = httplib.HTTPConnection(self.host, self.port)
 		url = self.prefix + action
 		header = {}
+		# there is data to send
 		if data is not None:
+			# encode it in json format
 			data = json.dumps(data)
 			header['Content-Type'] = 'application/json'
 		try:
+			# send the request and get the response
 			conn.request(method,url,data,header)
 			res = conn.getresponse()
 			if res.status in (httplib.OK,
@@ -41,7 +51,7 @@ class Client(object):
 			else:
 				raise Exception
 		except Exception:
-			raise Exception
+			print("Exception occured while sending request for {}".format(action))
 
 	def send_and_read_request(self,method,action,data=None):
 		try:
@@ -50,14 +60,15 @@ class Client(object):
 		except Exception:
 			return None
 
-class ConfigFlow(Client):
+class ConfigureFlow(Client):
  	"""
-		Push Flow to the physical switches through the REST API
+		Perform and send actions on flows to the RYU Controller
 	"""
+	# to change
  	prefix_config = 'stats/flowentry'
 
  	def __init__(self,host,port):
- 		super(ConfigFlow,self).__init__(host,port,ConfigFlow.prefix_config)
+ 		super(ConfigureFlow,self).__init__(host,port,ConfigureFlow.prefix_config)
 
  	def addFlow(self,data):
 	 	try:
@@ -84,14 +95,19 @@ class ConfigFlow(Client):
 		except Exception:
 			print 'Clear flows : Exception'
 
-class RecupStats(Client):
-	"""Client pour recuperer les stats et envoyer des packets"""
+class GetStats(Client):
+	"""
+		Client which will get the stats from the Ryu controller
+	"""
 	prefix_stat = 'stats'
 
 	def __init__(self,host,port):
-		super(RecupStats,self).__init__(host,port,RecupStats.prefix_stat)
+		super(GetStats,self).__init__(host,port,GetStats.prefix_stat)
 
 	def getStatsFlow(self,dpid,data=None):
+		"""
+			Recup flow statistics from switch-{dpid}
+		"""
 		action = 'flow/%d' % (dpid)
 		return self.send_request('GET',action,data)
 
@@ -102,72 +118,10 @@ class RecupStats(Client):
 		except Exception:
 			print 'Send Packet : Exception'
 
-class Stat(object):
-	"""
-	"""
-	def __init__(self, byte_count, packet_count, **kwargs):
-		self._byte_count = byte_count
-		self._packet_count = packet_count
-		self._issuing_match = match(**kwargs)
-		try:
-			self._nw_src = kwargs["nw_src"]
-		except KeyError:
-			self._nw_src = None
-		try:
-			self._nw_dst = kwargs["nw_dst"]
-		except KeyError:
-			self._nw_dst = None
-		try:
-			self._dl_src = kwargs["dl_src"]
-		except KeyError:
-			self._dl_src = None
-		try:
-		 	self._dl_dst = kwargs["dl_dst"]
-		except KeyError:
-			self._dl_dst = None
-		try:
-			self._tp_src = kwargs["tp_src"]
-		except KeyError:
-			self._tp_src = None
-		try:
-			self._tp_dst = kwargs["tp_dst"]
-		except KeyError:
-			self._tp_dst = None
-
-	@property
-	def byte_count(self):
-		return self._byte_count
-
-	@property
-	def packet_count(self):
-		return self._packet_count
-
-	@property
-	def nw_src(self):
-		return self._nw_src
-
-	@property
-	def nw_dst(self):
-		return self._nw_dst
-
-	@property
-	def dl_src(self):
-		return self._dl_src
-
-	@property
-	def dl_dst(self):
-		return self._dl_dst
-
-	@property
-	def tp_src(self):
-		return self._tp_src
-
-	@property
-	def tp_dst(self):
-		return self._tp_dst
-
 class RyuClient(object):
 	"""
+		Corresponds to the Airnet REST client which send requests to the
+		RYU REST server at {localhost:8080}
 	"""
 	def __init__(self,runtime):
 		self.switches_rules_cpt = {}
@@ -231,29 +185,12 @@ class RyuClient(object):
 				actions_mod.append({'type':'OUTPUT','port':act.output})
 		return actions_mod
 
-	"""
-		For What ?
-	"""
-	def build_action_fields_bis(self,actions):
-		actions_mod = []
-		for act in actions:
-			if isinstance(act, modify):
-				if "nw_dst" in act.map:
-					actions_mod.append({'type':'SET_NW_DST','nw_dst':act.map["nw_dst"]})
-				elif "nw_src" in act.map:
-					actions_mod.append({'type':'SET_NW_SRC','nw_src':act.map["nw_src"]})
-			if isinstance(act, forward):
-				if act.output == "OFPP_CONTROLLER":
-					act.output = 0xfffd #controller port
-				actions_mod.append({'type':'OUTPUT','port':act.output})
-		return actions_mod
-
 	def install_rules_on_dp(self, classifiers):
 		"""
 			Push Proactive Rules on the controller through the REST API
 			Rules are taken from classifiers (dictionary --> sw1 : [r1,r2,r3...], sw2 :...)
 		"""
-		c = ConfigFlow('localhost',8080)
+		c = ConfigureFlow('localhost',8080)
 
 		for switch, rules in classifiers.iteritems():
 			# get the switch id
@@ -282,17 +219,17 @@ class RyuClient(object):
 		# First rules are installed
 		self.runtime_mode = True
 
-	"""
-	installe des nouvelles regles,utilise par le mode reactif
-	classifiers : dictionnaire des regles a installer
-	"""
 	def installNewRules(self, classifiers):
-		c = ConfigFlow('localhost',8080)
+		"""
+			Install new rules from classifiers
+		"""
+		c = ConfigureFlow('localhost',8080)
+
 		for switch,rules in classifiers.iteritems():
 			dpid = int(switch[1:])
 			for rule in rules:
 				priority = len(self.runtime.new_classifiers[switch]) - rule[1]
-				data = {} #dictionnaire qui sera envoye
+				data = {}
 				data['dpid'] = dpid
 				data['match'] = self.build_match_field(**rule[0].match.map)
 				if not len(rule[0].actions) == 0:
@@ -306,7 +243,7 @@ class RyuClient(object):
 	classifiers : dictionnaire des regles a installer
 	"""
 	def install_new_rules(self, classifiers):
-		c = ConfigFlow('localhost',8080)
+		c = ConfigureFlow('localhost',8080)
 		for switch, rules in classifiers.iteritems():
 			priority = self.switches_rules_cpt[switch] + len(rules)
 			dpid = int(switch[1:])
@@ -324,8 +261,9 @@ class RyuClient(object):
 	supprime des regles,utilise par le mode reactif
 	to_delete: dictionnaire des regles a supprimer
 	"""
+
 	def delete_rules(self, to_delete):
-		c = ConfigFlow('localhost',8080)
+		c = ConfigureFlow('localhost',8080)
 		for switch, rules in to_delete.iteritems():
 			cpt_deleted_rules = 0
 			dpid = int(switch[1:])
@@ -334,18 +272,14 @@ class RyuClient(object):
 				data['dpid'] = dpid
 				data['match'] = self.build_match_field(**rule[0].match.map)
 				if not len(rule[0].actions) == 0:
-					data['actions'] = self.build_action_fields_bis(rule[0].actions)
+					data['actions'] = self.build_action_fields(rule[0].actions)
 				data['priority'] = self.switches_rules_cpt[switch] - rule[1]
 				c.deleteFlow(data)
 				cpt_deleted_rules += 1
 			self.switches_rules_cpt[switch] -= cpt_deleted_rules
 
-	"""
-	modifie des regles,utilise par le mode reactif
-	to_modify est un dictionnaire contenant les regles a modifier
-	"""
 	def modifyExistingRules(self, to_modify):
-		c = ConfigFlow('localhost',8080)
+		c = ConfigureFlow('localhost',8080)
 		def different_actions(act_list1, act_list2):
 			# test if they have same number of
 			for act1 in act_list1:
@@ -386,12 +320,8 @@ class RyuClient(object):
 					data['priority'] = self.switches_rules_cpt[switch] - new_r[1]
 					c.updateFlow(data)
 
-	"""
-	modifie des regles
-	to_modify est un dictionnaire contenant les regles a modifier
-	"""
 	def modify_existing_rules(self, to_modify):
-		c = ConfigFlow('localhost',8080)
+		c = ConfigureFlow('localhost',8080)
 		for switch, rules in to_modify.iteritems():
 			dpid = int(switch[1:])
 			for rule in rules:
@@ -404,29 +334,39 @@ class RyuClient(object):
 				#TODO runtime.msgs
 				c.updateFlow(data)
 
-	"""
-	envoie des requetes pour recevoir les stats sur un flow
-	switches est une liste de switch
-	target_match est le matching correspondant au flow
-	"""
 	def send_stat_request(self, switches, target_match):
 		"""
+			sends stats requests to physical OF switches
+			stats are associated to a flow which matches target_match
 		"""
-		s = RecupStats('localhost',8080)
-
+		# initialize the client
+		req_stat = GetStats('localhost',8080)
+		# backup the matching field
 		_target_match = copy.deepcopy(target_match)
-
+		# pop the edge field
 		_target_match.map.pop("edge")
-
 		request = {}
-
+		# build the match field dict
 		request['match'] = self.build_match_field(**_target_match.map)
 
 		for switch in switches:
 			dpid = int((switch[1:]))
 			request['dpid'] = dpid
-			s.getStatsFlow(dpid,request)
-			#TODO comment transferer les donnees
+			# send the request to each switch
+			resp_stat = req_stat.getStatsFlow(dpid,request)
+			# get the answer body
+			response = json.load(resp_stat)
+
+		# response looks like {"u'dpid'":[{u'field1: u'value1', u'field2': u'value2'... }]
+		# for each switch response
+		for h in response[u'{}'.format(dpid)]:
+			byte_count = h[u'byte_count']
+			packet_count = h[u'packet_count']
+
+		# construct the stat object
+		stat = Stat_object(byte_count,packet_count,**target_match.map)
+
+		return stat
 
 	"""
 	gere les packet in
@@ -475,7 +415,7 @@ class RyuClient(object):
 			packet_out['dpid'] = dpid
 			packet_out['port'] = port
 			packet_out['packet'] = packet
-			c = RecupStats('localhost',8080)
+			c = GetStats('localhost',8080)
 			c.sendPacket(packet_out)
 	"""
 	permet d'envoyer un dictionnaire contenant le numero et les entetes d'un paquet
@@ -490,7 +430,7 @@ class RyuClient(object):
 		dpid = int((switch[1:]))
 		packet['dpid'] = dpid
 		packet['output'] = output
-		c = RecupStats('localhost',8080)
+		c = GetStats('localhost',8080)
 		print("[DEBUG] ryu_client -- send_packet_out()")
 		c.sendPacket(packet)
 

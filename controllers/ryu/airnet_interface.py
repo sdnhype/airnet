@@ -22,7 +22,7 @@ from log import Logger
 from pprint import pprint
 import logging, json, ast
 
-#LOG = logging.getLogger('ryu.app.ofctl_rest')
+#logger = logging.getLogger('ryu.app.ofctl_rest')
 logger = Logger("airnet_interface").getLog()
 
 # supported ofctl versions in this restful app
@@ -42,7 +42,7 @@ id_packet = 0
 
 class StatsController(ControllerBase):
     """
-        Class Description not to forget
+        Methods in this class allows to manipulate OF switches tables
     """
 
     def __init__(self, req, link, data, **config):
@@ -90,20 +90,18 @@ class StatsController(ControllerBase):
 
         # For debug
         print("Stat_Data {}".format(body))
-        #trash_data = json.load(body)
-        #pprint(trash_data)
 
         return Response(content_type='application/json', body=body)
 
     def mod_flow_entry(self, req, cmd, **_kwargs):
         """
-            Function Description
+            Modify the OF switch Table
         """
         try:
             # Syntax verification
             flow = ast.literal_eval(req.body)
         except SyntaxError:
-            LOG.debug('invalid syntax %s', req.body)
+            logger.debug('invalid syntax %s', req.body)
             return Response(status=400)
 
         # get the dpid field in the request
@@ -111,7 +109,7 @@ class StatsController(ControllerBase):
 
         # check if the dpid field is correct
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         # get the switch that corresponds to the dpid value
@@ -141,17 +139,17 @@ class StatsController(ControllerBase):
         if _ofctl is not None:
             _ofctl.mod_flow_entry(dp, flow, cmd)
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         return Response(status=200)
 
     def delete_flow_entry(self, req, dpid, **_kwargs):
         """
-
+            Delete an entry in OF Table
         """
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -172,7 +170,7 @@ class StatsController(ControllerBase):
             _ofctl.mod_flow_entry(dp, flow, dp.ofproto.OFPFC_DELETE)
 
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         return Response(status=200)
@@ -186,13 +184,13 @@ class StatsController(ControllerBase):
         try:
             flow = ast.literal_eval(req.body)
         except SyntaxError:
-            LOG.debug('invalid syntax %s', req.body)
+            logger.debug('invalid syntax %s', req.body)
             return Response(status=400)
 
         dpid = flow.get('dpid')
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -228,11 +226,19 @@ class StatsController(ControllerBase):
                 del packets[id_pkt]
                 sender.send_packet(dp,flow,msg)
             else:
-                LOG.debug('Unsupported OF protocol')
+                logger.debug('Unsupported OF protocol')
                 return Response(status=501)
 
 class RestStatsApi(app_manager.RyuApp):
-
+    """
+        This class receives statitics queries from the Airnet Hypervisor
+        Since the REST API is used, queries are represented by URLs
+        URLs are associated with methods in StatsController class which will
+        collect information and provide responses
+        Events from the OF switches are also collected here and transfered
+        to the Airnet Hypervisor through the REST API
+        (The RyuTopologyClient class is used here)
+    """
     OFP_VERSIONS = [ofproto_v1_0.OFP_VERSION,
                     ofproto_v1_2.OFP_VERSION,
                     ofproto_v1_3.OFP_VERSION,
@@ -246,24 +252,25 @@ class RestStatsApi(app_manager.RyuApp):
     def __init__(self, *args, **kwargs):
         super(RestStatsApi, self).__init__(*args, **kwargs)
 
-        # REST Server Parameters
+        # Airnet REST Server
         self.client = RyuTopologyClient('localhost',9000)
-
+        # list of managed switches
         self.dpset = kwargs['dpset']
-
+        # wsgi application
         wsgi = kwargs['wsgi']
-
         self.waiters = {}
+
         self.data = {}
-
         self.data['dpset'] = self.dpset
-
         self.data['waiters'] = self.waiters
 
         mapper = wsgi.mapper
-
+        # register to the StatsController class
         wsgi.registory['StatsController'] = self.data
         path = '/stats'
+
+        # Associate URLs with methods in StatsController
+
         uri = path + '/flow/{dpid}'
         mapper.connect('stats', uri,
                        controller=StatsController, action='get_flow_stats',
@@ -279,9 +286,6 @@ class RestStatsApi(app_manager.RyuApp):
                        controller=StatsController, action='delete_flow_entry',
                        conditions=dict(method=['DELETE']))
 
-        """
-            a expliquer
-        """
         # rajoute pour recevoir des demandes d'envoi de paquets depuis airnet
         uri = path + '/send'
         mapper.connect('stats', uri,
@@ -290,35 +294,35 @@ class RestStatsApi(app_manager.RyuApp):
 
     @set_ev_cls(event.EventSwitchEnter)
     def _event_switch_enter_handler(self, ev):
-        logger.debug("*** Switch-{} Entering ".format(ev.switch.dp.id))
+        logger.debug("*** Switch-{} Enter Event ".format(ev.switch.dp.id))
 
         # convert switch object informations to a dict
         msg = ev.switch.to_dict()
 
-        logger.debug("\n{}".format("\n".join([str(porti) for porti in msg['ports']])))
+        logger.debug("\n\n{}".format("\n".join([str(porti) for porti in msg['ports']])))
         self.client.switchEnter(msg)
 
     @set_ev_cls(event.EventSwitchLeave)
     def _event_switch_leave_handler(self, ev):
-        logger.debug("*** Switch-{} Leaving ".format(ev.switch.dp.id))
+        logger.debug("\n*** Switch-{} Leave Event ".format(ev.switch.dp.id))
         msg = ev.switch.to_dict()
         self.client.switchLeave(msg)
 
     @set_ev_cls(event.EventLinkAdd)
     def _event_link_add_handler(self, ev):
-        logger.debug("*** Adding Link \n{}".format(str(ev.link)))
+        logger.debug("\n*** Add Link Event\n{}".format(str(ev.link)))
         msg = ev.link.to_dict()
         self.client.linkAdd(msg)
 
     @set_ev_cls(event.EventLinkDelete)
     def _event_link_delete_handler(self, ev):
-        logger.debug("*** Deleting Link \n{}".format(str(ev.link)))
+        logger.debug("\n*** Delete Link Event\n{}".format(str(ev.link)))
         msg = ev.link.to_dict()
         self.client.linkDelete(msg)
 
     @set_ev_cls(event.EventHostAdd)
     def _event_host_add_handler(self, ev):
-        logger.debug("*** Host {} Entering ".format(str(ev.host.mac)))
+        logger.debug("\n*** Host Add Event : {}  ".format(str(ev.host.mac)))
         msg = ev.host.to_dict()
         self.client.hostAdd(msg)
 
@@ -354,11 +358,11 @@ class RestStatsApi(app_manager.RyuApp):
 
         # if it's an arp packet
         if eth.ethertype == ether_types.ETH_TYPE_ARP:
-            logger.debug("PACKET_IN : Received an ARP packet from sw-{}".format(str(dpid)))
+            logger.debug("\nPACKET_IN : Received an ARP packet from sw-{}".format(str(dpid)))
             # convert the arp packet into a dictionnary
             data['packet'] = parser.arp_to_dict(pkt)
         else:
-            logger.debug("PACKET_IN : Received an IP packet from sw-{}".format(str(dpid)))
+            logger.debug("\nPACKET_IN : Received an IP packet from sw-{}".format(str(dpid)))
             data['packet'] = parser.packet_to_dict(pkt)
             # Packet Numbering
             data['id_packet'] = id_packet
@@ -367,7 +371,7 @@ class RestStatsApi(app_manager.RyuApp):
             id_packet = id_packet + 1
         # Packet contents are formatted in json
         data = json.dumps(data)
-        logger.debug("{}".format(data))
+        logger.debug("\nData to send : {}".format(data))
         self.client.packetIn(data)
 
     @set_ev_cls([ofp_event.EventOFPStatsReply,
@@ -387,7 +391,6 @@ class RestStatsApi(app_manager.RyuApp):
                  ofp_event.EventOFPGroupDescStatsReply,
                  ofp_event.EventOFPPortDescStatsReply
                  ], MAIN_DISPATCHER)
-
     def stats_reply_handler(self, ev):
         msg = ev.msg
         dp = msg.datapath
@@ -396,6 +399,7 @@ class RestStatsApi(app_manager.RyuApp):
             return
         if msg.xid not in self.waiters[dp.id]:
             return
+
         lock, msgs = self.waiters[dp.id][msg.xid]
         msgs.append(msg)
 

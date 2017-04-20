@@ -2,6 +2,7 @@
 from language import *
 # Import constants for all use cases
 from constants import *
+import datetime
 
 """
 
@@ -14,14 +15,17 @@ ALLOW ICMP HOST_B to HOSt_A
 
 
 """
-@DynamicControlFct(data="stat", every=10, split=["nw_src"])
+@DynamicControlFct(data="stat", every=5, limit="none")
 def saveStat( stat ):
+
     # Open log file
     logFile = open("statsLog.txt", 'a')
     time = datetime.datetime.now()
     logFile.write('[%s] nw_src %s nw_dst %s | packet count %s \n' % (time, stat.nw_src, stat.nw_dst, stat.packet_count))
     logFile.close()
-    return identity
+    if stat.packet_count > 1:
+        policy = (match(edge=E2, tp_dst=80) >> forward(FAB))
+        return policy
 
 #Virtual topology
 def virtual_network():
@@ -49,7 +53,7 @@ def virtual_network():
 # Edges can forward to their connected hosts or networks
 def default_distribution_policy():
 
-    e1 = match(edge=E1, dst=HA) >> (saveStat() + forward(HA))
+    e1 = match(edge=E1, dst=HA) >> forward(HA)
     e2 = match(edge=E2, dst=HB) >> (saveStat() + forward(HB))
     return e1 + e2
 
