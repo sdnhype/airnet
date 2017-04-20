@@ -24,7 +24,7 @@ def saveStat( stat ):
     logFile.write('[%s] nw_src %s nw_dst %s | packet count %s \n' % (time, stat.nw_src, stat.nw_dst, stat.packet_count))
     logFile.close()
     if stat.packet_count > 1:
-        policy = (match(edge=E2, tp_dst=80) >> forward(FAB))
+        policy = (match(edge=E2, tp_dst=80) >> tag("toto") >> forward(FAB))
         return policy
 
 #Virtual topology
