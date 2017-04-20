@@ -8,38 +8,66 @@ import copy, pdb
 
 class Rule(object):
     """
-    A rule contains a filter and the parallel composition of zero or more
-    actions.
+        A rule format example : filter (match), "tag", set([actions])
     """
     def __init__(self, m, t, acts):
         self.match = m
         self.label = t
         self.actions = acts
-        
+
+    """
+        [FOR_DEBUG] Return a correct presentation of a rule
+    """
+    def __str__(self):
+        return "{} -- {} -- {}".format(self.match, self.label,self.actions)
+
 class FabricRule(object):
+    """
+
+    """
     def __init__(self, f, acts, via_list):
         self.flow = f
         self.actions = acts
         self.via_list = via_list
 
-    
+    """
+        [FOR_DEBUG] Return a correct presentation of a rule
+    """
+    def __str__(self):
+        return "{} -- {} -- {}".format(self.flow,str(self.actions), str(self.via_list))
+
 class Classifier(object):
     """
     A classifier contains a list of rules, where the order of the list implies
-    the relative priorities of the rules. 
+    the relative priorities of the rules.
     """
-    
+
     def __init__(self, rules=[]):
         self.rules = list(rules)
-        
+
+    """
+    Add an element to the classifier object remove_shadowed_rules
+    """
     def append(self, item):
+        # the object to add can be a rule
         if isinstance(item, Rule):
             self.rules.append(item)
+        # or another classifier
         elif isinstance(item, Classifier):
             self.rules.extend(item.rules)
         else:
             raise TypeError
-   
+
+    """
+        [FOR_DEBUG] !! Adding a method to return the current classifier (str) rules
+    """
+    def getLogRules(self):
+        str_Rules = ""
+        for rule in self.rules:
+            str_Rules = str_Rules + str(rule) + "\n"
+        return str_Rules
+
+
     def __add__(c1, c2):
         from language import identity, drop, forward, DataFctPolicy
         def _cross(r1, r2):
@@ -48,8 +76,8 @@ class Classifier(object):
             if i have two DataFct that apply on the same flow
             i need to do function chaining (but the order is not important because )
             """
-            
-            intersection = r1.match.intersec(r2.match)      
+
+            intersection = r1.match.intersec(r2.match)
             if intersection != drop:
                 # label composition
                 label = identity
@@ -63,7 +91,7 @@ class Classifier(object):
                         part2 = str(r2.label)
                         errorMsg = "tag intersection error: " + part1 + " and " + part2
                         raise AssertionError(errorMsg)
-                else:    
+                else:
                     if r1.label is identity:
                         label = r2.label
                     else:
@@ -77,7 +105,7 @@ class Classifier(object):
                     if isinstance(a1, forward):
                         contain_forward = True
                     actions.add(a1)
-                        
+
                 for a2 in r2.actions:
                     if isinstance(a2, forward) and not contain_forward:
                         actions.add(a2)
@@ -93,9 +121,9 @@ class Classifier(object):
                         actions.add(a2)
                     else:
                         return None
-                
+
                 #actions = r1.actions | r2.actions  i will have rule with 2 forward actions to same destination
-                return Rule(intersection, label, actions) 
+                return Rule(intersection, label, actions)
             else:
                 return None
 
@@ -112,7 +140,7 @@ class Classifier(object):
         else:
             c3 = c3.optimize()
         return c3
-    
+
     def __rshift__(c1, c2):
         from language import identity, DataFctPolicy, DynamicPolicy, modify, forward, tag, NetworkFunction
         from language import drop, match
@@ -139,21 +167,21 @@ class Classifier(object):
                         new_a1.map.update(a2.map)
                         new_actions.add(new_a1)
                     else:
-                        raise TypeError   
+                        raise TypeError
                 return new_actions
             elif isinstance(a1, forward) or isinstance(a1, DynamicPolicy):
                 # no right shift after a forward or a dynamic control function
                 raise AssertionError
             else:
                 raise TypeError
-                    
-        
+
+
         def _commute_test(act, pkts):
             """
             given a test b and an action p, return a test
             b' such that p >> b == b' >> p.
             e.g. (match1, tag1, actions1) >> (match2, tag2, actions2)
-            match2 don't apply directly on match1 
+            match2 don't apply directly on match1
             but apply on it after the execution of actions1
             """
             # if act == identity or isinstance(act, tag) --> deleted
@@ -166,14 +194,14 @@ class Classifier(object):
                 if pkts == identity:
                     return identity
                 elif pkts == drop:
-                    return drop 
+                    return drop
                 for f, v in pkts.map.iteritems():
                     if f in act.map and act.map[f] == v:
                         continue
                     elif f in act.map and act.map[f] != v:
-                        # >> modify(srctcp=20) >> match (srctcp=30) ! 
+                        # >> modify(srctcp=20) >> match (srctcp=30) !
                         # So the result is set() !
-                        return drop  
+                        return drop
                     else:
                         new_match_dict[f] = v
                 if len(new_match_dict) == 0:
@@ -183,9 +211,9 @@ class Classifier(object):
                 # no actions after a forward action !
                 raise AssertionError
             else:
-                raise TypeError 
-        
-        
+                raise TypeError
+
+
         def _cross_act(r1, act, r2):
             # match
             m = r1.match.intersec(_commute_test(act, r2.match))
@@ -200,12 +228,12 @@ class Classifier(object):
                 return None
             else:
                 return Classifier([Rule(m, label, actions)])
-    
-        
+
+
         """
         cross two rules and return & non-total classifier
         """
-        def _cross(r1, r2):            
+        def _cross(r1, r2):
             c = None
             for act in r1.actions:
                 cross = _cross_act(r1, act, r2)
@@ -218,7 +246,7 @@ class Classifier(object):
                     c = c_tmp
                     c.optimize()
             return c
-        
+
         # composition logic start here
         c3 = Classifier()
         for r1 in c1.rules:
@@ -226,15 +254,15 @@ class Classifier(object):
                 c3.append(r1)
             else:
                 for r2 in c2.rules:
-                    c_tmp = _cross(r1, r2) 
+                    c_tmp = _cross(r1, r2)
                     if not c_tmp is None:
                         c3.append(c_tmp)
         c3.optimize()
         return c3
-    
+
     def optimize(self):
         return self.remove_shadowed_cover_single()
-    
+
     def remove_shadowed_cover_single(self):
         opt_c = Classifier()
         for r in self.rules:
@@ -245,15 +273,15 @@ class Classifier(object):
             # si aucune regle ne couvre "r", je place "r" dans la cls optimise
                 opt_c.rules.append(r)
         return opt_c
-   
-   
+
 
 class FabricClassifier(object):
     """
+
     """
     def __init__(self, rules=[]):
         self.rules = list(rules)
-        
+
     def append(self, item):
         if isinstance(item, FabricRule):
             self.rules.append(item)
@@ -261,20 +289,35 @@ class FabricClassifier(object):
             self.rules.extend(item.rules)
         else:
             raise TypeError
-    
+
+    """
+        [FOR_DEBUG] !! Adding a method to return the current FabricClassifier (str) rules
+    """
+    def getLogRules(self):
+        str_Rules = ""
+        for rule in self.rules:
+            str_Rules = str_Rules + str(rule) + "\n"
+        return str_Rules
+
+    # FabricClassifiers Fusion
     def __add__(c1, c2):
         c3 = FabricClassifier()
         c3.append(c1)
         c3.append(c2)
         return c3
-        
+
+
     def __rshift__(c1, c2):
         from language import identity
+        # The resulting classifier
         c3 = FabricClassifier()
+        # for each rule in the first classifier
         for r1 in c1.rules:
             new_actions = set()
             via_list = list()
+            # for each rule rule in the second one
             for r2 in c2.rules:
+
                 flow = r1.flow
                 for act1 in r1.actions:
                     if act1 != identity:
@@ -286,5 +329,6 @@ class FabricClassifier(object):
                     via_list.append(dm)
                 for dm in r2.via_list:
                     via_list.append(dm)
-                c3.append(FabricRule(flow, new_actions, via_list)) 
-        return c3        
+
+                c3.append(FabricRule(flow, new_actions, via_list))
+        return c3

@@ -149,7 +149,7 @@ mininet> users ping -c1 WS  ---> OK
 mininet> users ping -c1 CC  ---> OK
 mininet> guests wget WS     ---> OK  (guests IP on whitelist)
 
-mininet> guests ping -c1 WS  ---> KO the first time : good!
+mininet> guests ping -c1 WS  ---> KO the first time : BUG!
 mininet> guests ping -c1 WS  ---> OK the second time : XXX BUG ! not OK. FIX ME!
 
 ******************************************************************************

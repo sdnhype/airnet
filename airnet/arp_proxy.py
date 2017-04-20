@@ -6,6 +6,10 @@ from pox.lib.addresses import EthAddr
 from collections import namedtuple
 import pdb
 
+"""
+"""
+import time
+
 
 log = core.getLogger()
 
@@ -17,13 +21,16 @@ def countOfMessages(of_messages):
     return cpt
 
 class ARP_Proxy(object):
-    
+
     _core_name = "arp_proxy"
-    
+
     def __init__(self):
         self.active = False
-    
+
     def start(self):
+        """
+        """
+        print (time.strftime("%A %d %B %Y %H:%M:%S"))
         print "arp proxy starting"
         self.active = True
         core.runtime.nexus.arpProxy = True
@@ -38,17 +45,17 @@ class ARP_Proxy(object):
             ARP_messages[dpid].append(ARPmsg)
         log.info("number of ARP rules: " + str(countOfMessages(ARP_messages)))
         core.runtime.nexus.send_of_messages(ARP_messages)
-    
+
     def stop(self):
         self.active = False
         core.runtime.nexus.arpProxy = False
-        
+
     def resolve_ARP_request(self, packet):
         """
         """
         def build_arp_reply(packet):
             requested_mac_address = core.infrastructure.arp(packet.payload.protodst.toStr())
-            # useful in usecases like loadbalancer where the public ip adresse have no HWaddr 
+            # useful in usecases like loadbalancer where the public ip adresse have no HWaddr
             if requested_mac_address is None:
                 # 00:26:55:42:9a:62 is the VHWaddr
                 requested_mac_address = EthAddr("00:26:55:42:9a:62")
@@ -64,13 +71,13 @@ class ARP_Proxy(object):
             ether.src = requested_mac_address
             ether.payload = arp_reply
             return ether
-        
+
         arpReply = namedtuple('arpReply', ['switch', 'packet', 'output'])
         arpPacket = build_arp_reply(packet)
         switch, port = core.infrastructure.get_output_to_destination(packet.src)
-        
+
         return arpReply(switch, arpPacket, port)
 
-        
+
 def launch():
     core.registerNew(ARP_Proxy)

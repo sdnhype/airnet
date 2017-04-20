@@ -177,6 +177,9 @@ class drop(Policy):
     def __repr__(self):
         return "drop"
 
+    def __str__(self):
+        return "drop"
+
 ################ Edge policies ####################
 
 
@@ -336,6 +339,9 @@ class forward(EdgePolicy):
 
     def __repr__(self):
         return "forward to " + str(self.output)
+
+    def __str__(self):
+        return "forward ('{}'')".format(self.output)
 
 
 
@@ -626,7 +632,8 @@ class catch(FabricPolicy):
         #return Classifier([r1, r2])
         return FabricClassifier([FabricRule(self, {identity}, list())])
 
-
+    def __repr__(self):
+        return "fabric='{}' ,src='{}' flow='{}'".format(self.fabric,self.src,self.flow)
 
 class carry(FabricPolicy):
     """
@@ -643,6 +650,8 @@ class carry(FabricPolicy):
         else:
             self.constraints = None
 
+    def __repr__(self):
+        return "carry ({},{})".format(self.destination,str(self.constraints))
 
     def generateClassifier(self):
         return FabricClassifier([FabricRule(identity, {self}, list())])

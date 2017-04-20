@@ -1,12 +1,12 @@
 from mapping import Mapping
-from usecases.constants import *
+from constants import *
 
 """
 mininet topology: topo_9sw_4hosts.py
 
 
 users --|---[s1]---|           |---[s5]---[s6]----|           |---[s8]---WebServer
-                   |---[s3] ---|                  |---[s7] ---| 
+                   |---[s3] ---|                  |---[s7] ---|
 guests--|---[s2]---|           | -------[s4] -----|           |---[s9]---ComputerCluster
 """
 

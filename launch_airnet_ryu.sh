@@ -14,7 +14,6 @@ CTRL_MODULE=$1
 MAPPING_MODULE=$2
 AIRNET_DIR=airnet
 
-echo Running AIRNET with RYU backend...
+echo "Starting AIRNET Hypervisor with RYU Controller ....... "
 
 python $AIRNET_DIR/main_server_ryu.py $CTRL_MODULE $MAPPING_MODULE
-

@@ -1,13 +1,13 @@
 #Import language primitives
 from language import *
-from usecases.constants import *
+from constants import *
 import ast
 whitelist = {}
 whitelist["172.16.0.12"] = "allow"
 
 """
-------------- 
-- Admin Net ------[IO]--- |                          
+-------------
+- Admin Net ------[IO]--- |
 -------------             |                       |-- WebServer
                           |----[ Fabric ]---[AC]--|
 --------------            |                       |-- DataBase
@@ -36,10 +36,10 @@ def authenticate(packet):
     else:
         ip = packet.find('ipv4')
         hostIP = ip.srcip.toStr()
-    
-    if whitelist.has_key(hostIP): 
+
+    if whitelist.has_key(hostIP):
         print(hostIP + " is whitelisted. --> fwd")
-        new_policy = (match(edge=WAP, nw_src=hostIP, dst=WEB_SERVER, tp_dst=80) >> 
+        new_policy = (match(edge=WAP, nw_src=hostIP, dst=WEB_SERVER, tp_dst=80) >>
                       tag(GUESTS_WS_FLOWS) >> forward(FABRIC))
     else:
         print(hostIP + " is blacklisted. --> drop")
@@ -84,18 +84,18 @@ def Access_policy():
     return i1 + i2 + i3 + i4
 
 def transport_policy():
-    t1 = ((catch(fabric=FABRIC, src=IO, flow=ADMIN_FLOWS) + 
+    t1 = ((catch(fabric=FABRIC, src=IO, flow=ADMIN_FLOWS) +
             catch(fabric=FABRIC, src=WAP, flow=GUESTS_WS_FLOWS))
                 >> carry(dst=AC))
     t2 = catch(fabric=FABRIC, src=AC, flow=ADMIN_FLOWS) >> carry(dst=IO)
     t3 = catch(fabric=FABRIC, src=AC, flow=GUESTS_WS_FLOWS) >> carry(dst=WAP)
-    return t1 + t2 + t3 
+    return t1 + t2 + t3
 
 #Main function
 def main():
     in_network_functions = InputOutput_policy() + Access_policy()
     transport_function = transport_policy()
-    topology = virtual_network() 
-    return {"virtual_topology": topology, 
-            "edge_policies": in_network_functions, 
+    topology = virtual_network()
+    return {"virtual_topology": topology,
+            "edge_policies": in_network_functions,
             "fabric_policies": transport_function}
