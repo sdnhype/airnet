@@ -2745,3 +2745,1152 @@ PACKET_IN : Received an ARP packet from sw-4
 2017-04-21 15:43:51,591 : airnet_interface : [DEBUG] : 
 Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.50", "dst_ip": "10.0.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "3e:78:b2:ad:be:e5"}}, "dpid": 4}
 2017-04-21 15:43:51,592 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:17:55,229 : airnet_interface : [DEBUG] : *** Switch-1 Enter Event 
+2017-04-21 16:17:55,229 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': 'da:59:66:28:5c:43', 'name': u's1-eth1', 'port_no': '00000001', 'dpid': '0000000000000001'}
+{'hw_addr': 'ee:c3:5c:67:8a:3e', 'name': u's1-eth2', 'port_no': '00000002', 'dpid': '0000000000000001'}
+{'hw_addr': '6e:0d:13:c0:86:52', 'name': u's1-eth3', 'port_no': '00000003', 'dpid': '0000000000000001'}
+2017-04-21 16:17:55,229 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:17:55,255 : airnet_interface : [DEBUG] : *** Switch-2 Enter Event 
+2017-04-21 16:17:55,255 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '5a:fc:ed:f6:04:47', 'name': u's2-eth1', 'port_no': '00000001', 'dpid': '0000000000000002'}
+{'hw_addr': '2e:f6:02:66:b6:eb', 'name': u's2-eth2', 'port_no': '00000002', 'dpid': '0000000000000002'}
+2017-04-21 16:17:55,256 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:17:55,265 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=2, port_no=1, LIVE> to Port<dpid=1, port_no=1, LIVE>
+2017-04-21 16:17:55,265 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:17:55,316 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=1, port_no=1, LIVE> to Port<dpid=2, port_no=1, LIVE>
+2017-04-21 16:17:55,316 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:17:55,329 : airnet_interface : [DEBUG] : *** Switch-3 Enter Event 
+2017-04-21 16:17:55,330 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '16:17:0e:fa:5e:b4', 'name': u's3-eth1', 'port_no': '00000001', 'dpid': '0000000000000003'}
+{'hw_addr': 'e2:d3:21:9c:57:57', 'name': u's3-eth2', 'port_no': '00000002', 'dpid': '0000000000000003'}
+2017-04-21 16:17:55,330 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:17:55,366 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=3, port_no=1, LIVE> to Port<dpid=2, port_no=2, LIVE>
+2017-04-21 16:17:55,366 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:17:55,377 : airnet_interface : [DEBUG] : *** Switch-4 Enter Event 
+2017-04-21 16:17:55,377 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '92:3a:c2:2c:26:0c', 'name': u's4-eth1', 'port_no': '00000001', 'dpid': '0000000000000004'}
+{'hw_addr': '7e:d4:f1:c7:f6:56', 'name': u's4-eth2', 'port_no': '00000002', 'dpid': '0000000000000004'}
+2017-04-21 16:17:55,378 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:17:55,383 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=2, port_no=2, LIVE> to Port<dpid=3, port_no=1, LIVE>
+2017-04-21 16:17:55,384 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:17:55,390 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=4, port_no=1, LIVE> to Port<dpid=3, port_no=2, LIVE>
+2017-04-21 16:17:55,391 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:17:55,409 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=3, port_no=2, LIVE> to Port<dpid=4, port_no=1, LIVE>
+2017-04-21 16:17:55,410 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:17:55,440 : airnet_interface : [DEBUG] : *** Switch-5 Enter Event 
+2017-04-21 16:17:55,440 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': 'e6:95:62:b8:b8:f4', 'name': u's5-eth2', 'port_no': '00000002', 'dpid': '0000000000000005'}
+2017-04-21 16:17:55,440 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:17:55,448 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=5, port_no=1, LIVE> to Port<dpid=4, port_no=2, LIVE>
+2017-04-21 16:17:55,448 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:17:55,457 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=4, port_no=2, LIVE> to Port<dpid=5, port_no=1, LIVE>
+2017-04-21 16:17:55,457 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:17:55,482 : airnet_interface : [DEBUG] : *** Switch-6 Enter Event 
+2017-04-21 16:17:55,483 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '0a:56:18:a7:7b:d2', 'name': u's6-eth1', 'port_no': '00000001', 'dpid': '0000000000000006'}
+{'hw_addr': 'c2:61:82:49:3a:f0', 'name': u's6-eth2', 'port_no': '00000002', 'dpid': '0000000000000006'}
+2017-04-21 16:17:55,483 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:17:55,492 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=6, port_no=1, LIVE> to Port<dpid=5, port_no=2, LIVE>
+2017-04-21 16:17:55,493 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:17:55,507 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=5, port_no=2, LIVE> to Port<dpid=6, port_no=1, LIVE>
+2017-04-21 16:17:55,508 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:17:55,545 : airnet_interface : [DEBUG] : *** Switch-7 Enter Event 
+2017-04-21 16:17:55,545 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '92:e3:b2:dd:27:d4', 'name': u's7-eth1', 'port_no': '00000001', 'dpid': '0000000000000007'}
+{'hw_addr': '56:5e:60:ca:df:f8', 'name': u's7-eth2', 'port_no': '00000002', 'dpid': '0000000000000007'}
+2017-04-21 16:17:55,546 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:17:55,550 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=7, port_no=1, LIVE> to Port<dpid=6, port_no=2, LIVE>
+2017-04-21 16:17:55,551 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:17:55,559 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:17:55,560 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "fe:c0:27:32:57:d7"}}, "dpid": 1}
+2017-04-21 16:17:55,560 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:17:55,567 : airnet_interface : [DEBUG] : 
+*** Host Add Event : fe:c0:27:32:57:d7  
+2017-04-21 16:17:55,567 : rest_client : [DEBUG] : Send Host/add request via POST method
+2017-04-21 16:17:55,572 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=6, port_no=2, LIVE> to Port<dpid=7, port_no=1, LIVE>
+2017-04-21 16:17:55,572 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:17:56,552 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:17:56,552 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "fe:c0:27:32:57:d7"}}, "dpid": 1}
+2017-04-21 16:17:56,552 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:17:56,557 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:17:56,558 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "fe:c0:27:32:57:d7"}}, "dpid": 1}
+2017-04-21 16:17:56,558 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:17:57,551 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:17:57,551 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "fe:c0:27:32:57:d7"}}, "dpid": 1}
+2017-04-21 16:17:57,551 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:17:57,555 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:17:57,555 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "fe:c0:27:32:57:d7"}}, "dpid": 1}
+2017-04-21 16:17:57,555 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:17:57,560 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:17:57,560 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "b6:97:3b:e6:0e:e1"}}, "dpid": 1}
+2017-04-21 16:17:57,561 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:17:57,563 : airnet_interface : [DEBUG] : 
+*** Host Add Event : b6:97:3b:e6:0e:e1  
+2017-04-21 16:17:57,563 : rest_client : [DEBUG] : Send Host/add request via POST method
+2017-04-21 16:17:58,555 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:17:58,555 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "fe:c0:27:32:57:d7"}}, "dpid": 1}
+2017-04-21 16:17:58,556 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:17:58,559 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:17:58,559 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "b6:97:3b:e6:0e:e1"}}, "dpid": 1}
+2017-04-21 16:17:58,560 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:17:58,563 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:17:58,563 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "b6:97:3b:e6:0e:e1"}}, "dpid": 1}
+2017-04-21 16:17:58,564 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:17:59,560 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:17:59,560 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "b6:97:3b:e6:0e:e1"}}, "dpid": 1}
+2017-04-21 16:17:59,560 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:17:59,563 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:17:59,563 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "b6:97:3b:e6:0e:e1"}}, "dpid": 1}
+2017-04-21 16:17:59,564 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:17:59,567 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:17:59,568 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "3e:eb:a0:03:5d:56"}}, "dpid": 7}
+2017-04-21 16:17:59,568 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:17:59,570 : airnet_interface : [DEBUG] : 
+*** Host Add Event : 3e:eb:a0:03:5d:56  
+2017-04-21 16:17:59,570 : rest_client : [DEBUG] : Send Host/add request via POST method
+2017-04-21 16:18:00,559 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:18:00,560 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "b6:97:3b:e6:0e:e1"}}, "dpid": 1}
+2017-04-21 16:18:00,560 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:18:00,563 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:18:00,564 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "3e:eb:a0:03:5d:56"}}, "dpid": 7}
+2017-04-21 16:18:00,564 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:18:00,568 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:18:00,568 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "3e:eb:a0:03:5d:56"}}, "dpid": 7}
+2017-04-21 16:18:00,568 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:18:01,564 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:18:01,564 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "3e:eb:a0:03:5d:56"}}, "dpid": 7}
+2017-04-21 16:18:01,564 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:18:01,568 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:18:01,569 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "3e:eb:a0:03:5d:56"}}, "dpid": 7}
+2017-04-21 16:18:01,569 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:18:02,567 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:18:02,568 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "3e:eb:a0:03:5d:56"}}, "dpid": 7}
+2017-04-21 16:18:02,568 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:18:02,575 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:18:02,575 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "b6:97:3b:e6:0e:e1"}}, "dpid": 1}
+2017-04-21 16:18:02,575 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:18:31,295 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:18:31,295 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "fe:c0:27:32:57:d7"}}, "dpid": 1}
+2017-04-21 16:18:31,295 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:18:31,302 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:18:31,302 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "3e:eb:a0:03:5d:56"}}, "dpid": 7}
+2017-04-21 16:18:31,303 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:20:19,479 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:20:19,480 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 0, "port": 2, "packet": {"dl_dst": "fe:c0:27:32:57:d7", "icmp": {}, "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "dl_src": "3e:eb:a0:03:5d:56"}, "dpid": 6}
+2017-04-21 16:20:19,480 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:20:19,551 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:20:24,475 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:20:24,475 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "fe:c0:27:32:57:d7"}}, "dpid": 1}
+2017-04-21 16:20:24,475 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:20:39,094 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:20:39,095 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 1, "port": 2, "packet": {"dl_dst": "fe:c0:27:32:57:d7", "icmp": {}, "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "dl_src": "3e:eb:a0:03:5d:56"}, "dpid": 6}
+2017-04-21 16:20:39,095 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:20:39,099 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:20:44,108 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:20:44,108 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "3e:eb:a0:03:5d:56"}}, "dpid": 7}
+2017-04-21 16:20:44,108 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:21:14,155 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:21:14,156 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "fe:c0:27:32:57:d7"}}, "dpid": 1}
+2017-04-21 16:21:14,156 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:21:41,068 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:21:41,068 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "3e:eb:a0:03:5d:56"}}, "dpid": 7}
+2017-04-21 16:21:41,068 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:22:35,796 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=1, port_no=1, DOWN> to Port<dpid=2, port_no=1, LIVE>
+2017-04-21 16:22:35,797 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:22:35,840 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=2, port_no=1, LIVE> to Port<dpid=1, port_no=1, LIVE>
+2017-04-21 16:22:35,841 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:22:35,979 : airnet_interface : [DEBUG] : 
+*** Switch-5 Leave Event 
+2017-04-21 16:22:35,980 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:22:35,993 : airnet_interface : [DEBUG] : 
+*** Switch-2 Leave Event 
+2017-04-21 16:22:35,994 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:22:36,004 : airnet_interface : [DEBUG] : 
+*** Switch-1 Leave Event 
+2017-04-21 16:22:36,005 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:22:36,017 : airnet_interface : [DEBUG] : 
+*** Switch-4 Leave Event 
+2017-04-21 16:22:36,018 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:22:36,035 : airnet_interface : [DEBUG] : 
+*** Switch-3 Leave Event 
+2017-04-21 16:22:36,036 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:22:36,049 : airnet_interface : [DEBUG] : 
+*** Switch-7 Leave Event 
+2017-04-21 16:22:36,049 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:22:36,055 : airnet_interface : [DEBUG] : 
+*** Switch-6 Leave Event 
+2017-04-21 16:22:36,056 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:26:18,182 : airnet_interface : [DEBUG] : *** Switch-1 Enter Event 
+2017-04-21 16:26:18,182 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '52:79:51:71:33:00', 'name': u's1-eth1', 'port_no': '00000001', 'dpid': '0000000000000001'}
+{'hw_addr': '72:bd:78:f8:04:38', 'name': u's1-eth2', 'port_no': '00000002', 'dpid': '0000000000000001'}
+{'hw_addr': 'f2:01:28:95:d4:97', 'name': u's1-eth3', 'port_no': '00000003', 'dpid': '0000000000000001'}
+2017-04-21 16:26:18,182 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:26:18,209 : airnet_interface : [DEBUG] : *** Switch-2 Enter Event 
+2017-04-21 16:26:18,209 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '1a:55:6c:02:ea:04', 'name': u's2-eth1', 'port_no': '00000001', 'dpid': '0000000000000002'}
+{'hw_addr': 'f2:af:9b:c0:90:cc', 'name': u's2-eth2', 'port_no': '00000002', 'dpid': '0000000000000002'}
+2017-04-21 16:26:18,210 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:26:18,219 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=1, port_no=1, LIVE> to Port<dpid=2, port_no=1, LIVE>
+2017-04-21 16:26:18,219 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:26:18,224 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=2, port_no=1, LIVE> to Port<dpid=1, port_no=1, LIVE>
+2017-04-21 16:26:18,225 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:26:18,269 : airnet_interface : [DEBUG] : *** Switch-3 Enter Event 
+2017-04-21 16:26:18,269 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '4a:e9:f5:2e:95:a6', 'name': u's3-eth1', 'port_no': '00000001', 'dpid': '0000000000000003'}
+{'hw_addr': '42:82:ec:fd:f0:05', 'name': u's3-eth2', 'port_no': '00000002', 'dpid': '0000000000000003'}
+2017-04-21 16:26:18,270 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:26:18,296 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=3, port_no=1, LIVE> to Port<dpid=2, port_no=2, LIVE>
+2017-04-21 16:26:18,297 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:26:18,310 : airnet_interface : [DEBUG] : *** Switch-4 Enter Event 
+2017-04-21 16:26:18,311 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': 'a6:36:14:31:f6:51', 'name': u's4-eth1', 'port_no': '00000001', 'dpid': '0000000000000004'}
+{'hw_addr': '4e:c0:e6:f8:e8:8e', 'name': u's4-eth2', 'port_no': '00000002', 'dpid': '0000000000000004'}
+2017-04-21 16:26:18,311 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:26:18,328 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=4, port_no=1, LIVE> to Port<dpid=3, port_no=2, LIVE>
+2017-04-21 16:26:18,329 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:26:18,334 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=2, port_no=2, LIVE> to Port<dpid=3, port_no=1, LIVE>
+2017-04-21 16:26:18,334 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:26:18,356 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=3, port_no=2, LIVE> to Port<dpid=4, port_no=1, LIVE>
+2017-04-21 16:26:18,356 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:26:18,368 : airnet_interface : [DEBUG] : *** Switch-5 Enter Event 
+2017-04-21 16:26:18,369 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '8e:1b:25:6c:9f:9d', 'name': u's5-eth1', 'port_no': '00000001', 'dpid': '0000000000000005'}
+{'hw_addr': 'ae:bb:c9:11:d6:65', 'name': u's5-eth2', 'port_no': '00000002', 'dpid': '0000000000000005'}
+2017-04-21 16:26:18,369 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:26:18,375 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=5, port_no=1, LIVE> to Port<dpid=4, port_no=2, LIVE>
+2017-04-21 16:26:18,376 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:26:18,415 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=4, port_no=2, LIVE> to Port<dpid=5, port_no=1, LIVE>
+2017-04-21 16:26:18,415 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:26:18,423 : airnet_interface : [DEBUG] : *** Switch-6 Enter Event 
+2017-04-21 16:26:18,423 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '12:2e:bf:f4:1e:07', 'name': u's6-eth1', 'port_no': '00000001', 'dpid': '0000000000000006'}
+{'hw_addr': 'aa:66:e1:d1:c2:0c', 'name': u's6-eth2', 'port_no': '00000002', 'dpid': '0000000000000006'}
+2017-04-21 16:26:18,424 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:26:18,438 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=6, port_no=1, LIVE> to Port<dpid=5, port_no=2, LIVE>
+2017-04-21 16:26:18,439 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:26:18,456 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=5, port_no=2, LIVE> to Port<dpid=6, port_no=1, LIVE>
+2017-04-21 16:26:18,457 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:26:18,463 : airnet_interface : [DEBUG] : *** Switch-7 Enter Event 
+2017-04-21 16:26:18,463 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '36:a4:53:39:ae:ee', 'name': u's7-eth1', 'port_no': '00000001', 'dpid': '0000000000000007'}
+{'hw_addr': '7e:c1:e8:29:7d:71', 'name': u's7-eth2', 'port_no': '00000002', 'dpid': '0000000000000007'}
+2017-04-21 16:26:18,464 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:26:18,493 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=7, port_no=1, LIVE> to Port<dpid=6, port_no=2, LIVE>
+2017-04-21 16:26:18,497 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:26:18,510 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=6, port_no=2, LIVE> to Port<dpid=7, port_no=1, LIVE>
+2017-04-21 16:26:18,515 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:26:18,521 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:26:18,522 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:cb:eb:ca:21:a0"}}, "dpid": 1}
+2017-04-21 16:26:18,524 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:18,530 : airnet_interface : [DEBUG] : 
+*** Host Add Event : f2:cb:eb:ca:21:a0  
+2017-04-21 16:26:18,531 : rest_client : [DEBUG] : Send Host/add request via POST method
+2017-04-21 16:26:19,512 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:26:19,512 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:cb:eb:ca:21:a0"}}, "dpid": 1}
+2017-04-21 16:26:19,512 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:19,517 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:26:19,517 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:cb:eb:ca:21:a0"}}, "dpid": 1}
+2017-04-21 16:26:19,517 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:20,512 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:26:20,512 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:cb:eb:ca:21:a0"}}, "dpid": 1}
+2017-04-21 16:26:20,512 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:20,516 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:26:20,516 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:cb:eb:ca:21:a0"}}, "dpid": 1}
+2017-04-21 16:26:20,516 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:20,520 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:26:20,520 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "76:39:34:76:60:4a"}}, "dpid": 1}
+2017-04-21 16:26:20,520 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:20,523 : airnet_interface : [DEBUG] : 
+*** Host Add Event : 76:39:34:76:60:4a  
+2017-04-21 16:26:20,523 : rest_client : [DEBUG] : Send Host/add request via POST method
+2017-04-21 16:26:21,516 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:26:21,516 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:cb:eb:ca:21:a0"}}, "dpid": 1}
+2017-04-21 16:26:21,516 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:21,519 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:26:21,519 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "76:39:34:76:60:4a"}}, "dpid": 1}
+2017-04-21 16:26:21,519 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:21,522 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:26:21,523 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "76:39:34:76:60:4a"}}, "dpid": 1}
+2017-04-21 16:26:21,523 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:22,515 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:26:22,515 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "76:39:34:76:60:4a"}}, "dpid": 1}
+2017-04-21 16:26:22,516 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:22,519 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:26:22,520 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "76:39:34:76:60:4a"}}, "dpid": 1}
+2017-04-21 16:26:22,520 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:22,524 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:26:22,524 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ba:8f:9b:77:ff:31"}}, "dpid": 7}
+2017-04-21 16:26:22,525 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:22,527 : airnet_interface : [DEBUG] : 
+*** Host Add Event : ba:8f:9b:77:ff:31  
+2017-04-21 16:26:22,527 : rest_client : [DEBUG] : Send Host/add request via POST method
+2017-04-21 16:26:23,520 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:26:23,520 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "76:39:34:76:60:4a"}}, "dpid": 1}
+2017-04-21 16:26:23,520 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:23,523 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:26:23,524 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ba:8f:9b:77:ff:31"}}, "dpid": 7}
+2017-04-21 16:26:23,524 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:23,528 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:26:23,528 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ba:8f:9b:77:ff:31"}}, "dpid": 7}
+2017-04-21 16:26:23,528 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:24,524 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:26:24,524 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ba:8f:9b:77:ff:31"}}, "dpid": 7}
+2017-04-21 16:26:24,524 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:24,527 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:26:24,527 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ba:8f:9b:77:ff:31"}}, "dpid": 7}
+2017-04-21 16:26:24,528 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:25,523 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:26:25,524 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ba:8f:9b:77:ff:31"}}, "dpid": 7}
+2017-04-21 16:26:25,524 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:26:25,530 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:26:25,531 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "76:39:34:76:60:4a"}}, "dpid": 1}
+2017-04-21 16:26:25,531 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:18,291 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:27:18,291 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ba:8f:9b:77:ff:31"}}, "dpid": 7}
+2017-04-21 16:27:18,291 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:18,298 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:27:18,298 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:cb:eb:ca:21:a0"}}, "dpid": 1}
+2017-04-21 16:27:18,298 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:24,578 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-3
+2017-04-21 16:27:24,579 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 0, "port": 1, "packet": {"dl_dst": "ba:8f:9b:77:ff:31", "ipv4": {"src": "192.168.0.11", "dst": "172.16.0.11"}, "tcp": {"src_port": 5001, "dst_port": 48454}, "dl_src": "f2:cb:eb:ca:21:a0"}, "dpid": 3}
+2017-04-21 16:27:24,579 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:24,593 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:24,594 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-3
+2017-04-21 16:27:24,594 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 1, "port": 1, "packet": {"dl_dst": "ba:8f:9b:77:ff:31", "ipv4": {"src": "192.168.0.11", "dst": "172.16.0.11"}, "tcp": {"src_port": 5001, "dst_port": 48454}, "dl_src": "f2:cb:eb:ca:21:a0"}, "dpid": 3}
+2017-04-21 16:27:24,595 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:24,609 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:24,610 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-3
+2017-04-21 16:27:24,610 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 2, "port": 1, "packet": {"dl_dst": "ba:8f:9b:77:ff:31", "ipv4": {"src": "192.168.0.11", "dst": "172.16.0.11"}, "tcp": {"src_port": 5001, "dst_port": 48454}, "dl_src": "f2:cb:eb:ca:21:a0"}, "dpid": 3}
+2017-04-21 16:27:24,610 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:24,621 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:24,622 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-2
+2017-04-21 16:27:24,622 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 3, "port": 1, "packet": {"dl_dst": "ba:8f:9b:77:ff:31", "ipv4": {"src": "192.168.0.11", "dst": "172.16.0.11"}, "tcp": {"src_port": 5001, "dst_port": 48454}, "dl_src": "f2:cb:eb:ca:21:a0"}, "dpid": 2}
+2017-04-21 16:27:24,622 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:24,629 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:24,630 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-2
+2017-04-21 16:27:24,630 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 4, "port": 1, "packet": {"dl_dst": "ba:8f:9b:77:ff:31", "ipv4": {"src": "192.168.0.11", "dst": "172.16.0.11"}, "tcp": {"src_port": 5001, "dst_port": 48454}, "dl_src": "f2:cb:eb:ca:21:a0"}, "dpid": 2}
+2017-04-21 16:27:24,630 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:24,639 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:24,640 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-2
+2017-04-21 16:27:24,640 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 5, "port": 1, "packet": {"dl_dst": "ba:8f:9b:77:ff:31", "ipv4": {"src": "192.168.0.11", "dst": "172.16.0.11"}, "tcp": {"src_port": 5001, "dst_port": 48454}, "dl_src": "f2:cb:eb:ca:21:a0"}, "dpid": 2}
+2017-04-21 16:27:24,640 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:24,648 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:24,649 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-2
+2017-04-21 16:27:24,649 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 6, "port": 1, "packet": {"dl_dst": "ba:8f:9b:77:ff:31", "ipv4": {"src": "192.168.0.11", "dst": "172.16.0.11"}, "tcp": {"src_port": 5001, "dst_port": 48454}, "dl_src": "f2:cb:eb:ca:21:a0"}, "dpid": 2}
+2017-04-21 16:27:24,649 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:24,657 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:24,792 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:24,792 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 7, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:24,792 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:24,796 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:25,200 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:25,200 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 8, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:25,200 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:25,205 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:26,016 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:26,016 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 9, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:26,017 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:26,021 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:27,652 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:27,652 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 10, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:27,653 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:27,658 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:30,923 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:30,924 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 11, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:30,924 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:30,929 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:37,467 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:37,468 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 12, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:37,468 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:37,472 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,233 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,233 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 13, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,233 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,239 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,240 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,240 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 14, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,240 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,248 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,249 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,249 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 15, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,249 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,255 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,256 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,257 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 16, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,257 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,261 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,262 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,263 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 17, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,263 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,269 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,269 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,270 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 18, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,270 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,276 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,277 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,278 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 19, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,278 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,283 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,284 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,284 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 20, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,284 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,290 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,290 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,291 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 21, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,291 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,296 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,297 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,298 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 22, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,298 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,302 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,303 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,303 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 23, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,303 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,311 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,311 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,312 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 24, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,312 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,316 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,432 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,432 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 25, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,432 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,437 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,444 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,445 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 26, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,445 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,451 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,640 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,640 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 27, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,640 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,644 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,648 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,648 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 28, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,648 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,652 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:49,852 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:49,852 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 29, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:49,852 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:49,856 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:50,055 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:50,056 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 30, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:50,056 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:50,060 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:50,260 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:50,260 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 31, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:50,260 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:50,265 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:50,887 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:50,888 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 32, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:50,888 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:50,892 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:51,076 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:51,076 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 33, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:51,076 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:51,082 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:52,556 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:52,556 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 34, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:52,556 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:52,560 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:52,711 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:52,712 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 35, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:52,712 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:52,716 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:54,235 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:27:54,235 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:cb:eb:ca:21:a0"}}, "dpid": 1}
+2017-04-21 16:27:54,236 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:55,891 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:55,891 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 36, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:55,892 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:55,895 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:27:55,980 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:27:55,980 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 37, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:27:55,980 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:27:55,984 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:28:02,524 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:28:02,524 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 38, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:28:02,524 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:28:02,528 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:28:02,556 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:28:02,557 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 39, "port": 2, "packet": {"dl_dst": "f2:cb:eb:ca:21:a0", "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "tcp": {"src_port": 48454, "dst_port": 5001}, "dl_src": "ba:8f:9b:77:ff:31"}, "dpid": 6}
+2017-04-21 16:28:02,557 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:28:02,561 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:28:53,549 : airnet_interface : [DEBUG] : *** Switch-1 Enter Event 
+2017-04-21 16:28:53,549 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '52:79:51:71:33:00', 'name': u's1-eth1', 'port_no': '00000001', 'dpid': '0000000000000001'}
+{'hw_addr': '72:bd:78:f8:04:38', 'name': u's1-eth2', 'port_no': '00000002', 'dpid': '0000000000000001'}
+{'hw_addr': 'f2:01:28:95:d4:97', 'name': u's1-eth3', 'port_no': '00000003', 'dpid': '0000000000000001'}
+2017-04-21 16:28:53,549 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:28:53,561 : airnet_interface : [DEBUG] : *** Switch-2 Enter Event 
+2017-04-21 16:28:53,562 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '1a:55:6c:02:ea:04', 'name': u's2-eth1', 'port_no': '00000001', 'dpid': '0000000000000002'}
+{'hw_addr': 'f2:af:9b:c0:90:cc', 'name': u's2-eth2', 'port_no': '00000002', 'dpid': '0000000000000002'}
+2017-04-21 16:28:53,562 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:28:53,571 : airnet_interface : [DEBUG] : *** Switch-4 Enter Event 
+2017-04-21 16:28:53,572 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': 'a6:36:14:31:f6:51', 'name': u's4-eth1', 'port_no': '00000001', 'dpid': '0000000000000004'}
+{'hw_addr': '4e:c0:e6:f8:e8:8e', 'name': u's4-eth2', 'port_no': '00000002', 'dpid': '0000000000000004'}
+2017-04-21 16:28:53,572 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:28:53,576 : airnet_interface : [DEBUG] : *** Switch-5 Enter Event 
+2017-04-21 16:28:53,576 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '8e:1b:25:6c:9f:9d', 'name': u's5-eth1', 'port_no': '00000001', 'dpid': '0000000000000005'}
+{'hw_addr': 'ae:bb:c9:11:d6:65', 'name': u's5-eth2', 'port_no': '00000002', 'dpid': '0000000000000005'}
+2017-04-21 16:28:53,577 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:28:53,580 : airnet_interface : [DEBUG] : *** Switch-3 Enter Event 
+2017-04-21 16:28:53,581 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '4a:e9:f5:2e:95:a6', 'name': u's3-eth1', 'port_no': '00000001', 'dpid': '0000000000000003'}
+{'hw_addr': '42:82:ec:fd:f0:05', 'name': u's3-eth2', 'port_no': '00000002', 'dpid': '0000000000000003'}
+2017-04-21 16:28:53,581 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:28:53,585 : airnet_interface : [DEBUG] : *** Switch-7 Enter Event 
+2017-04-21 16:28:53,585 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '36:a4:53:39:ae:ee', 'name': u's7-eth1', 'port_no': '00000001', 'dpid': '0000000000000007'}
+{'hw_addr': '7e:c1:e8:29:7d:71', 'name': u's7-eth2', 'port_no': '00000002', 'dpid': '0000000000000007'}
+2017-04-21 16:28:53,585 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:28:53,589 : airnet_interface : [DEBUG] : *** Switch-6 Enter Event 
+2017-04-21 16:28:53,590 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '12:2e:bf:f4:1e:07', 'name': u's6-eth1', 'port_no': '00000001', 'dpid': '0000000000000006'}
+{'hw_addr': 'aa:66:e1:d1:c2:0c', 'name': u's6-eth2', 'port_no': '00000002', 'dpid': '0000000000000006'}
+2017-04-21 16:28:53,590 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:28:53,595 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=2, port_no=2, LIVE> to Port<dpid=3, port_no=1, LIVE>
+2017-04-21 16:28:53,596 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:28:53,599 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=4, port_no=1, LIVE> to Port<dpid=3, port_no=2, LIVE>
+2017-04-21 16:28:53,600 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:28:53,604 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=2, port_no=1, LIVE> to Port<dpid=1, port_no=1, LIVE>
+2017-04-21 16:28:53,604 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:28:53,609 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=4, port_no=2, LIVE> to Port<dpid=5, port_no=1, LIVE>
+2017-04-21 16:28:53,609 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:28:53,614 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=5, port_no=1, LIVE> to Port<dpid=4, port_no=2, LIVE>
+2017-04-21 16:28:53,614 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:28:53,618 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=5, port_no=2, LIVE> to Port<dpid=6, port_no=1, LIVE>
+2017-04-21 16:28:53,619 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:28:53,622 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=1, port_no=1, LIVE> to Port<dpid=2, port_no=1, LIVE>
+2017-04-21 16:28:53,623 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:28:53,625 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=6, port_no=2, LIVE> to Port<dpid=7, port_no=1, LIVE>
+2017-04-21 16:28:53,626 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:28:53,629 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=6, port_no=1, LIVE> to Port<dpid=5, port_no=2, LIVE>
+2017-04-21 16:28:53,629 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:28:53,632 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=7, port_no=1, LIVE> to Port<dpid=6, port_no=2, LIVE>
+2017-04-21 16:28:53,632 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:28:53,636 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=3, port_no=2, LIVE> to Port<dpid=4, port_no=1, LIVE>
+2017-04-21 16:28:53,636 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:28:53,641 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=3, port_no=1, LIVE> to Port<dpid=2, port_no=2, LIVE>
+2017-04-21 16:28:53,641 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:28:57,380 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=1, port_no=1, DOWN> to Port<dpid=2, port_no=1, LIVE>
+2017-04-21 16:28:57,380 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:28:57,383 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=2, port_no=1, LIVE> to Port<dpid=1, port_no=1, LIVE>
+2017-04-21 16:28:57,384 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:28:57,398 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=2, port_no=2, DOWN> to Port<dpid=3, port_no=1, LIVE>
+2017-04-21 16:28:57,398 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:28:57,401 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=3, port_no=1, LIVE> to Port<dpid=2, port_no=2, LIVE>
+2017-04-21 16:28:57,402 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:28:57,544 : airnet_interface : [DEBUG] : 
+*** Switch-5 Leave Event 
+2017-04-21 16:28:57,544 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:28:57,552 : airnet_interface : [DEBUG] : 
+*** Switch-2 Leave Event 
+2017-04-21 16:28:57,553 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:28:57,561 : airnet_interface : [DEBUG] : 
+*** Switch-1 Leave Event 
+2017-04-21 16:28:57,562 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:28:57,582 : airnet_interface : [DEBUG] : 
+*** Switch-4 Leave Event 
+2017-04-21 16:28:57,583 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:28:57,589 : airnet_interface : [DEBUG] : 
+*** Switch-3 Leave Event 
+2017-04-21 16:28:57,589 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:28:57,597 : airnet_interface : [DEBUG] : 
+*** Switch-7 Leave Event 
+2017-04-21 16:28:57,597 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:28:57,607 : airnet_interface : [DEBUG] : 
+*** Switch-6 Leave Event 
+2017-04-21 16:28:57,608 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:29:08,254 : airnet_interface : [DEBUG] : *** Switch-1 Enter Event 
+2017-04-21 16:29:08,254 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': 'ca:2a:d9:7f:cc:ea', 'name': u's1-eth1', 'port_no': '00000001', 'dpid': '0000000000000001'}
+{'hw_addr': 'de:9b:85:e4:c6:7a', 'name': u's1-eth2', 'port_no': '00000002', 'dpid': '0000000000000001'}
+{'hw_addr': '86:63:14:6a:2c:d6', 'name': u's1-eth3', 'port_no': '00000003', 'dpid': '0000000000000001'}
+2017-04-21 16:29:08,254 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:29:08,300 : airnet_interface : [DEBUG] : *** Switch-2 Enter Event 
+2017-04-21 16:29:08,300 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': 'd6:76:3c:99:5e:81', 'name': u's2-eth1', 'port_no': '00000001', 'dpid': '0000000000000002'}
+{'hw_addr': 'e2:e7:82:af:5c:7b', 'name': u's2-eth2', 'port_no': '00000002', 'dpid': '0000000000000002'}
+2017-04-21 16:29:08,300 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:29:08,306 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=3, port_no=2, LIVE> to Port<dpid=4, port_no=1, LIVE>
+2017-04-21 16:29:08,306 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:29:08,311 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=7, port_no=1, LIVE> to Port<dpid=6, port_no=2, LIVE>
+2017-04-21 16:29:08,311 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:29:08,316 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=5, port_no=2, LIVE> to Port<dpid=6, port_no=1, LIVE>
+2017-04-21 16:29:08,316 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:29:08,321 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=5, port_no=1, LIVE> to Port<dpid=4, port_no=2, LIVE>
+2017-04-21 16:29:08,322 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:29:08,326 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=4, port_no=2, LIVE> to Port<dpid=5, port_no=1, LIVE>
+2017-04-21 16:29:08,328 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:29:08,333 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=4, port_no=1, LIVE> to Port<dpid=3, port_no=2, LIVE>
+2017-04-21 16:29:08,334 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:29:08,339 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=6, port_no=1, LIVE> to Port<dpid=5, port_no=2, LIVE>
+2017-04-21 16:29:08,341 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:29:08,349 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=6, port_no=2, LIVE> to Port<dpid=7, port_no=1, LIVE>
+2017-04-21 16:29:08,350 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:29:08,368 : airnet_interface : [DEBUG] : *** Switch-3 Enter Event 
+2017-04-21 16:29:08,369 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '06:fd:be:cc:87:f6', 'name': u's3-eth1', 'port_no': '00000001', 'dpid': '0000000000000003'}
+{'hw_addr': 'c6:e0:62:22:c8:04', 'name': u's3-eth2', 'port_no': '00000002', 'dpid': '0000000000000003'}
+2017-04-21 16:29:08,369 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:29:08,403 : airnet_interface : [DEBUG] : *** Switch-4 Enter Event 
+2017-04-21 16:29:08,403 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': 'd2:d0:f2:6b:c8:35', 'name': u's4-eth1', 'port_no': '00000001', 'dpid': '0000000000000004'}
+{'hw_addr': '0e:b4:ed:b7:b8:c9', 'name': u's4-eth2', 'port_no': '00000002', 'dpid': '0000000000000004'}
+2017-04-21 16:29:08,404 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:29:08,459 : airnet_interface : [DEBUG] : *** Switch-5 Enter Event 
+2017-04-21 16:29:08,459 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '5e:f3:d2:36:95:18', 'name': u's5-eth1', 'port_no': '00000001', 'dpid': '0000000000000005'}
+{'hw_addr': '7e:52:39:aa:20:fc', 'name': u's5-eth2', 'port_no': '00000002', 'dpid': '0000000000000005'}
+2017-04-21 16:29:08,460 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:29:08,495 : airnet_interface : [DEBUG] : *** Switch-6 Enter Event 
+2017-04-21 16:29:08,495 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': '96:9a:ce:71:ea:d1', 'name': u's6-eth1', 'port_no': '00000001', 'dpid': '0000000000000006'}
+{'hw_addr': 'da:9d:4f:a5:38:08', 'name': u's6-eth2', 'port_no': '00000002', 'dpid': '0000000000000006'}
+2017-04-21 16:29:08,495 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:29:08,526 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=1, port_no=1, LIVE> to Port<dpid=2, port_no=1, LIVE>
+2017-04-21 16:29:08,526 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:29:08,553 : airnet_interface : [DEBUG] : *** Switch-7 Enter Event 
+2017-04-21 16:29:08,553 : airnet_interface : [DEBUG] : 
+
+{'hw_addr': 'f2:b9:59:88:ce:88', 'name': u's7-eth1', 'port_no': '00000001', 'dpid': '0000000000000007'}
+{'hw_addr': '6a:a6:c2:3c:7a:33', 'name': u's7-eth2', 'port_no': '00000002', 'dpid': '0000000000000007'}
+2017-04-21 16:29:08,553 : rest_client : [DEBUG] : Send Switch/enter request via POST method
+2017-04-21 16:29:08,564 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=2, port_no=1, LIVE> to Port<dpid=1, port_no=1, LIVE>
+2017-04-21 16:29:08,565 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:29:08,571 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=5, port_no=1, LIVE> to Port<dpid=4, port_no=2, LIVE>
+2017-04-21 16:29:08,571 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:29:08,577 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:08,578 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ea:77:fa:6c:db:33"}}, "dpid": 1}
+2017-04-21 16:29:08,579 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:08,583 : airnet_interface : [DEBUG] : 
+*** Host Add Event : ea:77:fa:6c:db:33  
+2017-04-21 16:29:08,584 : rest_client : [DEBUG] : Send Host/add request via POST method
+2017-04-21 16:29:08,615 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=4, port_no=2, LIVE> to Port<dpid=5, port_no=1, LIVE>
+2017-04-21 16:29:08,616 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:29:08,621 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=3, port_no=2, LIVE> to Port<dpid=4, port_no=1, LIVE>
+2017-04-21 16:29:08,621 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:29:08,665 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=4, port_no=1, LIVE> to Port<dpid=3, port_no=2, LIVE>
+2017-04-21 16:29:08,665 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:29:08,670 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=7, port_no=1, LIVE> to Port<dpid=6, port_no=2, LIVE>
+2017-04-21 16:29:08,671 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:29:08,715 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=6, port_no=2, LIVE> to Port<dpid=7, port_no=1, LIVE>
+2017-04-21 16:29:08,716 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:29:08,856 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=5, port_no=2, LIVE> to Port<dpid=6, port_no=1, LIVE>
+2017-04-21 16:29:08,857 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:29:08,908 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=6, port_no=1, LIVE> to Port<dpid=5, port_no=2, LIVE>
+2017-04-21 16:29:08,909 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:29:08,957 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=2, port_no=2, LIVE> to Port<dpid=3, port_no=1, LIVE>
+2017-04-21 16:29:08,957 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:29:09,007 : airnet_interface : [DEBUG] : 
+*** Add Link Event
+Link: Port<dpid=3, port_no=1, LIVE> to Port<dpid=2, port_no=2, LIVE>
+2017-04-21 16:29:09,008 : rest_client : [DEBUG] : Send Link/add request via POST method
+2017-04-21 16:29:09,570 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:09,570 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ea:77:fa:6c:db:33"}}, "dpid": 1}
+2017-04-21 16:29:09,570 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:09,582 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:09,582 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ea:77:fa:6c:db:33"}}, "dpid": 1}
+2017-04-21 16:29:09,582 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:10,568 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:10,568 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ea:77:fa:6c:db:33"}}, "dpid": 1}
+2017-04-21 16:29:10,568 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:10,580 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:10,580 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ea:77:fa:6c:db:33"}}, "dpid": 1}
+2017-04-21 16:29:10,580 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:10,585 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:10,586 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "e2:64:6a:91:a5:75"}}, "dpid": 1}
+2017-04-21 16:29:10,586 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:10,588 : airnet_interface : [DEBUG] : 
+*** Host Add Event : e2:64:6a:91:a5:75  
+2017-04-21 16:29:10,589 : rest_client : [DEBUG] : Send Host/add request via POST method
+2017-04-21 16:29:11,579 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:11,580 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ea:77:fa:6c:db:33"}}, "dpid": 1}
+2017-04-21 16:29:11,580 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:11,584 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:11,584 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "e2:64:6a:91:a5:75"}}, "dpid": 1}
+2017-04-21 16:29:11,584 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:11,589 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:11,589 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "e2:64:6a:91:a5:75"}}, "dpid": 1}
+2017-04-21 16:29:11,590 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:12,583 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:12,583 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "e2:64:6a:91:a5:75"}}, "dpid": 1}
+2017-04-21 16:29:12,584 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:12,587 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:12,588 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "e2:64:6a:91:a5:75"}}, "dpid": 1}
+2017-04-21 16:29:12,588 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:12,592 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:29:12,592 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:b5:59:98:16:69"}}, "dpid": 7}
+2017-04-21 16:29:12,592 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:12,595 : airnet_interface : [DEBUG] : 
+*** Host Add Event : f2:b5:59:98:16:69  
+2017-04-21 16:29:12,595 : rest_client : [DEBUG] : Send Host/add request via POST method
+2017-04-21 16:29:13,587 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:13,588 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "e2:64:6a:91:a5:75"}}, "dpid": 1}
+2017-04-21 16:29:13,588 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:13,592 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:29:13,592 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:b5:59:98:16:69"}}, "dpid": 7}
+2017-04-21 16:29:13,593 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:13,596 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:29:13,596 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:b5:59:98:16:69"}}, "dpid": 7}
+2017-04-21 16:29:13,596 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:14,592 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:29:14,592 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:b5:59:98:16:69"}}, "dpid": 7}
+2017-04-21 16:29:14,592 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:14,595 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:29:14,595 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:b5:59:98:16:69"}}, "dpid": 7}
+2017-04-21 16:29:14,596 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:15,592 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:29:15,592 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.12", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:b5:59:98:16:69"}}, "dpid": 7}
+2017-04-21 16:29:15,592 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:15,603 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:15,603 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 3, "packet": {"arp": {"src_ip": "192.168.0.12", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "e2:64:6a:91:a5:75"}}, "dpid": 1}
+2017-04-21 16:29:15,604 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:44,823 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:29:44,823 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ea:77:fa:6c:db:33"}}, "dpid": 1}
+2017-04-21 16:29:44,823 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:29:44,832 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:29:44,832 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:b5:59:98:16:69"}}, "dpid": 7}
+2017-04-21 16:29:44,832 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:30:46,668 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:30:46,668 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:b5:59:98:16:69"}}, "dpid": 7}
+2017-04-21 16:30:46,668 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:32:16,124 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:32:16,124 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:b5:59:98:16:69"}}, "dpid": 7}
+2017-04-21 16:32:16,124 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:35:13,244 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-7
+2017-04-21 16:35:13,245 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "172.16.0.11", "dst_ip": "192.168.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "f2:b5:59:98:16:69"}}, "dpid": 7}
+2017-04-21 16:35:13,245 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:35:15,292 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an ARP packet from sw-1
+2017-04-21 16:35:15,292 : airnet_interface : [DEBUG] : 
+Data to send : {"port": 2, "packet": {"arp": {"src_ip": "192.168.0.11", "dst_ip": "172.16.0.11", "dst_mac": "00:00:00:00:00:00", "opcode": 1, "src_mac": "ea:77:fa:6c:db:33"}}, "dpid": 1}
+2017-04-21 16:35:15,293 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:35:28,920 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:35:28,921 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 0, "port": 2, "packet": {"dl_dst": "ea:77:fa:6c:db:33", "icmp": {}, "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "dl_src": "f2:b5:59:98:16:69"}, "dpid": 6}
+2017-04-21 16:35:28,921 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:35:28,926 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:35:29,920 : airnet_interface : [DEBUG] : 
+PACKET_IN : Received an IP packet from sw-6
+2017-04-21 16:35:29,920 : airnet_interface : [DEBUG] : 
+Data to send : {"id_packet": 1, "port": 2, "packet": {"dl_dst": "ea:77:fa:6c:db:33", "icmp": {}, "ipv4": {"src": "172.16.0.11", "dst": "192.168.0.11"}, "dl_src": "f2:b5:59:98:16:69"}, "dpid": 6}
+2017-04-21 16:35:29,920 : rest_client : [DEBUG] : Send Packet/in request via POST method
+2017-04-21 16:35:29,925 : rest_client : [INFO] : Exception while sending Packet/in request
+2017-04-21 16:35:47,114 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=1, port_no=1, DOWN> to Port<dpid=2, port_no=1, LIVE>
+2017-04-21 16:35:47,115 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:35:47,163 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=2, port_no=1, LIVE> to Port<dpid=1, port_no=1, LIVE>
+2017-04-21 16:35:47,164 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:35:47,211 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=2, port_no=2, DOWN> to Port<dpid=3, port_no=1, LIVE>
+2017-04-21 16:35:47,211 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:35:47,233 : airnet_interface : [DEBUG] : 
+*** Delete Link Event
+Link: Port<dpid=3, port_no=1, LIVE> to Port<dpid=2, port_no=2, LIVE>
+2017-04-21 16:35:47,234 : rest_client : [DEBUG] : Send Link/delete request via POST method
+2017-04-21 16:35:47,298 : airnet_interface : [DEBUG] : 
+*** Switch-5 Leave Event 
+2017-04-21 16:35:47,298 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:35:47,305 : airnet_interface : [DEBUG] : 
+*** Switch-2 Leave Event 
+2017-04-21 16:35:47,306 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:35:47,312 : airnet_interface : [DEBUG] : 
+*** Switch-1 Leave Event 
+2017-04-21 16:35:47,312 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:35:47,336 : airnet_interface : [DEBUG] : 
+*** Switch-4 Leave Event 
+2017-04-21 16:35:47,338 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:35:47,352 : airnet_interface : [DEBUG] : 
+*** Switch-3 Leave Event 
+2017-04-21 16:35:47,352 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:35:47,367 : airnet_interface : [DEBUG] : 
+*** Switch-7 Leave Event 
+2017-04-21 16:35:47,368 : rest_client : [DEBUG] : Send Switch/leave request via POST method
+2017-04-21 16:35:47,375 : airnet_interface : [DEBUG] : 
+*** Switch-6 Leave Event 
+2017-04-21 16:35:47,375 : rest_client : [DEBUG] : Send Switch/leave request via POST method
