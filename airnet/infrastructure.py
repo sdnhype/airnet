@@ -106,8 +106,6 @@ class Infrastructure(object):
         self._hwAddrs = []        # POX bug ! when a link is down
         self._deleted_links = []  # [Phy_Link objects]
 
-        logger.debug("Logical containers for physical components fully initialized")
-
     def nb(self):
         return len(self.switches.keys())
 

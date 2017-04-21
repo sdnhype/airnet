@@ -58,15 +58,17 @@ class Classifier(object):
         else:
             raise TypeError
 
-    """
-        [FOR_DEBUG] !! Adding a method to return the current classifier (str) rules
-    """
     def getLogRules(self):
+        """
+            [FOR_DEBUG] !! Return the current classifier (str) rules
+        """
         str_Rules = ""
         for rule in self.rules:
             str_Rules = str_Rules + str(rule) + "\n"
         return str_Rules
 
+    def getNbRules(self):
+        return len(self.rules)
 
     def __add__(c1, c2):
         from language import identity, drop, forward, DataFctPolicy
@@ -299,6 +301,9 @@ class FabricClassifier(object):
         for rule in self.rules:
             str_Rules = str_Rules + str(rule) + "\n"
         return str_Rules
+
+    def getNbRules(self):
+        return len(self.rules)
 
     # FabricClassifiers Fusion
     def __add__(c1, c2):

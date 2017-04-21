@@ -23,8 +23,8 @@ def saveStat( stat ):
     time = datetime.datetime.now()
     logFile.write('[%s] nw_src %s nw_dst %s | packet count %s \n' % (time, stat.nw_src, stat.nw_dst, stat.packet_count))
     logFile.close()
-    if stat.packet_count > 1:
-        policy = (match(edge=E2, tp_dst=80) >> tag("toto") >> forward(FAB))
+    if stat.packet_count > 5:
+        policy = (match(edge=E2, dst=HA, nw_proto=ICMP) >> tag("too_much_icmp_replies") >> forward(FAB))
         return policy
 
 #Virtual topology
