@@ -48,7 +48,8 @@
 
 - Add TABLE-MISS with a drop in RYU's airnet_interface module
 
-- Add ARP rule (forwarding to controller) in RYU's airnet_interface module
+- Add ARP rule (forwarding to controller) in RYU's airnet_interface module, or elsewhere?
+  Messaoud added them only on border switches!
 
 - TO DELETE: controllers/ryu/ofctl_rest, controllers/ryu/appRyu
 
@@ -64,3 +65,5 @@
 - tools.py module: is it really useful? shouldn't it be somewhere else?
 
 - TO DELETE: stage_runtime.py, stage_arp_proxy.py ??
+
+- MOVE airnet/pox_client and airnet/ryu_client in folder airnet/backends/
