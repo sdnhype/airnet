@@ -675,6 +675,7 @@ class Runtime():
                 # rules are ordered by priority in the classifier
                 for priority in range(len(old_rules)-1, -1, -1):
                     new_rules = find_same_rules(old_rules[priority], new_classifiers[switch])
+
                     if new_rules is None:
                         to_delete.append((old_rules[priority], priority))
                     else:

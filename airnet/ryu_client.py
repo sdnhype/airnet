@@ -286,8 +286,12 @@ class RyuClient(object):
 
 	def modifyExistingRules(self, to_modify):
 		c = ConfigureFlow('localhost',8080)
+
 		def different_actions(act_list1, act_list2):
 			# test if they have same number of
+			if len(act_list1) != len(act_list2):
+				return True
+
 			for act1 in act_list1:
 				find = False
 				for act2 in act_list2:
@@ -295,14 +299,16 @@ class RyuClient(object):
 						find = True
 				if not find:
 					return True
-				if len(act_list1) != len(act_list2):
-					return True
-				return False
+
+			return False
+
 		def isSame(r1, r2):
 			if (r1.match == r2.match and
                 not different_actions(r1.actions, r2.actions)):
 				return True
+
 			return False
+
 		def modify_priority(old_r, new_r, switch):
 			to_delete = {switch:[]}
 			to_delete[switch].append(old_r)
@@ -313,7 +319,9 @@ class RyuClient(object):
 
 		for switch, rules in to_modify.iteritems():
 			dpid = int(switch[1:])
+
 			for new_r, old_r in rules:
+				# actions and match are the same --> only the priority has to be modified
 				if isSame(old_r[0], new_r[0]):
 					if self.switches_rules_cpt[switch]-old_r[1] != len(self.runtime.new_classifiers[switch])-new_r[1]:
 						modify_priority(old_r, new_r, switch)
@@ -322,10 +330,11 @@ class RyuClient(object):
 					data['dpid'] = dpid
 					data['match'] = self.build_match_field(**new_r[0].match.map)
 					if not len(new_r[0].actions) == 0:
-						data['actions'] = self.build_action_fields_bis(new_r[0].actions)
+						data['actions'] = self.build_action_fields(new_r[0].actions)
 					data['priority'] = self.switches_rules_cpt[switch] - new_r[1]
 					c.updateFlow(data)
 
+	"""
 	def modify_existing_rules(self, to_modify):
 		c = ConfigureFlow('localhost',8080)
 		for switch, rules in to_modify.iteritems():
@@ -339,7 +348,7 @@ class RyuClient(object):
 				data['priority'] = self.switches_rules_cpt[switch] - rule[1]
 				#TODO runtime.msgs
 				c.updateFlow(data)
-
+	"""
 	def send_stat_request(self, switches, target_match):
 		"""
 			sends stats requests to physical OF switches

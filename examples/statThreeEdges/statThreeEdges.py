@@ -152,10 +152,11 @@ def saveStat( stat ):
     return identity
 
 # Generic statistics policy
+# to remove
 def edgeStatForX(oneEdge, oneDestination):
     p = match(edge=oneEdge, dst=oneDestination) >> saveStat()
     return p
-
+# to remove
 def statPolicy():
     s1 = edgeStatForX(E1, A) + edgeStatForX(E1, B) + edgeStatForX(E1, C)
     s2 = edgeStatForX(E2, D) + edgeStatForX(E2, E) + edgeStatForX(E2, F)

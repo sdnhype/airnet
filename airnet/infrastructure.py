@@ -4,6 +4,10 @@ from collections import namedtuple
 from log import Logger
 import copy
 
+#TODO: asserts
+#TODO: rapr function return type on #255
+#TODO: is resolver on #270 still useful ?
+
 # LOGGER CONSTRUCTION
 logger = Logger("Airnet_Infrastructure").getLog()
 
@@ -83,7 +87,6 @@ class Phy_Host(object):
         self.hwAddr = mac_addr
         self.ip_addrs = ip_addrs # BUG: ref and defaut value !!!
 
-
 class Infrastructure(object):
     """
         Logical Containers are used here to describe the physical infrastructure
@@ -92,7 +95,6 @@ class Infrastructure(object):
     def __init__(self):
         """
             Initialize physical topology components in logical containers
-
         :hosts: dict of hosts in physical topology
         :switches: dict of switches in physical topology
         :links: list of links connecting equipments
@@ -252,7 +254,6 @@ class Infrastructure(object):
         return None
 
     def rarp(self, hwAddr):
-        """ Return ip address TYPE??? TODO """
         # work only for one ipAddr by host
         for key, host in self.hosts.iteritems():
             if host.hwAddr == hwAddr:

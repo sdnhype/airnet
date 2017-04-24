@@ -562,12 +562,10 @@ class DynamicPolicy(NetworkFunction):
         return (isinstance(other, DynamicPolicy))
 
     def apply(self, packet):
-        print("applying dyn control policy")
-        print(type(self.callback))
         return self.callback(packet, **self.callback_kwargs)
 
     def __repr__(self):
-        return "DynamicPolicy()"
+        return "{}()".format(self.callback.__name__)
 
 def DataFct(**decorator_kwargs):
     def data_fct_decorator(fct ):
