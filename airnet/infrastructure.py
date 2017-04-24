@@ -243,7 +243,9 @@ class Infrastructure(object):
                                                   link.entity2["port"]))
 
     def arp(self, ipAddr):
-        # work only for one ipAddr by host
+        """
+            Return hwAddr corresponding to ipAddr
+        """
         for key, host in self.hosts.iteritems():
             if (host.ip_addrs.keys()[0]) == ipAddr:
                 return host.hwAddr

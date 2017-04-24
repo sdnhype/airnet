@@ -32,7 +32,7 @@ class Client(object):
 			#logger.debug("Json File : \n{}".format(json.dumps(data, sort_keys=True, ident=4, separators=(',',': '))))
 			header['Content-Type'] = 'application/json'
 		try:
-			logger.debug("Send {} request via {} method".format(action,method))
+			logger.debug("Send {} request via {} method to the Airnet hypervisor".format(action,method))
 			# send request to the REST Server and get the answer
 			conn.request(method,url,data,header)
 			res = conn.getresponse()
@@ -57,7 +57,8 @@ class Client(object):
 
 class RyuTopologyClient(Client):
 	"""
-		Client used by RYU to notify topology changes to REST Server
+		Client used by RYU to notify topology changes to the Airnet Hypervisor
+		Notifications data are sent in json format through the REST API
 	"""
 	prefix_ryu = 'Topo'
 
@@ -69,42 +70,42 @@ class RyuTopologyClient(Client):
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			logger.info("Exception while sending Switch/enter request")
+			logger.info("Exception while sending Switch/enter notification to the Hypervisor")
 
 	def switchLeave(self,data):
 		action = 'Switch/leave'
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			logger.info("Exception while sending Switch/leave request")
+			logger.info("Exception while sending Switch/leave notification to the Hypervisor")
 
 	def linkAdd(self,data):
 		action = 'Link/add'
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			logger.info("Exception while sending Link/add request")
+			logger.info("Exception while sending Link/add notification to the Hypervisor")
 
 	def linkDelete(self,data):
 		action = 'Link/delete'
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			logger.info("Exception while sending Link/delete request")
+			logger.info("Exception while sending Link/delete notification to the Hypervisor")
 
 	def hostAdd(self,data):
 		action = 'Host/add'
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			logger.info("Exception while sending Host/add request")
+			logger.info("Exception while sending Host/add notification to the Hypervisor")
 
 	def packetIn(self,data):
 		action = 'Packet/in'
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			logger.info("Exception while sending Packet/in request")
+			logger.info("Exception while sending Packet/in notification to the Hypervisor")
 
 class GenericClient(Client):
 	"""

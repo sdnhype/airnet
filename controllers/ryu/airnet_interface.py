@@ -20,7 +20,7 @@ from ryu.lib.packet import packet,ethernet,ether_types
 from packetParser import PacketParser
 from log import Logger
 from pprint import pprint
-import logging, json, ast
+import json, ast
 
 #logger = logging.getLogger('ryu.app.ofctl_rest')
 logger = Logger("airnet_interface").getLog()
@@ -93,7 +93,76 @@ class StatsController(ControllerBase):
 
         return Response(content_type='application/json', body=body)
 
-    def mod_flow_entry(self, req, cmd, **_kwargs):
+class PacketsController(ControllerBase):
+
+    def __init__(self, req, link, data, **config):
+        super(PacketsController, self).__init__(req, link, data, **config)
+        # get the set of switches managed by the controller
+        self.dpset = data['dpset']
+        self.waiters = data['waiters']
+
+    def push_packet(self, req, **_kwargs):
+        """
+            Sends PacketOut
+        """
+        sender = PacketParser()
+
+        try:
+            flow = ast.literal_eval(req.body)
+        except SyntaxError:
+            logger.debug('invalid syntax %s', req.body)
+            return Response(status=400)
+
+        dpid = flow.get('dpid')
+
+        if type(dpid) == str and not dpid.isdigit():
+            logger.debug('invalid dpid %s', dpid)
+            return Response(status=400)
+
+        dp = self.dpset.get(int(dpid))
+
+        if dp is None:
+            return Response(status=404)
+
+        _ofp_version = dp.ofproto.OFP_VERSION
+
+        _ofctl = supported_ofctl.get(_ofp_version, None)
+
+        if _ofctl is not None:
+            if 'id_packet' not in flow:
+                # le packet Arp ne sont pas numerotes
+                """
+                    What's the point ??
+                """
+                sender.send_arp(dp,flow)
+        else:
+            """
+                The OF protocol is not supported here
+            """
+            global packets
+
+            id_pkt = int(flow.get('id_packet'))
+
+            """
+                The OF protocol is already not supported here right ??
+            """
+            if id_pkt in flow:
+                msg = packets.get(id_pkt)
+                #on supprime le paquet du dictionnaires des packets
+                del packets[id_pkt]
+                sender.send_packet(dp,flow,msg)
+            else:
+                logger.debug('Unsupported OF protocol')
+                return Response(status=501)
+
+class FlowsController(ControllerBase):
+    def __init__(self, req, link, data, **config):
+        super(FlowsController, self).__init__(req, link, data, **config)
+        # get the set of switches managed by the controller
+        self.dpset = data['dpset']
+        self.waiters = data['waiters']
+
+    def modify_flow_entry(self, req, cmd, **_kwargs):
         """
             Modify the OF switch Table
         """
@@ -101,7 +170,7 @@ class StatsController(ControllerBase):
             # Syntax verification
             flow = ast.literal_eval(req.body)
         except SyntaxError:
-            logger.debug('invalid syntax %s', req.body)
+            logger.debug('Mod_Flow_Entry -- invalid syntax %s', req.body)
             return Response(status=400)
 
         # get the dpid field in the request
@@ -175,60 +244,6 @@ class StatsController(ControllerBase):
 
         return Response(status=200)
 
-    def send_packet(self, req, **_kwargs):
-        """
-            Sends PacketOut
-        """
-        sender = PacketParser()
-
-        try:
-            flow = ast.literal_eval(req.body)
-        except SyntaxError:
-            logger.debug('invalid syntax %s', req.body)
-            return Response(status=400)
-
-        dpid = flow.get('dpid')
-
-        if type(dpid) == str and not dpid.isdigit():
-            logger.debug('invalid dpid %s', dpid)
-            return Response(status=400)
-
-        dp = self.dpset.get(int(dpid))
-
-        if dp is None:
-            return Response(status=404)
-
-        _ofp_version = dp.ofproto.OFP_VERSION
-
-        _ofctl = supported_ofctl.get(_ofp_version, None)
-
-        if _ofctl is not None:
-            if 'id_packet' not in flow:
-                # le packet Arp ne sont pas numerotes
-                """
-                    What's the point ??
-                """
-                sender.send_arp(dp,flow)
-        else:
-            """
-                The OF protocol is not supported here
-            """
-            global packets
-
-            id_pkt = int(flow.get('id_packet'))
-
-            """
-                The OF protocol is already not supported here right ??
-            """
-            if id_pkt in flow:
-                msg = packets.get(id_pkt)
-                #on supprime le paquet du dictionnaires des packets
-                del packets[id_pkt]
-                sender.send_packet(dp,flow,msg)
-            else:
-                logger.debug('Unsupported OF protocol')
-                return Response(status=501)
-
 class RestStatsApi(app_manager.RyuApp):
     """
         This class receives statitics queries from the Airnet Hypervisor
@@ -267,29 +282,40 @@ class RestStatsApi(app_manager.RyuApp):
         mapper = wsgi.mapper
         # register to the StatsController class
         wsgi.registory['StatsController'] = self.data
-        path = '/stats'
+        wsgi.registory['PacketsController'] = self.data
+        wsgi.registory['FlowsController'] = self.data
 
-        # Associate URLs with methods in StatsController
+        path1 = '/Stats'
+        path2 = '/Packets'
+        path3 = '/Flows'
 
-        uri = path + '/flow/{dpid}'
-        mapper.connect('stats', uri,
+        """
+            Datas to redirect to StatsController
+        """
+        uri = path1 + '/flow/{dpid}'
+        mapper.connect('Stats', uri,
                        controller=StatsController, action='get_flow_stats',
                        conditions=dict(method=['GET', 'POST']))
 
-        uri = path + '/flowentry/{cmd}'
-        mapper.connect('stats', uri,
-                       controller=StatsController, action='mod_flow_entry',
+        """
+            Datas to redirect to FlowsController
+        """
+        uri = path3 + '/entry/{cmd}'
+        mapper.connect('Flows', uri,
+                       controller=FlowsController, action='modify_flow_entry',
                        conditions=dict(method=['POST']))
 
-        uri = path + '/flowentry/clear/{dpid}'
-        mapper.connect('stats', uri,
-                       controller=StatsController, action='delete_flow_entry',
+        uri = path3 + '/entry/clear/{dpid}'
+        mapper.connect('Flows', uri,
+                       controller=FlowsController, action='delete_flow_entry',
                        conditions=dict(method=['DELETE']))
 
-        # rajoute pour recevoir des demandes d'envoi de paquets depuis airnet
-        uri = path + '/send'
-        mapper.connect('stats', uri,
-                       controller=StatsController, action='send_packet',
+        """
+            Datas to redirect to PacketsController
+        """
+        uri = path2 + '/push'
+        mapper.connect('Packets', uri,
+                       controller=PacketsController, action='push_packet',
                        conditions=dict(method=['POST']))
 
     @set_ev_cls(event.EventSwitchEnter)
@@ -344,11 +370,11 @@ class RestStatsApi(app_manager.RyuApp):
         global id_packet
         global packets
 
-        # get the switch which send the packet
+        # get the switch which sent the packet
         datapath = msg.datapath
         # get the switch's id
         dpid = datapath.id
-        #
+        # get the incoming port
         port = msg.in_port
         # Initialize a dictionnary
         data = {}
@@ -369,9 +395,11 @@ class RestStatsApi(app_manager.RyuApp):
             # Packet Storage
             packets[id_packet] = msg
             id_packet = id_packet + 1
+
         # Packet contents are formatted in json
         data = json.dumps(data)
-        logger.debug("\nData to send : {}".format(data))
+        # decomment if useful
+        #logger.debug("\nData : {}".format(data))
         self.client.packetIn(data)
 
     @set_ev_cls([ofp_event.EventOFPStatsReply,
@@ -416,7 +444,7 @@ class RestStatsApi(app_manager.RyuApp):
         del self.waiters[dp.id][msg.xid]
         lock.set()
 
-        """
+    """
     @set_ev_cls([ofp_event.EventOFPSwitchFeatures,
                  ofp_event.EventOFPQueueGetConfigReply], MAIN_DISPATCHER)
     def features_reply_handler(self, ev):
@@ -432,26 +460,27 @@ class RestStatsApi(app_manager.RyuApp):
 
         del self.waiters[dp.id][msg.xid]
         lock.set()
-        """
+    """
 
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):
         datapath = ev.msg.datapath
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
-        # install drop rule by default
-        match = parser.OFPMatch()
-        #actions = [parser.OFPActionOutput(ofproto.OFPFC_DELETE, 0)]
-        actions = []
 
-        mod = parser.OFPFlowMod(
-            datapath=datapath, match=match, cookie=0,
+        # install a drop rule by default
+        match_drop = parser.OFPMatch()
+        req_drop = parser.OFPFlowMod(
+            datapath=datapath, match=match_drop, cookie=0,
             command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
-            priority=0,flags=0, actions=actions)
+            priority=0,flags=0, actions=[])
+        datapath.send_msg(req_drop)
 
-        datapath.send_msg(mod)
-
-        logger.debug("*** Features Handler 4")
-        #mod = parser.OFPFlowMod(datapath=datapath, priority=0,
-        #                        match=match, instructions=inst)
-        logger.debug("default drop : {}".format(str(mod)))
+        # install a rule for arp flows
+        match_arp = parser.OFPMatch(dl_type=0x0806)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
+        req_arp = parser.OFPFlowMod(
+            datapath=datapath, match=match_arp, cookie=0,
+            command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
+            priority=1,flags=0, actions=actions)
+        datapath.send_msg(req_arp)

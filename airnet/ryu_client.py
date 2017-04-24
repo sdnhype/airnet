@@ -7,8 +7,6 @@ from generic_classes import Stat_object
 import ast, pdb, httplib, json, copy
 
 # **************** CODE AUDIT  by Mayoro *******************
-#TODO: change prefix_config on #64
-#TODO: sendPacket utility on #111
 #TODO: which installNewRules to delete on #220 and #243
 #TODO: which modifyExistingRules to delete on #280 and #322
 #TODO: mapping 1 edge --> n switches to handle in send_stat_request on #337
@@ -64,8 +62,7 @@ class ConfigureFlow(Client):
  	"""
 		Perform and send actions on flows to the RYU Controller
 	"""
-	# to change
- 	prefix_config = 'stats/flowentry'
+	prefix_config = 'Flows/entry'
 
  	def __init__(self,host,port):
  		super(ConfigureFlow,self).__init__(host,port,ConfigureFlow.prefix_config)
@@ -99,7 +96,7 @@ class GetStats(Client):
 	"""
 		Client which will get the stats from the Ryu controller
 	"""
-	prefix_stat = 'stats'
+	prefix_stat = 'Stats'
 
 	def __init__(self,host,port):
 		super(GetStats,self).__init__(host,port,GetStats.prefix_stat)
@@ -111,12 +108,21 @@ class GetStats(Client):
 		action = 'flow/%d' % (dpid)
 		return self.send_request('GET',action,data)
 
+class ConfigurePackets(Client):
+	"""
+		Send packets to the Ryu Controller
+	"""
+	prefix = 'Packets'
+
+	def __init__(self,host,port):
+		super(ConfigurePackets,self).__init__(host,port,ConfigurePackets.prefix)
+
 	def sendPacket(self,data):
-		action = 'send'
+		action = 'push'
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			print 'Send Packet : Exception'
+			print 'Exception while sending packet to the controller'
 
 class RyuClient(object):
 	"""
@@ -368,41 +374,40 @@ class RyuClient(object):
 
 		return stat
 
-	"""
-	gere les packet in
-	pour le moment seul le ARP est traite
-	le packet en parametre est au format json avec le dpid,le port et les entetes des protocoles du packet
-	{"port":..,"id_packet":..,"dpid":..,"packet": {"ipv4":{.....},"tcp":{....},"icmp":{...},
-                                                   "udp":{.....},"dl_src":...,"dl_dst":...}}
-	"""
 	def handle_PacketIn(self,packet):
+		"""
+			Handle a packet/in event received from the controller
+			Packet can be ARP or IP
+			{"port":..,"id_packet":..,"dpid":..,"packet": {"ipv4":{.....},"tcp":{....},"icmp":{...},
+		                                                   "udp":{.....},"dl_src":...,"dl_dst":...}}
+		"""
 		dpid = int(packet.get('dpid'))
 		port = int(packet.get('port'))
 		protos = (packet.get('packet'))
 		protos = ast.literal_eval(str(protos))
+		# it's an ARP packet
 		if 'arp' in protos:
 			data_arp = protos.get('arp')
+			# it's an ARP request
 			if data_arp.get('opcode') == ARP_REQUEST:
-				self.install_arp(dpid,port,data_arp)
+				self.reply_arp(dpid,port,data_arp)
+		# it's an IP Packet
 		else:
-			print("Handling IP packetIn...")
 			packet_match = self.match_from_packet(dpid,protos)
 			self.runtime.handle_packet_in(dpid, packet_match, packet)
 
-	"""
-	fonction qui construit et envoie un packet ARP de reponse
-	protos est la liste des protocoles
-	dpid le switch, port est le numero de port
-	data_arp est le dictionnaire contenant les infos ARP
-	{"src_mac":..,"dst_mac":..,"src_ip":..,"dst_ip":...,"opcode":..}
-	"""
-	def install_arp(self,dpid,port,data_arp):
+	def reply_arp(self,dpid,port,data_arp):
+		"""
+			Construct an ARP reply packet
+		"""
 		ip_src = data_arp.get('src_ip')
 		ip_dst = data_arp.get('dst_ip')
 		mac_src = data_arp.get('src_mac')
 		requested_mac = self.runtime.infra.arp(ip_dst)
+
 		if requested_mac is not None:
-			#on reconstruit le paquet de retour
+			connect = ConfigurePackets('localhost',8080)
+
 			data_arp["opcode"] = ARP_REPLY
 			data_arp["src_ip"] = ip_dst
 			data_arp["dst_ip"] = ip_src
@@ -415,8 +420,8 @@ class RyuClient(object):
 			packet_out['dpid'] = dpid
 			packet_out['port'] = port
 			packet_out['packet'] = packet
-			c = GetStats('localhost',8080)
-			c.sendPacket(packet_out)
+			connect.sendPacket(packet_out)
+
 	"""
 	permet d'envoyer un dictionnaire contenant le numero et les entetes d'un paquet
 	au controleur ryu pour que celui-ci le delivre
@@ -430,7 +435,7 @@ class RyuClient(object):
 		dpid = int((switch[1:]))
 		packet['dpid'] = dpid
 		packet['output'] = output
-		c = GetStats('localhost',8080)
+		c = ConfigurePackets('localhost',8080)
 		print("[DEBUG] ryu_client -- send_packet_out()")
 		c.sendPacket(packet)
 
