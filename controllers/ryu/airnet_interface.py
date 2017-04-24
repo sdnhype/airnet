@@ -10,7 +10,7 @@
 from webob import Response
 from ryu.base import app_manager
 from ryu.controller import ofp_event, dpset
-from ryu.controller.handler import MAIN_DISPATCHER, set_ev_cls
+from ryu.controller.handler import MAIN_DISPATCHER, CONFIG_DISPATCHER, set_ev_cls
 from ryu.ofproto import ofproto_v1_0, ofproto_v1_2, ofproto_v1_3, ofproto_v1_4
 from ryu.lib import ofctl_v1_0, ofctl_v1_2, ofctl_v1_3, ofctl_v1_4
 from ryu.app.wsgi import ControllerBase, WSGIApplication
@@ -416,6 +416,7 @@ class RestStatsApi(app_manager.RyuApp):
         del self.waiters[dp.id][msg.xid]
         lock.set()
 
+        """
     @set_ev_cls([ofp_event.EventOFPSwitchFeatures,
                  ofp_event.EventOFPQueueGetConfigReply], MAIN_DISPATCHER)
     def features_reply_handler(self, ev):
@@ -431,3 +432,26 @@ class RestStatsApi(app_manager.RyuApp):
 
         del self.waiters[dp.id][msg.xid]
         lock.set()
+        """
+
+    @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
+    def switch_features_handler(self, ev):
+        datapath = ev.msg.datapath
+        ofproto = datapath.ofproto
+        parser = datapath.ofproto_parser
+        # install drop rule by default
+        match = parser.OFPMatch()
+        #actions = [parser.OFPActionOutput(ofproto.OFPFC_DELETE, 0)]
+        actions = []
+
+        mod = parser.OFPFlowMod(
+            datapath=datapath, match=match, cookie=0,
+            command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
+            priority=0,flags=0, actions=actions)
+
+        datapath.send_msg(mod)
+
+        logger.debug("*** Features Handler 4")
+        #mod = parser.OFPFlowMod(datapath=datapath, priority=0,
+        #                        match=match, instructions=inst)
+        logger.debug("default drop : {}".format(str(mod)))
