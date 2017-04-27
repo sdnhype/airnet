@@ -28,7 +28,6 @@ class Fabric(object):
     def __eq__(self, other):
         return self.name == other.name
 
-
 class DataMachine(object):
     """ Data Machine class """
 
@@ -46,7 +45,6 @@ class DataMachine(object):
     @property
     def ports(self, value):
         return self._ports
-
 
 class Host(object):
     """ Host class """
@@ -199,8 +197,6 @@ class EdgePolicy(Policy):
         else:
             return SequentialComposition([self, policy])
 
-
-
 class match(EdgePolicy):
     """
     the match policy, Match on all specified fields.
@@ -293,8 +289,9 @@ class match(EdgePolicy):
             return True
         elif other == drop:
             return True
-        if set(self.map.keys()) - set(other.map.keys()):
-            #if the set is empthy == false, if not == true
+
+        if set(self.map.keys()) - set(other.map.keys()) :
+            #if the set is empty == false, if not == true
             # A - B: the resulting set has elements of the "A" set with all elements from the "B" set removed.
             return False
 
@@ -307,6 +304,25 @@ class match(EdgePolicy):
                 return False
         return True
 
+    def checkFields(self,other):
+        """
+        used with covers to check if self fields cover other fields
+        """
+        for (k,v) in self.map.items():
+            if k=='edge':
+                if not other.map.has_key(k) or v != other.map[k]:
+                    return False
+            elif k=='nw_src':
+                if not other.map.has_key(k) or v != other.map[k]:
+                    return False
+            elif k=='nw_dst':
+                if not other.map.has_key(k) or v != other.map[k]:
+                    return False
+            elif k=='tp_dst':
+                if not other.map.has_key(k) or v != other.map[k]:
+                    return False
+        return True
+
     # to be able to use match object as dictionary key
     def __hash__(self):
         return hash(repr(self.map))
@@ -317,8 +333,6 @@ class match(EdgePolicy):
 
     def __repr__(self):
         return "match " + str(self.map)
-
-
 
 class forward(EdgePolicy):
     """
@@ -340,8 +354,6 @@ class forward(EdgePolicy):
 
     def __str__(self):
         return "forward ('{}'')".format(self.output)
-
-
 
 class modify(EdgePolicy):
     """
@@ -426,8 +438,6 @@ class modify(EdgePolicy):
     def __repr__(self):
         return "modify such as " + str(self.map)
 
-
-
 class tag(EdgePolicy):
     """
     the tag policy allows to assigns a label to a matched flow
@@ -446,8 +456,6 @@ class tag(EdgePolicy):
 
     def __repr__(self):
         return "flowID==" + self.label
-
-
 
 class across(EdgePolicy):
     """
@@ -517,7 +525,6 @@ class NetworkFunction(EdgePolicy):
     def generateClassifier(self):
         return Classifier([Rule(identity, identity, {self})])
 
-
 class DataFctPolicy(NetworkFunction):
 
     def __init__(self,  callback, callback_kwargs, decorator_kwargs):
@@ -555,13 +562,13 @@ class DataFctPolicy(NetworkFunction):
     def __eq__(self, other):
         return (isinstance(other, DataFctPolicy))
 
-
 class DynamicPolicy(NetworkFunction):
 
     def __eq__(self, other):
         return (isinstance(other, DynamicPolicy))
 
     def apply(self, packet):
+        print("... Applying {}() dynamic function... ".format(self.callback.__name__))
         return self.callback(packet, **self.callback_kwargs)
 
     def __repr__(self):
@@ -573,7 +580,6 @@ def DataFct(**decorator_kwargs):
             return DataFctPolicy(fct, fct_kwargs, decorator_kwargs)
         return fct_warper
     return data_fct_decorator
-
 
 def DynamicControlFct(**decorator_kwargs):
     def dynamic_fct_decorator(fct ):
@@ -606,8 +612,6 @@ class FabricPolicy(Policy):
             return FabricSequentialComposition([self] + policy.policies)
         else:
             return FabricSequentialComposition([self, policy])
-
-
 
 class catch(FabricPolicy):
     """
@@ -653,7 +657,6 @@ class carry(FabricPolicy):
 
     def generateClassifier(self):
         return FabricClassifier([FabricRule(identity, {self}, list())])
-
 
 class via(FabricPolicy):
     """
@@ -724,8 +727,6 @@ class ParallelComposition(CompositionPolicy):
         # parallel composition of all classifiers
         return reduce(lambda acc, c: acc + c, classifiers)
 
-
-
 class SequentialComposition(CompositionPolicy):
     """
     Combinator for several edge policies in sequence.
@@ -774,7 +775,6 @@ class FabricParallelComposition(CompositionPolicy):
         classifiers = map(lambda p: p.compile(), self.policies)
         # parallel composition of all classifiers
         return reduce(lambda acc, c: acc + c, classifiers)
-
 
 class FabricSequentialComposition(CompositionPolicy):
     """

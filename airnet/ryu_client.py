@@ -402,6 +402,7 @@ class RyuClient(object):
 				self.reply_arp(dpid,port,data_arp)
 		# it's an IP Packet
 		else:
+			# extract informations had runtime deal with it
 			packet_match = self.match_from_packet(dpid,protos)
 			self.runtime.handle_packet_in(dpid, packet_match, packet)
 
@@ -445,7 +446,6 @@ class RyuClient(object):
 		packet['dpid'] = dpid
 		packet['output'] = output
 		c = ConfigurePackets('localhost',8080)
-		print("[DEBUG] ryu_client -- send_packet_out()")
 		c.sendPacket(packet)
 
 	"""

@@ -68,9 +68,9 @@ class PacketParser(object):
     def build_actions(self,dp,packet):
 
         actions = []
-        out_port = int(flow.get('output'))
+        out_port = int(packet.get('output'))
         actions.append(dp.ofproto_parser.OFPActionOutput(out_port))
-        protos = flow.get('packet')
+        protos = packet.get('packet')
         protos = ast.literal_eval(str(protos))
         if 'dl_src' in protos:
             actions.append(dp.ofproto_parser.OFPActionSetDlSrc(protos.get('dl_src')))

@@ -130,30 +130,23 @@ class PacketsController(ControllerBase):
 
         if _ofctl is not None:
             if 'id_packet' not in flow:
-                # le packet Arp ne sont pas numerotes
-                """
-                    What's the point ??
-                """
                 sender.send_arp(dp,flow)
-        else:
-            """
-                The OF protocol is not supported here
-            """
-            global packets
+            else:
+                global packets
+                # pop the output if it is present
+                #if 'output' in flow:
+                    #output = flow['output']
+                    #del flow['output']
+                # get the id of the packet
+                id_pkt = int(flow.get('id_packet'))
 
-            id_pkt = int(flow.get('id_packet'))
-
-            """
-                The OF protocol is already not supported here right ??
-            """
-            if id_pkt in flow:
                 msg = packets.get(id_pkt)
-                #on supprime le paquet du dictionnaires des packets
+                # Delete msg from the packet dict
                 del packets[id_pkt]
                 sender.send_packet(dp,flow,msg)
-            else:
-                logger.debug('Unsupported OF protocol')
-                return Response(status=501)
+        else:
+            logger.debug('Unsupported OF protocol')
+            return Response(status=501)
 
 class FlowsController(ControllerBase):
     def __init__(self, req, link, data, **config):

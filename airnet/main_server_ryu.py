@@ -102,6 +102,7 @@ def handle_host_add():
 @app.route('/Topo/Packet/in',methods = ['POST'])
 def handle_packet_in():
 	if runtime.nexus.runtime_mode:
+		print("Nexus Received a Packet : {}".format(str(request.json)))
 		packet = json.loads(request.json)
 		runtime.nexus.handle_PacketIn(packet)
 	return 'OK'

@@ -1,6 +1,7 @@
 from threading import Timer
 from tools import match_from_packet
 from language import identity,match
+import copy
 
 #TODO: what's the point on #66
 #TODO: merge tools.py on #84
@@ -56,7 +57,6 @@ class Bucket(object):
     def add_packet(self, dpid, packet_match, packet):
         if self.limit is None:
             self.data.append(packet)
-            self.runtime.apply_network_function(dpid, self.match, packet_match, packet)
         else:
             if self.split is not None:
                 micro_flow = self.get_micro_flow(packet)
@@ -75,7 +75,7 @@ class Bucket(object):
                         micro_flow_match = copy.deepcopy(self.match)
                         micro_flow_match.map.update(micro_flow.map)
                         self.runtime.micro_flow_limit_reached(micro_flow_match)
-                    self.runtime.apply_network_function(dpid, self.match, packet_match, packet)
+                    #self.runtime.apply_network_function(dpid, self.match, packet_match, packet)
                 else:
                     print "micro-flow locked"
                     # TODO: add something to handle this lasts packets --> packets concurrency
