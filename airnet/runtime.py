@@ -208,36 +208,7 @@ class Runtime():
         """
         """
         from language import modify
-        """
-        def _covers(match1,match2):
-            """"""
-            Defined to determine whether match2 is
-            completely included in match1
-            covers method in langage.match wasn't that appropriate
-            return true if match1 covers match2
-            """"""
-            # match1 = match ....
-            if match2 == identity and len(match1.map.keys()) > 0:
-                return False
-            # match1 = identity
-            elif match2 == identity and match1 == identity:
-                return True
-            # match1 = match....
-            elif match2 == drop:
-                return True
 
-            m1KeysList = set(match1.map.keys())
-            m2KeysList = set(match2.map.keys())
-
-            if len(m1KeysList) == len(m2KeysList):
-                # they don't have the same elements
-                if len(m1KeysList - m2KeysList) > 0:
-                    return False
-
-            result = match1.checkFields(match2)
-            print("Result {}".format(result))
-            return result
-        """
         def handle_using_new_policy(dpid, policy, packet_match, packet):
             policy = policy.compile()
             matching_rule = None
@@ -246,21 +217,23 @@ class Runtime():
                     matching_rule = rule
                     break
             switch = 's' + str(dpid)
+            find = False
 
             # if the new policy does not apply on the packet
             if matching_rule.match == identity:
-                for rule in self.edge_policies.rules:
+                for edge_rule in self.edge_policies.rules:
                     if edge_rule.match.covers(packet_match):
-                        print("actions in if : {}".format(str(edge_rule.actions)))
                         for act in edge_rule.actions:
                             if isinstance(act, modify):
                                 act.apply(packet)
                         for act in edge_rule.actions:
                             if isinstance(act, forward):
-                                print("got a forward")
                                 output = self.get_phy_switch_output_port(switch, act.output)
-                                print("forward {}".format(output))
                                 self.nexus.send_packet_out(switch, packet, output)
+                                find = True
+                                break
+                    if find:
+                        break
             else:
                 # the new policy apply on the packet
                 for act in matching_rule.actions:
@@ -272,13 +245,17 @@ class Runtime():
                     output = self.get_phy_switch_output_port(switch, fwd.output)
                     self.nexus.send_packet_out(switch, packet, output)
 
-
         dyc_rule = None
+        print("Bucket Match {}".format(packet))
+        print("Packet Match {}\n".format(packet_match))
 
         for rule in self.nwFct_rules:
+            print("Net rules : {}".format(rule))
             if rule.match.map == bucket_match.map:
                 dyc_rule = rule
                 break
+
+        print("dyc_rule {}".format(dyc_rule))
 
         for act in dyc_rule.actions:
             if isinstance(act, modify):
@@ -294,7 +271,6 @@ class Runtime():
             handle_using_new_policy(dpid, result, packet_match, packet)
         else:
             logger.debug("runtime -- net function result: new packet")
-            print("type result : packet -- {}".format(result))
             fwd = self.get_dycRule_forward(dyc_rule)
             switch = 's' + str(dpid)
             output = self.get_phy_switch_output_port(switch, fwd.output)
@@ -681,6 +657,60 @@ class Runtime():
         _enforcing_duration = int(round(time.time() * 1000)) - _enforcing_duration
         logger.info("Proactive core policies enforcement finished -- Duration == " + str(_enforcing_duration))
 
+    def flow_limit_reached(self, fct_predicate):
+
+        # first: remove fct item from nwFct_rules list
+        for idx in range(len(self.nwFct_rules)):
+            if self.nwFct_rules[idx].match.map == fct_predicate.map:
+                del self.nwFct_rules[idx]
+                break
+
+        # second: in edge policies, replace the fct action with identity
+        nwFct_rule = None
+        for rule in self.edge_policies.rules:
+            if rule.match is not identity:
+                if rule.match.map == fct_predicate.map:
+                        self.remove_nwFct_action(rule)
+                        nwFct_rule = rule
+
+        tmp_classifiers = self.create_classifiers()
+        new_rule = False
+        if self.is_ingress_rule(nwFct_rule):
+            self.enforce_ingressPolicies(nwFct_rule, tmp_classifiers)
+            new_rule = True
+        elif self.is_egress_rule(nwFct_rule):
+            self.enforce_egressPolicies(nwFct_rule, tmp_classifiers)
+            new_rule = True
+
+        new_classifiers = copy.deepcopy(self.physical_switches_classifiers)
+
+        # case where dynamicFct is the only action (i.e., match >> dycFct)
+        if new_rule:
+            for switch, new_rules in tmp_classifiers.iteritems():
+                for new_r in new_rules:
+                    find = False
+                    for idx, old_r in enumerate(new_classifiers[switch]):
+                        if new_r.match == old_r.match:
+                            find = True
+                            new_classifiers[switch][idx] = new_r
+                    if not find:
+                        # Unlike for micro-flows, here we need to modify an existing rule and not to add new one
+                        raise RuntimeError
+        else:
+            # a rule with a single action: dycFct
+            egress_edge = nwFct_rule.match.map["edge"]
+            nwFct_rule.match.map.pop("edge")
+            egress_edge_switches = self.get_edge_physical_corresponding(egress_edge)
+            for switch in egress_edge_switches:
+                for idx, old_r in enumerate(new_classifiers[switch]):
+                    if nwFct_rule.match == old_r.match:
+                        del new_classifiers[switch][idx]
+
+
+        diff_lists = self.get_diff_lists(self.physical_switches_classifiers, new_classifiers)
+        self.install_diff_lists(diff_lists)
+        self.physical_switches_classifiers = copy.deepcopy(new_classifiers)
+
 #TODO : modify and rename
     def get_corresponding_match_switch_list(self, fabric, flow_src, label, classifiers):
         """
@@ -970,7 +1000,6 @@ class Runtime():
             if bucket.match.covers(packet_match):
                 logger.debug("Runtime -- Found a bucket for this packet!")
                 bucket.add_packet(dpid, packet_match, packet)
-                self.apply_netFunction_fromPacket(dpid, bucket.match, packet_match, packet)
 
     def install_diff_lists(self, diff_lists):
         """
@@ -1034,6 +1063,48 @@ class Runtime():
                     return True
         return False
 
+    def micro_flow_limit_reached(self, micro_flow):
+        """
+            Function called when the limit parameter is ""
+            for the micro_flow in argument
+        """
+        target_rule = None
+
+        for rule in self.edge_policies.rules:
+            if (rule.match != identity and rule.match.covers(micro_flow)):
+                target_rule = copy.deepcopy(rule)
+
+        classifiers = self.create_classifiers()
+        target_rule.match = micro_flow
+
+        if self.is_dynamicFunction_rule(target_rule) or self.is_dataFunction_rule(target_rule):
+            # remove network function actions in target rule
+            self.remove_nwFct_action(target_rule)
+
+            new_rule = False
+            if self.is_ingress_rule(target_rule):
+                self.enforce_ingressPolicies(target_rule, classifiers)
+                new_rule = True
+            elif self.is_egress_rule(target_rule):
+                self.enforce_egressPolicies(target_rule, classifiers)
+                new_rule = True
+
+            # dynamicFct is the only action (i.e., match >> dycFct) ??
+            if new_rule:
+                self.nexus.install_new_rules(classifiers)
+
+                for switch, new_rules in classifiers.iteritems():
+                    for new_r in new_rules:
+                        find = False
+                        for idx, old_r in enumerate(self.physical_switches_classifiers[switch]):
+                            if new_r.match == old_r.match:
+                                find = True
+                                self.physical_switches_classifiers[switch][idx] = new_r
+                        if not find:
+                            self.physical_switches_classifiers[switch].append(new_r)
+        else:
+            raise RuntimeError("runtime failed to find the nwFct_rule corresponding to " + str(micro_flow))
+
 #TODO: modify and rename
     def opt_physical_classifires(self, classifiers):
 
@@ -1084,6 +1155,32 @@ class Runtime():
         opt_c = remove_shadowed_rules(classifiers)
 
         return opt_c
+
+    def remove_nwFct_action(self, rule):
+        """
+            function called when the limit parameter in dynamic control functions is reached
+            remove the dynamic function from the rule list of actions
+        """
+        def get_actions(function, actions):
+            for act in function.sequential_actions:
+                if not isinstance(act, DataFctPolicy):
+                    actions.add(act)
+                else:
+                    get_actions(act, actions)
+            for fct in function.parallel_functions:
+                get_actions(fct, actions)
+
+        actions = set()
+
+        for act in rule.actions:
+            if isinstance(act, DataFctPolicy):
+                get_actions(act, actions)
+            elif not isinstance(act, DynamicPolicy):
+                actions.add(act)
+        if len(actions) == 0:
+            actions.add(identity)
+
+        rule.actions = actions
 
     def replace_by_ipAddrs(self, policy):
         if isinstance(policy, CompositionPolicy):
@@ -1520,146 +1617,9 @@ class Runtime():
 
 
 
-    def remove_nwFct_action(self, rule):
-        def get_actions(function, actions):
-            for act in function.sequential_actions:
-                if not isinstance(act, DataFctPolicy):
-                    actions.add(act)
-                else:
-                    get_actions(act, actions)
-            for fct in function.parallel_functions:
-                get_actions(fct, actions)
-        actions = set()
-        for act in rule.actions:
-            if isinstance(act, DataFctPolicy):
-                get_actions(act, actions)
-            elif not isinstance(act, DynamicPolicy):
-                actions.add(act)
-        if len(actions) == 0:
-            actions.add(identity)
-        rule.actions = actions
-
-        """
-        this fct is called before apply_netFunction_fromPacket
-        """
-        target_rule = None
-        for rule in self.edge_policies.rules:
-            if (rule.match != identity and rule.match.covers(micro_flow)):
-                target_rule = copy.deepcopy(rule)
-
-        classifiers = self.create_classifiers()
-        target_rule.match = micro_flow
-        if self.is_dynamicFunction_rule(target_rule) or self.is_dataFunction_rule(target_rule):
-            self.remove_nwFct_action(target_rule)
-            new_rule = False
-            if self.is_ingress_rule(target_rule):
-                self.enforce_ingressPolicies(target_rule, classifiers)
-                new_rule = True
-            elif self.is_egress_rule(target_rule):
-                self.enforce_egressPolicies(target_rule, classifiers)
-                new_rule = True
-            # case where dynamicFct is the only action (i.e., match >> dycFct)
-            if new_rule:
-                self.nexus.install_new_rules(classifiers)
-                for switch, new_rules in classifiers.iteritems():
-                    for new_r in new_rules:
-                        find = False
-                        for idx, old_r in enumerate(self.physical_switches_classifiers[switch]):
-                            if new_r.match == old_r.match:
-                                find = True
-                                self.physical_switches_classifiers[switch][idx] = new_r
-                        if not find:
-                            self.physical_switches_classifiers[switch].append(new_r)
-        else:
-            raise RuntimeError("runtime failed to find the nwFct_rule corresponding to " + str(micro_flow))
 
 
-    def flow_limit_reached(self, fct_predicate):
-        # first: remove fct item from nwFct_rules list
-        for idx in range(len(self.nwFct_rules)):
-            if self.nwFct_rules[idx].match.map == fct_predicate.map:
-                del self.nwFct_rules[idx]
-                break
 
-        # second: in edge policies, replace the fct action with identity
-        nwFct_rule = None
-        for rule in self.edge_policies.rules:
-            if rule.match is not identity:
-                if rule.match.map == fct_predicate.map:
-                        self.remove_nwFct_action(rule)
-                        nwFct_rule = rule
-
-        tmp_classifiers = self.create_classifiers()
-        new_rule = False
-        if self.is_ingress_rule(nwFct_rule):
-            self.enforce_ingressPolicies(nwFct_rule, tmp_classifiers)
-            new_rule = True
-        elif self.is_egress_rule(nwFct_rule):
-            self.enforce_egressPolicies(nwFct_rule, tmp_classifiers)
-            new_rule = True
-
-        new_classifiers = copy.deepcopy(self.physical_switches_classifiers)
-        # case where dynamicFct is the only action (i.e., match >> dycFct)
-        if new_rule:
-            for switch, new_rules in tmp_classifiers.iteritems():
-                for new_r in new_rules:
-                    find = False
-                    for idx, old_r in enumerate(new_classifiers[switch]):
-                        if new_r.match == old_r.match:
-                            find = True
-                            new_classifiers[switch][idx] = new_r
-                    if not find:
-                        # Unlike for micro-flows, here we need to modify an existing rule and not to add new one
-                        raise RuntimeError
-        else:
-            # a rule with a single action: dycFct
-            egress_edge = nwFct_rule.match.map["edge"]
-            nwFct_rule.match.map.pop("edge")
-            egress_edge_switches = self.get_edge_physical_corresponding(egress_edge)
-            for switch in egress_edge_switches:
-                for idx, old_r in enumerate(new_classifiers[switch]):
-                    if nwFct_rule.match == old_r.match:
-                        del new_classifiers[switch][idx]
-
-
-        diff_lists = self.get_diff_lists(self.physical_switches_classifiers, new_classifiers)
-        self.install_diff_lists(diff_lists)
-        self.physical_switches_classifiers = copy.deepcopy(new_classifiers)
-
-    def micro_flow_limit_reached(self, micro_flow):
-        """
-        this fct is called before apply_network_function
-        """
-        target_rule = None
-        for rule in self.edge_policies.rules:
-            if (rule.match != identity and rule.match.covers(micro_flow)):
-                target_rule = copy.deepcopy(rule)
-
-        classifiers = self.create_classifiers()
-        target_rule.match = micro_flow
-        if self.is_dynamicFunction_rule(target_rule) or self.is_dataFunction_rule(target_rule):
-            self.remove_nwFct_action(target_rule)
-            new_rule = False
-            if self.is_ingress_rule(target_rule):
-                self.enforce_ingressPolicies(target_rule, classifiers)
-                new_rule = True
-            elif self.is_egress_rule(target_rule):
-                self.enforce_egressPolicies(target_rule, classifiers)
-                new_rule = True
-            # case where dynamicFct is the only action (i.e., match >> dycFct)
-            if new_rule:
-                self.nexus.install_new_rules(classifiers)
-                for switch, new_rules in classifiers.iteritems():
-                    for new_r in new_rules:
-                        find = False
-                        for idx, old_r in enumerate(self.physical_switches_classifiers[switch]):
-                            if new_r.match == old_r.match:
-                                find = True
-                                self.physical_switches_classifiers[switch][idx] = new_r
-                        if not find:
-                            self.physical_switches_classifiers[switch].append(new_r)
-        else:
-            raise RuntimeError("runtime failed to find the nwFct_rule corresponding to " + str(micro_flow))
 
 
     def stop_timers(self):

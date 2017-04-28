@@ -33,11 +33,7 @@ supported_ofctl = {
     ofproto_v1_4.OFP_VERSION: ofctl_v1_4,
 }
 
-#rajoute pour stocker des packets
-#dictionnaire qui contiendra les msg OpenFlow remontes comme PacketIn :{0:msg1,1:msg2,....}
 packets = {}
-
-#cle des packets dans le dictionnaire precedent
 id_packet = 0
 
 class StatsController(ControllerBase):
@@ -133,17 +129,12 @@ class PacketsController(ControllerBase):
                 sender.send_arp(dp,flow)
             else:
                 global packets
-                # pop the output if it is present
-                #if 'output' in flow:
-                    #output = flow['output']
-                    #del flow['output']
-                # get the id of the packet
                 id_pkt = int(flow.get('id_packet'))
 
                 msg = packets.get(id_pkt)
+                sender.send_packet(dp,flow,msg)
                 # Delete msg from the packet dict
                 del packets[id_pkt]
-                sender.send_packet(dp,flow,msg)
         else:
             logger.debug('Unsupported OF protocol')
             return Response(status=501)

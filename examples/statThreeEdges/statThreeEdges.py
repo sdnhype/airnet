@@ -73,9 +73,8 @@ def virtual_network():
 def distribute(VID, destination):
     p = match(edge=VID, dst=destination) >> (saveStat() + forward(destination))
     return p
-
-# Generic MAC distribution policy
 """
+# Generic MAC distribution policy
 def distribute_mac(VID, destination):
     p = match(edge=VID, dl_dst=(globals()["MAC_"+destination])) >> (forward(destination) + saveStat())
     return p
@@ -86,7 +85,6 @@ def distribute_edges():
     distribute_e2 = distribute(E2, D) + distribute(E2, E) + distribute(E2, F)
     distribute_e3 = distribute(E3, G) + distribute(E3, H) + distribute(E3, I)
     return distribute_e1 + distribute_e2 + distribute_e3
-
 """
 # Distribute traffic (BASED ON MAC @) to the different members connected to the 3 edges
 def distribute_mac_edges():
@@ -141,14 +139,13 @@ def fabric_policies():
 # DYNAMIC CONTROL POLICIES
 # ============================================================================
 
-
-#@DynamicControlFct(data="stat", every=10, split=["nw_src"])
-@DynamicControlFct(data="stat", every=10, split=["nw_dst"])
+@DynamicControlFct(data="stat", every=10, split=["nw_src"])
 def saveStat( stat ):
     # Open log file
     logFile = open("statsLog_ThreeEdges.txt", 'a')
     time = datetime.datetime.now()
-    logFile.write('[%s] nw_dst %s | packet count %s \n' % (time, stat.nw_dst, stat.packet_count))
+    #logFile.write('[%s] dl_dst  %s | packet count %s | byte count %s\n' % (time, stat.dl_dst, stat.packet_count,stat.byte_count))
+    logFile.write('[%s] nw_src %s nw_dst  %s | packet count %s | byte count %s\n' % (time, stat.nw_src,stat.nw_dst, stat.packet_count,stat.byte_count))
     logFile.close()
     return identity
 

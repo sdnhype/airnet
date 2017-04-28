@@ -225,10 +225,8 @@ class RyuClient(object):
 		# First rules are installed
 		self.runtime_mode = True
 
+
 	def installNewRules(self, classifiers):
-		"""
-			Install new rules from classifiers
-		"""
 		c = ConfigureFlow('localhost',8080)
 
 		for switch,rules in classifiers.iteritems():
@@ -244,25 +242,30 @@ class RyuClient(object):
 				c.addFlow(data)
 			self.switches_rules_cpt[switch] += len(rules)
 
-	"""
-	installe des nouvelles regles,utilise par le mode dynamique
-	classifiers : dictionnaire des regles a installer
-	"""
+
 	def install_new_rules(self, classifiers):
+		"""
+			Push Reactive Rules to the SDN Controller
+		"""
 		c = ConfigureFlow('localhost',8080)
+
 		for switch, rules in classifiers.iteritems():
+			# priority = len (old rules + new rules)
 			priority = self.switches_rules_cpt[switch] + len(rules)
 			dpid = int(switch[1:])
+
 			for rule in rules:
-				data = {} #dictionnaire qui sera envoye
+				data = {}
 				data['dpid'] = dpid
 				data['match'] = self.build_match_field(**rule.match.map)
+
 				if not len(rule.actions) == 0:
 					data['actions'] = self.build_action_fields(rule.actions)
 				data['priority'] = priority
 				priority -= 1
 				c.addFlow(data)
 			self.switches_rules_cpt[switch] += len(rules)
+
 	"""
 	supprime des regles,utilise par le mode reactif
 	to_delete: dictionnaire des regles a supprimer

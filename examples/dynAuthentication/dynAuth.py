@@ -22,7 +22,7 @@ GUEST_NET <--> WS : only whitelist
 ADMIN_FLOWS = "ADMIN_FLOWS"
 GUESTS_WS_FLOWS = "GUESTS_WS_FLOWS"
 
-@DynamicControlFct(data="packet", limit=None, split=["nw_src"])
+@DynamicControlFct(data="packet", limit=1, split=["nw_src"])
 def authenticate(packet):
     if isinstance(packet, dict):
         #ici il s'agit de {'dpid':..,'packet':{'ipv4':{......},'tcp':{....},...},'port':..}
@@ -36,7 +36,7 @@ def authenticate(packet):
 
     if whitelist.has_key(hostIP):
         print(hostIP + " is whitelisted. --> fwd")
-        new_policy = (match(edge=WAP, nw_src=hostIP, dst=WEB_SERVER, tp_dst=80) >>
+        new_policy = (match(edge=WAP, nw_src=hostIP, dst=WEB_SERVER, nw_proto=ICMP) >>
                       tag(GUESTS_WS_FLOWS) >> forward(FABRIC))
     else:
         print(hostIP + " is blacklisted. --> drop")
@@ -69,6 +69,7 @@ def virtual_network():
 def access_policies():
     i1 = match(edge=IO, src=ADMIN_NET) >> tag(ADMIN_FLOWS) >> forward(FABRIC)
     i2 = match(edge=WAP, src=GUEST_NET, dst=WEB_SERVER) >> authenticate()
+    #i5 = match(edge=WAP, src=GUEST_NET, dst=WEB_SERVER, nw_proto=ICMP) >> tag(GUESTS_WS_FLOWS) >> forward(FABRIC)
     i3 = match(edge=AC, dst=GUEST_NET) >> tag(GUESTS_WS_FLOWS) >> forward(FABRIC)
     i4 = match(edge=AC, dst=ADMIN_NET) >> tag(ADMIN_FLOWS) >> forward(FABRIC)
 

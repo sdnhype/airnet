@@ -1,0 +1,5 @@
+PingAll to replace
+savestat() at the end
+upgrade Version
+think about multitable
+evolution multiprogrammes (liste de vtopos)

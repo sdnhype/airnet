@@ -55,8 +55,10 @@ class Bucket(object):
             print "This packet can't be splitted"
 
     def add_packet(self, dpid, packet_match, packet):
+        print("add packet")
         if self.limit is None:
             self.data.append(packet)
+            self.runtime.apply_netFunction_fromPacket(dpid, self.match, packet_match, packet)
         else:
             if self.split is not None:
                 micro_flow = self.get_micro_flow(packet)
@@ -75,7 +77,7 @@ class Bucket(object):
                         micro_flow_match = copy.deepcopy(self.match)
                         micro_flow_match.map.update(micro_flow.map)
                         self.runtime.micro_flow_limit_reached(micro_flow_match)
-                    #self.runtime.apply_network_function(dpid, self.match, packet_match, packet)
+                    self.runtime.apply_netFunction_fromPacket(dpid, self.match, packet_match, packet)
                 else:
                     print "micro-flow locked"
                     # TODO: add something to handle this lasts packets --> packets concurrency
@@ -84,9 +86,12 @@ class Bucket(object):
                     self.nb_packets += 1
                     self.data.append(packet)
                     if self.nb_packets == self.limit:
+                        print("locked because of limit")
                         self.locked = True
+                        self.runtime.apply_netFunction_fromPacket(dpid, self.match, packet_match, packet)
                         self.runtime.flow_limit_reached(self.match)
-                    self.runtime.apply_network_function(dpid, self.match, packet_match, packet)
+                    else :
+                        self.runtime.apply_netFunction_fromPacket(dpid, self.match, packet_match, packet)
                 else:
                     print "flow locked"
                     # TODO: packets concurrency
