@@ -9,8 +9,8 @@ from constants import *
 
 Policies (we test composition here):
 
-ALLOW HOST_A to communicate with HOST_B
 DENY HTTP from HOST_A
+ALLOW HOST_A to communicate with HOST_B
 
 INTERSECTION here is HOST_A sending HTTP Request to HOST_B
 

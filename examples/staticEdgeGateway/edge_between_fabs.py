@@ -1,5 +1,5 @@
 from language import *
-from usecases.constants import *
+from constants import *
 
 """
 
@@ -37,30 +37,29 @@ def default_distribution_policy():
     return e1 + e2
 
 def access_policies():
-    
+
     e1 = match(edge=E1, dst=WS) >> tag(IN_FLOWS) >> forward(FAB1)
     e2 = match(edge=E_GW, dst=WS) >> tag(IN_FLOWS) >> forward(FAB2)
-    
+
     e3 = match(edge=E2, src=WS) >> tag(OUT_FLOWS) >> forward(FAB2)
     e4 = match(edge=E_GW, src=WS) >> tag(OUT_FLOWS) >> forward(FAB1)
-    
+
     return e1 + e2 + e3 + e4
 
 def transport_policy():
-    
+
     f1 = catch(fabric=FAB1, src=E1, flow=IN_FLOWS) >> carry(dst=E_GW)
     f2 = catch(fabric=FAB2, src=E_GW, flow=IN_FLOWS) >> carry(dst=E2)
     f3 = catch(fabric=FAB2, src=E2, flow=OUT_FLOWS) >> carry(dst=E_GW)
     f4 = catch(fabric=FAB1, src=E_GW, flow=OUT_FLOWS) >> carry(dst=E1)
-    
+
     return f1 + f2 + f3 + f4
 
 
 def main():
     topology = virtual_network()
     in_network_functions = default_distribution_policy() + access_policies()
-    transport_function = transport_policy() 
-    return {"virtual_topology": topology, 
-            "edge_policies": in_network_functions, 
-            "fabric_policies": transport_function}  
-
+    transport_function = transport_policy()
+    return {"virtual_topology": topology,
+            "edge_policies": in_network_functions,
+            "fabric_policies": transport_function}

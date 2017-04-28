@@ -1,11 +1,12 @@
 import logging
+from logging.handlers import RotatingFileHandler
 
 class Logger :
 
     def __init__ (self, name, file="log/debug.log") :
         self.logger = logging.getLogger(name)
         self.formatter = logging.Formatter('%(asctime)s : %(name)s : [%(levelname)s] : %(message)s')
-        self.handler = logging.FileHandler(file,mode="a",encoding="utf-8")
+        self.handler = logging.handlers.RotatingFileHandler(file,mode="a",maxBytes=100000, backupCount=1, encoding="utf-8")
         self.handler.setFormatter(self.formatter)
 
     def getLog(self, level="DEBUG") :

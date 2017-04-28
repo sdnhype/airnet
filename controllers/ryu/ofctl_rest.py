@@ -37,7 +37,8 @@ from ryu.app.wsgi import ControllerBase, WSGIApplication
 #pour envoyer des packetsOut
 from ryu.app.packetParser import PacketParser
 
-LOG = logging.getLogger('ryu.app.ofctl_rest')
+#logger = logging.getLogger('ryu.app.ofctl_rest')
+logger = Logger("ofctl_rest").getLog()
 
 # supported ofctl versions in this restful app
 supported_ofctl = {
@@ -177,7 +178,7 @@ class StatsController(ControllerBase):
     def get_desc_stats(self, req, dpid, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -191,7 +192,7 @@ class StatsController(ControllerBase):
             desc = _ofctl.get_desc_stats(dp, self.waiters)
 
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         body = json.dumps(desc)
@@ -208,11 +209,11 @@ class StatsController(ControllerBase):
                 flow = ast.literal_eval(req.body)
 
             except SyntaxError:
-                LOG.debug('invalid syntax %s', req.body)
+                logger.debug('invalid syntax %s', req.body)
                 return Response(status=400)
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -227,7 +228,7 @@ class StatsController(ControllerBase):
             flows = _ofctl.get_flow_stats(dp, self.waiters, flow)
 
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         body = json.dumps(flows)
@@ -243,11 +244,11 @@ class StatsController(ControllerBase):
                 flow = ast.literal_eval(req.body)
 
             except SyntaxError:
-                LOG.debug('invalid syntax %s', req.body)
+                logger.debug('invalid syntax %s', req.body)
                 return Response(status=400)
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -262,7 +263,7 @@ class StatsController(ControllerBase):
             flows = _ofctl.get_aggregate_flow_stats(dp, self.waiters, flow)
 
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         body = json.dumps(flows)
@@ -271,7 +272,7 @@ class StatsController(ControllerBase):
     def get_table_stats(self, req, dpid, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -286,7 +287,7 @@ class StatsController(ControllerBase):
             ports = _ofctl.get_table_stats(dp, self.waiters)
 
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         body = json.dumps(ports)
@@ -295,7 +296,7 @@ class StatsController(ControllerBase):
     def get_table_features(self, req, dpid, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -310,7 +311,7 @@ class StatsController(ControllerBase):
             ports = _ofctl.get_table_features(dp, self.waiters)
 
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         body = json.dumps(ports)
@@ -319,11 +320,11 @@ class StatsController(ControllerBase):
     def get_port_stats(self, req, dpid, port=None, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         if type(port) == str and not port.isdigit():
-            LOG.debug('invalid port %s', port)
+            logger.debug('invalid port %s', port)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -338,7 +339,7 @@ class StatsController(ControllerBase):
             ports = _ofctl.get_port_stats(dp, self.waiters, port)
 
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         body = json.dumps(ports)
@@ -347,21 +348,21 @@ class StatsController(ControllerBase):
     def get_queue_stats(self, req, dpid, port=None, queue_id=None, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         if port == "ALL":
             port = None
 
         if type(port) == str and not port.isdigit():
-            LOG.debug('invalid port %s', port)
+            logger.debug('invalid port %s', port)
             return Response(status=400)
 
         if queue_id == "ALL":
             queue_id = None
 
         if type(queue_id) == str and not queue_id.isdigit():
-            LOG.debug('invalid queue_id %s', queue_id)
+            logger.debug('invalid queue_id %s', queue_id)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -376,7 +377,7 @@ class StatsController(ControllerBase):
             queues = _ofctl.get_queue_stats(dp, self.waiters, port, queue_id)
 
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         body = json.dumps(queues)
@@ -385,11 +386,11 @@ class StatsController(ControllerBase):
     def get_queue_config(self, req, dpid, port, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         if type(port) == str and not port.isdigit():
-            LOG.debug('invalid port %s', port)
+            logger.debug('invalid port %s', port)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -404,7 +405,7 @@ class StatsController(ControllerBase):
         if _ofctl is not None:
             queues = _ofctl.get_queue_config(dp, port, self.waiters)
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         body = json.dumps(queues)
@@ -413,15 +414,15 @@ class StatsController(ControllerBase):
     def get_queue_desc(self, req, dpid, port, queue, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         if type(port) == str and not port.isdigit():
-            LOG.debug('invalid port %s', port)
+            logger.debug('invalid port %s', port)
             return Response(status=400)
 
         if type(queue) == str and not queue.isdigit():
-            LOG.debug('invalid queue %s', queue)
+            logger.debug('invalid queue %s', queue)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -438,7 +439,7 @@ class StatsController(ControllerBase):
             queues = _ofctl.get_queue_desc_stats(
                 dp=dp, port_no=port, waiters=self.waiters)
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         body = json.dumps(queues)
@@ -447,7 +448,7 @@ class StatsController(ControllerBase):
     def get_meter_features(self, req, dpid, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -462,7 +463,7 @@ class StatsController(ControllerBase):
             meters = _ofctl.get_meter_features(dp, self.waiters)
 
         else:
-            LOG.debug('Unsupported OF protocol or \
+            logger.debug('Unsupported OF protocol or \
                 request not supported in this OF protocol version')
             return Response(status=501)
 
@@ -472,11 +473,11 @@ class StatsController(ControllerBase):
     def get_meter_config(self, req, dpid, meter_id=None, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         if type(meter_id) == str and not meter_id.isdigit():
-            LOG.debug('invalid meter_id %s', memter_id)
+            logger.debug('invalid meter_id %s', memter_id)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -491,7 +492,7 @@ class StatsController(ControllerBase):
             meters = _ofctl.get_meter_config(dp, self.waiters, meter_id)
 
         else:
-            LOG.debug('Unsupported OF protocol or \
+            logger.debug('Unsupported OF protocol or \
                 request not supported in this OF protocol version')
             return Response(status=501)
 
@@ -501,11 +502,11 @@ class StatsController(ControllerBase):
     def get_meter_stats(self, req, dpid, meter_id=None, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         if type(meter_id) == str and not meter_id.isdigit():
-            LOG.debug('invalid meter_id %s', memter_id)
+            logger.debug('invalid meter_id %s', memter_id)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -520,7 +521,7 @@ class StatsController(ControllerBase):
             meters = _ofctl.get_meter_stats(dp, self.waiters, meter_id)
 
         else:
-            LOG.debug('Unsupported OF protocol or \
+            logger.debug('Unsupported OF protocol or \
                 request not supported in this OF protocol version')
             return Response(status=501)
 
@@ -530,7 +531,7 @@ class StatsController(ControllerBase):
     def get_group_features(self, req, dpid, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -545,7 +546,7 @@ class StatsController(ControllerBase):
             groups = _ofctl.get_group_features(dp, self.waiters)
 
         else:
-            LOG.debug('Unsupported OF protocol or \
+            logger.debug('Unsupported OF protocol or \
                 request not supported in this OF protocol version')
             return Response(status=501)
 
@@ -555,7 +556,7 @@ class StatsController(ControllerBase):
     def get_group_desc(self, req, dpid, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -570,7 +571,7 @@ class StatsController(ControllerBase):
             groups = _ofctl.get_group_desc(dp, self.waiters)
 
         else:
-            LOG.debug('Unsupported OF protocol or \
+            logger.debug('Unsupported OF protocol or \
                 request not supported in this OF protocol version')
             return Response(status=501)
 
@@ -580,11 +581,11 @@ class StatsController(ControllerBase):
     def get_group_stats(self, req, dpid, group_id=None, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         if type(group_id) == str and not group_id.isdigit():
-            LOG.debug('invalid group_id %s', group_id)
+            logger.debug('invalid group_id %s', group_id)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -599,7 +600,7 @@ class StatsController(ControllerBase):
             groups = _ofctl.get_group_stats(dp, self.waiters, group_id)
 
         else:
-            LOG.debug('Unsupported OF protocol or \
+            logger.debug('Unsupported OF protocol or \
                 request not supported in this OF protocol version')
             return Response(status=501)
 
@@ -609,7 +610,7 @@ class StatsController(ControllerBase):
     def get_port_desc(self, req, dpid, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -624,7 +625,7 @@ class StatsController(ControllerBase):
             groups = _ofctl.get_port_desc(dp, self.waiters)
 
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         body = json.dumps(groups)
@@ -635,13 +636,13 @@ class StatsController(ControllerBase):
         try:
             flow = ast.literal_eval(req.body)
         except SyntaxError:
-            LOG.debug('invalid syntax %s', req.body)
+            logger.debug('invalid syntax %s', req.body)
             return Response(status=400)
 
         dpid = flow.get('dpid')
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -667,7 +668,7 @@ class StatsController(ControllerBase):
         if _ofctl is not None:
             _ofctl.mod_flow_entry(dp, flow, cmd)
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         return Response(status=200)
@@ -675,7 +676,7 @@ class StatsController(ControllerBase):
     def delete_flow_entry(self, req, dpid, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -695,7 +696,7 @@ class StatsController(ControllerBase):
             _ofctl.mod_flow_entry(dp, flow, dp.ofproto.OFPFC_DELETE)
 
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         return Response(status=200)
@@ -706,13 +707,13 @@ class StatsController(ControllerBase):
             flow = ast.literal_eval(req.body)
 
         except SyntaxError:
-            LOG.debug('invalid syntax %s', req.body)
+            logger.debug('invalid syntax %s', req.body)
             return Response(status=400)
 
         dpid = flow.get('dpid')
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -736,7 +737,7 @@ class StatsController(ControllerBase):
             _ofctl.mod_meter_entry(dp, flow, cmd)
 
         else:
-            LOG.debug('Unsupported OF protocol or \
+            logger.debug('Unsupported OF protocol or \
                 request not supported in this OF protocol version')
             return Response(status=501)
 
@@ -748,13 +749,13 @@ class StatsController(ControllerBase):
             group = ast.literal_eval(req.body)
 
         except SyntaxError:
-            LOG.debug('invalid syntax %s', req.body)
+            logger.debug('invalid syntax %s', req.body)
             return Response(status=400)
 
         dpid = group.get('dpid')
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -778,7 +779,7 @@ class StatsController(ControllerBase):
             _ofctl.mod_group_entry(dp, group, cmd)
 
         else:
-            LOG.debug('Unsupported OF protocol or \
+            logger.debug('Unsupported OF protocol or \
                 request not supported in this OF protocol version')
             return Response(status=501)
 
@@ -790,18 +791,18 @@ class StatsController(ControllerBase):
             port_config = ast.literal_eval(req.body)
 
         except SyntaxError:
-            LOG.debug('invalid syntax %s', req.body)
+            logger.debug('invalid syntax %s', req.body)
             return Response(status=400)
 
         dpid = port_config.get('dpid')
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         port_no = port_config.get('port_no', 0)
         if type(port_no) == str and not port_no.isdigit():
-            LOG.debug('invalid port_no %s', port_no)
+            logger.debug('invalid port_no %s', port_no)
             return Response(status=400)
 
         port_info = self.dpset.port_state[int(dpid)].get(port_no)
@@ -829,7 +830,7 @@ class StatsController(ControllerBase):
             _ofctl.mod_port_behavior(dp, port_config)
 
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         return Response(status=200)
@@ -837,7 +838,7 @@ class StatsController(ControllerBase):
     def send_experimenter(self, req, dpid, **_kwargs):
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -849,7 +850,7 @@ class StatsController(ControllerBase):
             exp = ast.literal_eval(req.body)
 
         except SyntaxError:
-            LOG.debug('invalid syntax %s', req.body)
+            logger.debug('invalid syntax %s', req.body)
             return Response(status=400)
         _ofp_version = dp.ofproto.OFP_VERSION
         _ofctl = supported_ofctl.get(_ofp_version, None)
@@ -858,23 +859,23 @@ class StatsController(ControllerBase):
             _ofctl.send_experimenter(dp, exp)
 
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
         return Response(status=200)
 
-    #fonction pour envoyer des Packets Out    
+    #fonction pour envoyer des Packets Out
     def send_packet(self, req, **_kwargs):
         try:
             flow = ast.literal_eval(req.body)
         except SyntaxError:
-            LOG.debug('invalid syntax %s', req.body)
+            logger.debug('invalid syntax %s', req.body)
             return Response(status=400)
-	
+
         dpid = flow.get('dpid')
 
         if type(dpid) == str and not dpid.isdigit():
-            LOG.debug('invalid dpid %s', dpid)
+            logger.debug('invalid dpid %s', dpid)
             return Response(status=400)
 
         dp = self.dpset.get(int(dpid))
@@ -888,7 +889,7 @@ class StatsController(ControllerBase):
             sender = PacketParser()
             sender.send_packet(dp,flow)
         else:
-            LOG.debug('Unsupported OF protocol')
+            logger.debug('Unsupported OF protocol')
             return Response(status=501)
 
 class RestStatsApi(app_manager.RyuApp):

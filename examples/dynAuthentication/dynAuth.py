@@ -24,9 +24,6 @@ GUESTS_WS_FLOWS = "GUESTS_WS_FLOWS"
 
 @DynamicControlFct(data="packet", limit=1, split=["nw_src"])
 def authenticate(packet):
-    """
-    le paquet peut etre un paquet pox ou un dictionnaire
-    """
     if isinstance(packet, dict):
         #ici il s'agit de {'dpid':..,'packet':{'ipv4':{......},'tcp':{....},...},'port':..}
         protos = packet.get('packet')
@@ -39,7 +36,7 @@ def authenticate(packet):
 
     if whitelist.has_key(hostIP):
         print(hostIP + " is whitelisted. --> fwd")
-        new_policy = (match(edge=WAP, nw_src=hostIP, dst=WEB_SERVER, tp_dst=80) >>
+        new_policy = (match(edge=WAP, nw_src=hostIP, dst=WEB_SERVER, nw_proto=ICMP) >>
                       tag(GUESTS_WS_FLOWS) >> forward(FABRIC))
     else:
         print(hostIP + " is blacklisted. --> drop")
@@ -69,21 +66,23 @@ def virtual_network():
     return topology
 
 #Policies
-def InputOutput_policy():
+def access_policies():
     i1 = match(edge=IO, src=ADMIN_NET) >> tag(ADMIN_FLOWS) >> forward(FABRIC)
-    i2 = match(edge=IO, dst=ADMIN_NET) >> forward(ADMIN_NET)
-    i3 = match(edge=WAP, src=GUEST_NET, dst=WEB_SERVER) >> authenticate()
-    i4 = match(edge=WAP, dst=GUEST_NET) >> forward(GUEST_NET)
-    return i1 + i2 + i3 + i4
-
-def Access_policy():
-    i1 = match(edge=AC, dst=WEB_SERVER) >> forward(WEB_SERVER)
-    i2 = match(edge=AC, dst=DATA_BASE) >> forward(DATA_BASE)
+    i2 = match(edge=WAP, src=GUEST_NET, dst=WEB_SERVER) >> authenticate()
+    #i5 = match(edge=WAP, src=GUEST_NET, dst=WEB_SERVER, nw_proto=ICMP) >> tag(GUESTS_WS_FLOWS) >> forward(FABRIC)
     i3 = match(edge=AC, dst=GUEST_NET) >> tag(GUESTS_WS_FLOWS) >> forward(FABRIC)
     i4 = match(edge=AC, dst=ADMIN_NET) >> tag(ADMIN_FLOWS) >> forward(FABRIC)
+
     return i1 + i2 + i3 + i4
 
-def transport_policy():
+def distribution_policies():
+    i1 = match(edge=IO, dst=ADMIN_NET) >> forward(ADMIN_NET)
+    i2 = match(edge=WAP, dst=GUEST_NET) >> forward(GUEST_NET)
+    i3 = match(edge=AC, dst=WEB_SERVER) >> forward(WEB_SERVER)
+    i4 = match(edge=AC, dst=DATA_BASE) >> forward(DATA_BASE)
+    return i1 + i2 + i3 + i4
+
+def transport_policies():
     t1 = ((catch(fabric=FABRIC, src=IO, flow=ADMIN_FLOWS) +
             catch(fabric=FABRIC, src=WAP, flow=GUESTS_WS_FLOWS))
                 >> carry(dst=AC))
@@ -93,8 +92,8 @@ def transport_policy():
 
 #Main function
 def main():
-    in_network_functions = InputOutput_policy() + Access_policy()
-    transport_function = transport_policy()
+    in_network_functions = access_policies() + distribution_policies()
+    transport_function = transport_policies()
     topology = virtual_network()
     return {"virtual_topology": topology,
             "edge_policies": in_network_functions,

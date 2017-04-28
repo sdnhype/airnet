@@ -12,8 +12,8 @@ from constants import *
 
 Policies (by app flows):
 
-ALLOW ICMP HOST_A to HOSt_B
-ALLOW ICMP HOST_B to HOSt_A
+ALLOW ICMP HOST_A to HOST_B
+ALLOW ICMP HOST_B to HOST_A
 
 ************************
 *** mininet topology ***

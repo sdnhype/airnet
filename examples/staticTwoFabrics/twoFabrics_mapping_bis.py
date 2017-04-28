@@ -1,4 +1,4 @@
-from proto.mapping import Mapping
+from mapping import Mapping
 from constants import *
 """
 mininet_topo: topo_2_fabrics_bis.py

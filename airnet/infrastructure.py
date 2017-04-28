@@ -4,6 +4,10 @@ from collections import namedtuple
 from log import Logger
 import copy
 
+#TODO: asserts
+#TODO: rapr function return type on #255
+#TODO: is resolver on #270 still useful ?
+
 # LOGGER CONSTRUCTION
 logger = Logger("Airnet_Infrastructure").getLog()
 
@@ -83,7 +87,6 @@ class Phy_Host(object):
         self.hwAddr = mac_addr
         self.ip_addrs = ip_addrs # BUG: ref and defaut value !!!
 
-
 class Infrastructure(object):
     """
         Logical Containers are used here to describe the physical infrastructure
@@ -92,7 +95,6 @@ class Infrastructure(object):
     def __init__(self):
         """
             Initialize physical topology components in logical containers
-
         :hosts: dict of hosts in physical topology
         :switches: dict of switches in physical topology
         :links: list of links connecting equipments
@@ -105,8 +107,6 @@ class Infrastructure(object):
         self.links = []           # [Phy_Link objects]
         self._hwAddrs = []        # POX bug ! when a link is down
         self._deleted_links = []  # [Phy_Link objects]
-
-        logger.debug("Logical containers for physical components fully initialized")
 
     def nb(self):
         return len(self.switches.keys())
@@ -223,7 +223,7 @@ class Infrastructure(object):
                         else:
                             vertices["s{}".format(switch.dpid)].append((1, "s{}".format(link.entity2["dpid"]), link.entity1["port"]))
 
-        logger.debug("Graph Components Initialized")
+        logger.debug("Graph Components Actualized")
         return Graph(vertices, edges)
 
     def view(self):
@@ -245,14 +245,15 @@ class Infrastructure(object):
                                                   link.entity2["port"]))
 
     def arp(self, ipAddr):
-        # work only for one ipAddr by host
+        """
+            Return hwAddr corresponding to ipAddr
+        """
         for key, host in self.hosts.iteritems():
             if (host.ip_addrs.keys()[0]) == ipAddr:
                 return host.hwAddr
         return None
 
     def rarp(self, hwAddr):
-        """ Return ip address TYPE??? TODO """
         # work only for one ipAddr by host
         for key, host in self.hosts.iteritems():
             if host.hwAddr == hwAddr:
