@@ -3,35 +3,6 @@ from language import *
 # Import constants for all use cases
 from constants import *
 
-"""
-                       WS   SSH_GW
-                         \ /
-                         [ED]
-------------              |               -----------------
-- Internet ----[EI]---[ Fabric ]---[EC]---- Corporate Net -
-------------              |               -----------------
-                         [EW]
-                         /  \
-                   -------  --------
-                   - WiFI-   - WiFi -
-                   - Pub -   - Priv -
-                   -------   --------
-
-Policies (by app flows):
-
-- [ Internet, WiFi Pub and Priv ] <--> WS  : allow HTTP
-- [ Internet, WiFi Pub and Priv ] <--> WS  : allow ICMP
-
-- [ Internet, WiFi Pub and Priv ] <--> SSH_GW : allow SSH
-- [ SSH_GW ]                      <--> Corporate Net : allow ALL
-
-- [ Wifi Pub and Priv ]           <--> Internet : allow ALL
-TODO - [ WiFi Priv ]                   <--> Corporate Net : allow FTP
-
-- drop other (e.g. Internet --> Corp Net)
-
-"""
-
 #Virtual topology
 def virtual_network():
 
@@ -61,7 +32,6 @@ def virtual_network():
     topology.addLink((EC,2),(CORP_NET))
 
     return topology
-
 
 # ==========
 # Policies
@@ -194,6 +164,24 @@ def wifi_internet_policy():
     # return a tuple of 2 elements: in_network policies and transport policies
     return (e1+e2+e3+e4, f1+f2)
 
+# WIFI - CORPORATE POLICY
+# [ WiFi Priv ] <--> Corporate Net : allow TCP 8080
+def wifi_corporate_net_policy():
+
+    # Tags
+    AUTH_IN = "8080_in"
+    AUTH_OUT = "8080_out"
+
+    # Edges
+    e1 = match(edge=EW, src=WIFI_PRIV, dst=CORP_NET, nw_proto=TCP, tp_dst=8080) >> tag(AUTH_IN) >> forward(FAB)
+    e2 = match(edge=EC, src=CORP_NET, dst=WIFI_PRIV, nw_proto=TCP, tp_src=8080) >> tag(AUTH_OUT) >> forward(FAB)
+
+    # Fabric
+    f1 = catch(fabric=FAB, src=EW, flow=AUTH_IN) >> carry(dst=EC)
+    f2 = catch(fabric=FAB, src=EC, flow=AUTH_OUT) >> carry(dst=EW)
+
+    # return a tuple of 2 elements: in_network policies and transport policies
+    return (e1+e2, f1+f2)
 
 # ===============
 # Main function
@@ -206,9 +194,10 @@ def main():
     inf_02, tf_02 = icmp_flows_policy()
     inf_03, tf_03 = ssh_flows_policy()
     inf_04, tf_04 = wifi_internet_policy()
+    inf_05, tf_05 = wifi_corporate_net_policy()
 
-    in_net_fct_global = inf_base + inf_01 + inf_02 + inf_03 + inf_04
-    transport_fct_global = tf_01 + tf_02 + tf_03 + tf_04
+    in_net_fct_global = inf_base + inf_01 + inf_02 + inf_03 + inf_04 + inf_05
+    transport_fct_global = tf_01 + tf_02 + tf_03 + tf_04 + tf_05
 
     return {"virtual_topology": topology,
             "edge_policies": in_net_fct_global,
