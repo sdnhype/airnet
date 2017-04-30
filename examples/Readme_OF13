@@ -1,0 +1,9 @@
+""" toyExample """
+
+badji@meilo-PC:~/airnet$ ./launch_airnet_ryu.sh toyExample.toyExample toyExample.toyExample_mapping
+
+badji@meilo-PC:~/airnet/controllers/ryu$ ryu-manager --observe-links airnet_interface.py
+
+mininet@mininet-vm:~/topo$ sudo python topo_toyExample.py 192.168.56.1 6633
+
+mininet> host_A ping -c1 host_B  --> OK

@@ -1,586 +1,796 @@
-2017-04-28 18:54:03,946 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
-2017-04-28 18:54:04,017 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
-2017-04-28 18:54:04,433 : Airnet_Infrastructure : [DEBUG] : Switch-5 has left 
-2017-04-28 18:54:04,441 : Airnet_Infrastructure : [DEBUG] : Switch-2 has left 
-2017-04-28 18:54:04,449 : Airnet_Infrastructure : [DEBUG] : Switch-8 has left 
-2017-04-28 18:54:04,457 : Airnet_Infrastructure : [DEBUG] : Switch-9 has left 
-2017-04-28 18:54:04,468 : Airnet_Infrastructure : [DEBUG] : Switch-1 has left 
-2017-04-28 18:54:04,478 : Airnet_Infrastructure : [DEBUG] : Switch-4 has left 
-2017-04-28 18:54:04,491 : Airnet_Infrastructure : [DEBUG] : Switch-3 has left 
-2017-04-28 18:54:04,500 : Airnet_Infrastructure : [DEBUG] : Switch-7 has left 
-2017-04-28 18:54:04,517 : Airnet_Infrastructure : [DEBUG] : Switch-6 has left 
-2017-04-28 18:55:14,683 : Airnet_Runtime : [DEBUG] : 
+2017-04-30 17:50:25,982 : Airnet_Infrastructure : [DEBUG] : Switch-1 has left 
+2017-04-30 17:50:25,998 : Airnet_Infrastructure : [DEBUG] : Switch-4 has left 
+2017-04-30 17:50:26,004 : Airnet_Infrastructure : [DEBUG] : Switch-3 has left 
+2017-04-30 17:52:43,473 : Airnet_Runtime : [DEBUG] : 
 
 **************************************************        **************************************************
                                                 STARTING DEBUG
 **************************************************        **************************************************
 
-2017-04-28 18:55:14,683 : Airnet_Runtime : [INFO] : Compilation started --
-2017-04-28 18:55:14,684 : Airnet_Runtime : [DEBUG] : Control program -- dynAuthentication.dynAuth
-2017-04-28 18:55:14,684 : Airnet_Runtime : [DEBUG] : Mapping program -- dynAuthentication.dynAuth_mapping
-2017-04-28 18:55:14,685 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
-2017-04-28 18:55:14,685 : Airnet_Runtime : [DEBUG] : Got topology graph 
-2017-04-28 18:55:14,685 : Airnet_Runtime : [DEBUG] : Got virtual topology
-2017-04-28 18:55:14,685 : Airnet_Runtime : [DEBUG] : Got edge policies
-2017-04-28 18:55:14,686 : Airnet_Runtime : [DEBUG] : Replaced in edge policies symbolic names by ipAddrs
-2017-04-28 18:55:14,686 : Airnet_Runtime : [DEBUG] : Compiling edge policies
-2017-04-28 18:55:14,689 : Airnet_Runtime : [DEBUG] : Edge rules generated : 9
+2017-04-30 17:52:43,474 : Airnet_Runtime : [INFO] : Compilation started --
+2017-04-30 17:52:43,475 : Airnet_Runtime : [DEBUG] : Control program -- toyExample.toyExample_bis
+2017-04-30 17:52:43,476 : Airnet_Runtime : [DEBUG] : Mapping program -- toyExample.toyExample_mapping
+2017-04-30 17:52:43,476 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 17:52:43,476 : Airnet_Runtime : [DEBUG] : Got topology graph 
+2017-04-30 17:52:43,477 : Airnet_Runtime : [DEBUG] : Got virtual topology
+2017-04-30 17:52:43,477 : Airnet_Runtime : [DEBUG] : Got edge policies
+2017-04-30 17:52:43,477 : Airnet_Runtime : [DEBUG] : Replaced in edge policies symbolic names by ipAddrs
+2017-04-30 17:52:43,478 : Airnet_Runtime : [DEBUG] : Compiling edge policies
+2017-04-30 17:52:43,479 : Airnet_Runtime : [DEBUG] : Edge rules generated : 7
 ************
-match {'edge': 'IO', 'nw_src': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to FABRIC])
-match {'edge': 'WAP', 'nw_src': '172.16.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([authenticate()])
-match {'edge': 'AC', 'nw_dst': '172.16.0.0/16'} -- flowID==GUESTS_WS_FLOWS -- set([forward to FABRIC])
-match {'edge': 'AC', 'nw_dst': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to FABRIC])
-match {'edge': 'IO', 'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to ADMIN_NET])
-match {'edge': 'WAP', 'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to GUEST_NET])
-match {'edge': 'AC', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to WEB_SERVER])
-match {'edge': 'AC', 'nw_dst': '192.168.0.12'} -- identity -- set([forward to DATA_BASE])
+match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([forward to HA])
+match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB])
+match {'edge': 'E1', 'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to Fabric])
+match {'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to Fabric])
+match {'edge': 'E1', 'nw_src': '10.0.0.11', 'tp_dst': 80} -- identity -- set([])
+match {'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==flow_out -- set([forward to Fabric])
 identity -- identity -- set([])
 ************
-2017-04-28 18:55:14,690 : Airnet_Runtime : [DEBUG] : Compiling fabric policies
-2017-04-28 18:55:14,690 : Airnet_Runtime : [DEBUG] : Fabric rules generated : 4
+2017-04-30 17:52:43,479 : Airnet_Runtime : [DEBUG] : Compiling fabric policies
+2017-04-30 17:52:43,480 : Airnet_Runtime : [DEBUG] : Fabric rules generated : 2
 ************
-fabric='FABRIC' ,src='IO' flow='ADMIN_FLOWS' -- set([carry (AC,{})]) -- []
-fabric='FABRIC' ,src='WAP' flow='GUESTS_WS_FLOWS' -- set([carry (AC,{})]) -- []
-fabric='FABRIC' ,src='AC' flow='ADMIN_FLOWS' -- set([carry (IO,{})]) -- []
-fabric='FABRIC' ,src='AC' flow='GUESTS_WS_FLOWS' -- set([carry (WAP,{})]) -- []
+fabric='Fabric' ,src='E1' flow='flow_in' -- set([carry (E2,{})]) -- []
+fabric='Fabric' ,src='E2' flow='flow_out' -- set([carry (E1,{})]) -- []
 ************
-2017-04-28 18:55:14,690 : Airnet_Runtime : [DEBUG] : Ryu client started successfully
-2017-04-28 18:55:14,690 : Airnet_Runtime : [INFO] : Compilation finished -- Duration == 7ms
-2017-04-28 18:55:19,473 : Airnet_Infrastructure : [DEBUG] : Switch-1 has joined 
-2017-04-28 18:55:19,548 : Airnet_Infrastructure : [DEBUG] : Switch-2 has joined 
-2017-04-28 18:55:19,585 : Airnet_Infrastructure : [DEBUG] : Switch-3 has joined 
-2017-04-28 18:55:19,617 : Airnet_Infrastructure : [DEBUG] : Switch-4 has joined 
-2017-04-28 18:55:19,648 : Airnet_Infrastructure : [DEBUG] : Switch-5 has joined 
-2017-04-28 18:55:19,718 : Airnet_Infrastructure : [DEBUG] : Switch-6 has joined 
-2017-04-28 18:55:19,790 : Airnet_Infrastructure : [DEBUG] : Switch-7 has joined 
-2017-04-28 18:55:19,899 : Airnet_Infrastructure : [DEBUG] : Switch-8 has joined 
-2017-04-28 18:55:19,967 : Airnet_Infrastructure : [DEBUG] : Switch-9 has joined 
-2017-04-28 18:55:19,999 : Airnet_Infrastructure : [DEBUG] : Host-1e:2f:67:29:9f:35 has joined 
-2017-04-28 18:55:23,008 : Airnet_Infrastructure : [DEBUG] : Host-5a:5c:94:be:e8:9d has joined 
-2017-04-28 18:55:26,015 : Airnet_Infrastructure : [DEBUG] : Host-ae:2b:4e:6e:89:fa has joined 
-2017-04-28 18:55:29,024 : Airnet_Infrastructure : [DEBUG] : Host-02:58:22:e7:9a:39 has joined 
-2017-04-28 18:55:34,030 : Airnet_Runtime : [INFO] : Proactive core policies enforcement started --
-2017-04-28 18:55:34,032 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
-2017-04-28 18:55:34,032 : Airnet_Runtime : [DEBUG] : Got topology graph 
-2017-04-28 18:55:34,033 : Airnet_Runtime : [DEBUG] : Replaced hwAddrs in topology graph by symbolic names
-2017-04-28 18:55:34,034 : Airnet_Runtime : [DEBUG] : Initialized a per-switch classifier
-2017-04-28 18:55:34,034 : Airnet_Runtime : [DEBUG] : Converting high-level policies to physical rules
-2017-04-28 18:55:34,034 : Airnet_Runtime : [DEBUG] : 
--- Ingress Rule : match {'edge': 'IO', 'nw_src': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to FABRIC])
-2017-04-28 18:55:34,034 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
-2017-04-28 18:55:34,035 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:55:34,036 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:55:34,036 : Airnet_Runtime : [DEBUG] : match {'nw_src': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to 1])
-2017-04-28 18:55:34,036 : Airnet_Runtime : [DEBUG] : 
--- Dynamic Function Rule : match {'edge': 'WAP', 'nw_src': '172.16.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([authenticate()])
-2017-04-28 18:55:34,037 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:55:34,037 : Airnet_Runtime : [DEBUG] : match {'nw_src': '172.16.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to OFPP_CONTROLLER])
-2017-04-28 18:55:34,037 : Airnet_Runtime : [DEBUG] : 
--- Ingress Rule : match {'edge': 'AC', 'nw_dst': '172.16.0.0/16'} -- flowID==GUESTS_WS_FLOWS -- set([forward to FABRIC])
-2017-04-28 18:55:34,037 : Airnet_Runtime : [DEBUG] : 2 switch(es) matched to the current rule
-2017-04-28 18:55:34,038 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:55:34,039 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:55:34,039 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.16.0.0/16'} -- flowID==GUESTS_WS_FLOWS -- set([forward to 1])
-2017-04-28 18:55:34,040 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:55:34,040 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:55:34,040 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.16.0.0/16'} -- flowID==GUESTS_WS_FLOWS -- set([forward to 1])
-2017-04-28 18:55:34,040 : Airnet_Runtime : [DEBUG] : 
--- Ingress Rule : match {'edge': 'AC', 'nw_dst': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to FABRIC])
-2017-04-28 18:55:34,041 : Airnet_Runtime : [DEBUG] : 2 switch(es) matched to the current rule
-2017-04-28 18:55:34,042 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:55:34,042 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:55:34,042 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to 1])
-2017-04-28 18:55:34,043 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:55:34,043 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:55:34,043 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to 1])
-2017-04-28 18:55:34,044 : Airnet_Runtime : [DEBUG] : 
--- Egress Rule : match {'edge': 'IO', 'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to ADMIN_NET])
-2017-04-28 18:55:34,044 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s1
-2017-04-28 18:55:34,045 : Airnet_Runtime : [DEBUG] : Destination found : ADMIN_NET
-2017-04-28 18:55:34,045 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:55:34,045 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to 2])
-2017-04-28 18:55:34,045 : Airnet_Runtime : [DEBUG] : 
--- Egress Rule : match {'edge': 'WAP', 'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to GUEST_NET])
-2017-04-28 18:55:34,046 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s2
-2017-04-28 18:55:34,046 : Airnet_Runtime : [DEBUG] : Destination found : GUEST_NET
-2017-04-28 18:55:34,047 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:55:34,047 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to 2])
-2017-04-28 18:55:34,047 : Airnet_Runtime : [DEBUG] : 
--- Egress Rule : match {'edge': 'AC', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to WEB_SERVER])
-2017-04-28 18:55:34,047 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s8
-2017-04-28 18:55:34,048 : Airnet_Runtime : [DEBUG] : Destination found : WEB_SERVER
-2017-04-28 18:55:34,048 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:55:34,049 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '192.168.0.11'} -- identity -- set([forward to 2])
-2017-04-28 18:55:34,049 : Airnet_Runtime : [DEBUG] : 
--- Egress Rule : match {'edge': 'AC', 'nw_dst': '192.168.0.12'} -- identity -- set([forward to DATA_BASE])
-2017-04-28 18:55:34,049 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s9
-2017-04-28 18:55:34,050 : Airnet_Runtime : [DEBUG] : Destination found : DATA_BASE
-2017-04-28 18:55:34,050 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:55:34,050 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '192.168.0.12'} -- identity -- set([forward to 2])
-2017-04-28 18:55:34,050 : Airnet_Runtime : [DEBUG] : Enforcing policies for fabrics
-2017-04-28 18:55:34,051 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='IO' flow='ADMIN_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:55:34,051 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:55:34,051 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_src': '172.15.0.0/16'}, 's3')]
-2017-04-28 18:55:34,052 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='WAP' flow='GUESTS_WS_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:55:34,052 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:55:34,053 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
-2017-04-28 18:55:34,053 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='ADMIN_FLOWS' -- set([carry (IO,{})]) -- []
-2017-04-28 18:55:34,053 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
-2017-04-28 18:55:34,053 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.15.0.0/16'}, 's7')]
-2017-04-28 18:55:34,054 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='GUESTS_WS_FLOWS' -- set([carry (WAP,{})]) -- []
-2017-04-28 18:55:34,054 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s2
-2017-04-28 18:55:34,054 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.16.0.0/16'}, 's7')]
-2017-04-28 18:55:34,057 : Airnet_Runtime : [DEBUG] : 
+2017-04-30 17:52:43,480 : Airnet_Runtime : [DEBUG] : Ryu client started successfully
+2017-04-30 17:52:43,480 : Airnet_Runtime : [INFO] : Compilation finished -- Duration == 4ms
+2017-04-30 17:52:50,482 : Airnet_Infrastructure : [DEBUG] : Switch-1 has joined 
+2017-04-30 17:52:50,524 : Airnet_Infrastructure : [DEBUG] : Switch-2 has joined 
+2017-04-30 17:52:50,556 : Airnet_Infrastructure : [DEBUG] : Switch-3 has joined 
+2017-04-30 17:52:50,592 : Airnet_Infrastructure : [DEBUG] : Switch-4 has joined 
+2017-04-30 17:52:50,658 : Airnet_Infrastructure : [DEBUG] : Host-6a:48:18:24:f3:bd has joined 
+2017-04-30 17:52:51,661 : Airnet_Infrastructure : [DEBUG] : Host-46:1e:68:8f:49:52 has joined 
+2017-04-30 17:52:56,667 : Airnet_Runtime : [INFO] : Proactive core policies enforcement started --
+2017-04-30 17:52:56,667 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 17:52:56,667 : Airnet_Runtime : [DEBUG] : Got topology graph 
+2017-04-30 17:52:56,668 : Airnet_Runtime : [DEBUG] : Replaced hwAddrs in topology graph by symbolic names
+2017-04-30 17:52:56,668 : Airnet_Runtime : [DEBUG] : Initialized a per-switch classifier
+2017-04-30 17:52:56,668 : Airnet_Runtime : [DEBUG] : Converting high-level policies to physical rules
+2017-04-30 17:52:56,668 : Airnet_Runtime : [DEBUG] : 
+-- Egress Rule : match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([forward to HA])
+2017-04-30 17:52:56,668 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s1
+2017-04-30 17:52:56,669 : Airnet_Runtime : [DEBUG] : Destination found : HA
+2017-04-30 17:52:56,669 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:52:56,669 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
+2017-04-30 17:52:56,669 : Airnet_Runtime : [DEBUG] : 
+-- Egress Rule : match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB])
+2017-04-30 17:52:56,669 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s4
+2017-04-30 17:52:56,670 : Airnet_Runtime : [DEBUG] : Destination found : HB
+2017-04-30 17:52:56,670 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:52:56,670 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+2017-04-30 17:52:56,670 : Airnet_Runtime : [DEBUG] : 
+-- Ingress Rule : match {'edge': 'E1', 'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to Fabric])
+2017-04-30 17:52:56,670 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 17:52:56,671 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 17:52:56,671 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:52:56,671 : Airnet_Runtime : [DEBUG] : match {'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to 1])
+2017-04-30 17:52:56,671 : Airnet_Runtime : [DEBUG] : 
+-- Ingress Rule : match {'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to Fabric])
+2017-04-30 17:52:56,671 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 17:52:56,672 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 17:52:56,672 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:52:56,672 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to 1])
+2017-04-30 17:52:56,672 : Airnet_Runtime : [DEBUG] : 
+-- Drop Rule : match {'edge': 'E1', 'nw_src': '10.0.0.11', 'tp_dst': 80} -- identity -- set([])
+2017-04-30 17:52:56,672 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:52:56,672 : Airnet_Runtime : [DEBUG] : match {'nw_src': '10.0.0.11', 'tp_dst': 80} -- identity -- set([])
+2017-04-30 17:52:56,673 : Airnet_Runtime : [DEBUG] : 
+-- Ingress Rule : match {'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==flow_out -- set([forward to Fabric])
+2017-04-30 17:52:56,673 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 17:52:56,673 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 17:52:56,674 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:52:56,674 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '10.0.0.11'} -- flowID==flow_out -- set([forward to 1])
+2017-04-30 17:52:56,674 : Airnet_Runtime : [DEBUG] : Enforcing policies for fabrics
+2017-04-30 17:52:56,674 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='flow_in' -- set([carry (E2,{})]) -- []
+2017-04-30 17:52:56,674 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 17:52:56,674 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'}, 's2'), (match {'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 17:52:56,675 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='flow_out' -- set([carry (E1,{})]) -- []
+2017-04-30 17:52:56,675 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 17:52:56,675 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 17:52:56,676 : Airnet_Runtime : [DEBUG] : 
 
  *** Physical rules to push on switches
-2017-04-28 18:55:34,057 : Airnet_Runtime : [DEBUG] : 
- ----- s9 rules : 
-match {'nw_dst': '172.16.0.0/16'} -- flowID==GUESTS_WS_FLOWS -- set([forward to 1])
-match {'nw_dst': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to 1])
-match {'nw_dst': '192.168.0.12'} -- identity -- set([forward to 2])
-2017-04-28 18:55:34,058 : Airnet_Runtime : [DEBUG] : 
- ----- s5 rules : 
-
-2017-04-28 18:55:34,058 : Airnet_Runtime : [DEBUG] : 
- ----- s1 rules : 
-match {'nw_src': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to 1])
-match {'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to 2])
-2017-04-28 18:55:34,058 : Airnet_Runtime : [DEBUG] : 
- ----- s7 rules : 
-match {'nw_src': '172.15.0.0/16', 'nw_dst': '192.168.0.12'} -- identity -- set([forward to 4])
-match {'nw_src': '172.15.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to 3])
-match {'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to 1])
-match {'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to 1])
-2017-04-28 18:55:34,058 : Airnet_Runtime : [DEBUG] : 
- ----- s8 rules : 
-match {'nw_dst': '172.16.0.0/16'} -- flowID==GUESTS_WS_FLOWS -- set([forward to 1])
-match {'nw_dst': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to 1])
-match {'nw_dst': '192.168.0.11'} -- identity -- set([forward to 2])
-2017-04-28 18:55:34,059 : Airnet_Runtime : [DEBUG] : 
- ----- s6 rules : 
-
-2017-04-28 18:55:34,059 : Airnet_Runtime : [DEBUG] : 
- ----- s4 rules : 
-match {'nw_src': '172.15.0.0/16', 'nw_dst': '192.168.0.12'} -- identity -- set([forward to 2])
-match {'nw_src': '172.15.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to 2])
-match {'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to 1])
-match {'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to 1])
-2017-04-28 18:55:34,059 : Airnet_Runtime : [DEBUG] : 
- ----- s2 rules : 
-match {'nw_src': '172.16.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to OFPP_CONTROLLER])
-match {'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to 2])
-2017-04-28 18:55:34,059 : Airnet_Runtime : [DEBUG] : 
+2017-04-30 17:52:56,676 : Airnet_Runtime : [DEBUG] : 
  ----- s3 rules : 
-match {'nw_src': '172.15.0.0/16', 'nw_dst': '192.168.0.12'} -- identity -- set([forward to 3])
-match {'nw_src': '172.15.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to 3])
-match {'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to 1])
-match {'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to 2])
-2017-04-28 18:55:34,115 : Airnet_Runtime : [INFO] : 
-# Proactive rules installed == 22
-2017-04-28 18:55:34,116 : Airnet_Runtime : [INFO] : Proactive core policies enforcement finished -- Duration == 85
-2017-04-28 18:56:47,164 : Airnet_Runtime : [DEBUG] : Runtime -- handling a Packet/in
-2017-04-28 18:56:47,164 : Airnet_Runtime : [DEBUG] : Runtime -- Found a bucket for this packet!
-2017-04-28 18:56:47,167 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
-2017-04-28 18:56:47,169 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:56:47,169 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:56:47,169 : Airnet_Runtime : [DEBUG] : match {'nw_proto': 1, 'nw_src': u'172.16.0.12', 'nw_dst': '192.168.0.11'} -- flowID==GUESTS_WS_FLOWS -- set([forward to 1])
-2017-04-28 18:56:47,174 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='IO' flow='ADMIN_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:56:47,174 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:56:47,175 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_src': '172.15.0.0/16'}, 's3')]
-2017-04-28 18:56:47,175 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='WAP' flow='GUESTS_WS_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:56:47,175 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:56:47,176 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_src': u'172.16.0.12', 'nw_dst': '192.168.0.11'}, 's3')]
-2017-04-28 18:56:47,176 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='ADMIN_FLOWS' -- set([carry (IO,{})]) -- []
-2017-04-28 18:56:47,176 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
-2017-04-28 18:56:47,177 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.15.0.0/16'}, 's7')]
-2017-04-28 18:56:47,177 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='GUESTS_WS_FLOWS' -- set([carry (WAP,{})]) -- []
-2017-04-28 18:56:47,177 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s2
-2017-04-28 18:56:47,177 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.16.0.0/16'}, 's7')]
-2017-04-28 18:56:47,186 : Airnet_Runtime : [INFO] : 
+match {'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 1])
+2017-04-30 17:52:56,677 : Airnet_Runtime : [DEBUG] : 
+ ----- s4 rules : 
+match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_dst': '10.0.0.11'} -- flowID==flow_out -- set([forward to 1])
+2017-04-30 17:52:56,677 : Airnet_Runtime : [DEBUG] : 
+ ----- s2 rules : 
+match {'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 1])
+2017-04-30 17:52:56,677 : Airnet_Runtime : [DEBUG] : 
+ ----- s1 rules : 
+match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
+match {'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to 1])
+match {'nw_dst': '172.16.0.50'} -- flowID==flow_in -- set([forward to 1])
+match {'nw_src': '10.0.0.11', 'tp_dst': 80} -- identity -- set([])
+2017-04-30 17:52:56,709 : Airnet_Runtime : [INFO] : 
+# Proactive rules installed == 12
+2017-04-30 17:52:56,709 : Airnet_Runtime : [INFO] : Proactive core policies enforcement finished -- Duration == 42
+2017-04-30 17:53:02,097 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 17:53:02,101 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='flow_in' -- set([carry (E2,{})]) -- []
+2017-04-30 17:53:02,102 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 17:53:02,102 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'}, 's2'), (match {'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 17:53:02,103 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='flow_out' -- set([carry (E1,{})]) -- []
+2017-04-30 17:53:02,103 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 17:53:02,104 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 17:53:02,110 : Airnet_Runtime : [INFO] : 
 Differentiated rules list enforcement started --
-2017-04-28 18:56:47,217 : Airnet_Runtime : [INFO] : Rules modified == 6
-2017-04-28 18:56:47,227 : Airnet_Runtime : [INFO] : Rules installed == 4
-2017-04-28 18:56:47,227 : Airnet_Runtime : [INFO] : Rules deleted == 0
-2017-04-28 18:56:47,227 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 42 ms
+2017-04-30 17:53:02,136 : Airnet_Runtime : [INFO] : Rules modified == 4
+2017-04-30 17:53:02,136 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-04-30 17:53:02,144 : Airnet_Runtime : [INFO] : Rules deleted == 2
+2017-04-30 17:53:02,144 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 33 ms
 
-2017-04-28 18:56:47,232 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:57:16,213 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
-2017-04-28 18:57:16,219 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='IO' flow='ADMIN_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:57:16,219 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:57:16,220 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_src': '172.15.0.0/16'}, 's3')]
-2017-04-28 18:57:16,220 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='WAP' flow='GUESTS_WS_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:57:16,220 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:57:16,221 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
-2017-04-28 18:57:16,221 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='ADMIN_FLOWS' -- set([carry (IO,{})]) -- []
-2017-04-28 18:57:16,221 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
-2017-04-28 18:57:16,222 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.15.0.0/16'}, 's7')]
-2017-04-28 18:57:16,222 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='GUESTS_WS_FLOWS' -- set([carry (WAP,{})]) -- []
-2017-04-28 18:57:16,222 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s2
-2017-04-28 18:57:16,223 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.16.0.0/16'}, 's7')]
-2017-04-28 18:57:16,233 : Airnet_Runtime : [INFO] : 
+2017-04-30 17:53:02,152 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 17:53:02,155 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='flow_in' -- set([carry (E2,{})]) -- []
+2017-04-30 17:53:02,156 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 17:53:02,156 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_src': '10.0.0.11', 'tp_dst': 80, 'nw_dst': '172.16.0.50'}, 's2'), (match {'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 17:53:02,157 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='flow_out' -- set([carry (E1,{})]) -- []
+2017-04-30 17:53:02,157 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 17:53:02,158 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 17:53:02,164 : Airnet_Runtime : [INFO] : 
 Differentiated rules list enforcement started --
-2017-04-28 18:57:16,270 : Airnet_Runtime : [INFO] : Rules modified == 6
-2017-04-28 18:57:16,270 : Airnet_Runtime : [INFO] : Rules installed == 0
-2017-04-28 18:57:16,280 : Airnet_Runtime : [INFO] : Rules deleted == 3
-2017-04-28 18:57:16,280 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 46 ms
+2017-04-30 17:53:02,164 : Airnet_Runtime : [INFO] : Rules modified == 0
+2017-04-30 17:53:02,164 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-04-30 17:53:02,175 : Airnet_Runtime : [INFO] : Rules deleted == 4
+2017-04-30 17:53:02,175 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 12 ms
 
-2017-04-28 18:57:16,290 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
-2017-04-28 18:57:16,295 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='IO' flow='ADMIN_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:57:16,296 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:57:16,296 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_src': '172.15.0.0/16'}, 's3')]
-2017-04-28 18:57:16,297 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='WAP' flow='GUESTS_WS_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:57:16,297 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:57:16,297 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
-2017-04-28 18:57:16,298 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='ADMIN_FLOWS' -- set([carry (IO,{})]) -- []
-2017-04-28 18:57:16,298 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
-2017-04-28 18:57:16,298 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.15.0.0/16'}, 's7')]
-2017-04-28 18:57:16,299 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='GUESTS_WS_FLOWS' -- set([carry (WAP,{})]) -- []
-2017-04-28 18:57:16,299 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s2
-2017-04-28 18:57:16,300 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.16.0.0/16'}, 's7')]
-2017-04-28 18:57:16,310 : Airnet_Runtime : [INFO] : 
-Differentiated rules list enforcement started --
-2017-04-28 18:57:16,361 : Airnet_Runtime : [INFO] : Rules modified == 9
-2017-04-28 18:57:16,361 : Airnet_Runtime : [INFO] : Rules installed == 0
-2017-04-28 18:57:16,370 : Airnet_Runtime : [INFO] : Rules deleted == 3
-2017-04-28 18:57:16,370 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 60 ms
-
-2017-04-28 18:57:16,380 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
-2017-04-28 18:57:16,385 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='IO' flow='ADMIN_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:57:16,385 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:57:16,385 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_src': '172.15.0.0/16'}, 's3')]
-2017-04-28 18:57:16,386 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='WAP' flow='GUESTS_WS_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:57:16,386 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:57:16,386 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
-2017-04-28 18:57:16,386 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='ADMIN_FLOWS' -- set([carry (IO,{})]) -- []
-2017-04-28 18:57:16,387 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
-2017-04-28 18:57:16,387 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.15.0.0/16'}, 's7')]
-2017-04-28 18:57:16,387 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='GUESTS_WS_FLOWS' -- set([carry (WAP,{})]) -- []
-2017-04-28 18:57:16,388 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s2
-2017-04-28 18:57:16,388 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.16.0.0/16'}, 's7')]
-2017-04-28 18:57:16,397 : Airnet_Runtime : [INFO] : 
-Differentiated rules list enforcement started --
-2017-04-28 18:57:16,398 : Airnet_Runtime : [INFO] : Rules modified == 0
-2017-04-28 18:57:16,398 : Airnet_Runtime : [INFO] : Rules installed == 0
-2017-04-28 18:57:16,398 : Airnet_Runtime : [INFO] : Rules deleted == 0
-2017-04-28 18:57:16,398 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 1 ms
-
-2017-04-28 18:57:16,407 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
-2017-04-28 18:57:16,411 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='IO' flow='ADMIN_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:57:16,411 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:57:16,412 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_src': '172.15.0.0/16'}, 's3')]
-2017-04-28 18:57:16,412 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='WAP' flow='GUESTS_WS_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:57:16,412 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:57:16,412 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
-2017-04-28 18:57:16,412 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='ADMIN_FLOWS' -- set([carry (IO,{})]) -- []
-2017-04-28 18:57:16,413 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
-2017-04-28 18:57:16,413 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.15.0.0/16'}, 's7')]
-2017-04-28 18:57:16,414 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='GUESTS_WS_FLOWS' -- set([carry (WAP,{})]) -- []
-2017-04-28 18:57:16,414 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s2
-2017-04-28 18:57:16,414 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.16.0.0/16'}, 's7')]
-2017-04-28 18:57:16,421 : Airnet_Runtime : [INFO] : 
-Differentiated rules list enforcement started --
-2017-04-28 18:57:16,440 : Airnet_Runtime : [INFO] : Rules modified == 3
-2017-04-28 18:57:16,440 : Airnet_Runtime : [INFO] : Rules installed == 0
-2017-04-28 18:57:16,451 : Airnet_Runtime : [INFO] : Rules deleted == 3
-2017-04-28 18:57:16,452 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 30 ms
-
-2017-04-28 18:57:16,482 : Airnet_Infrastructure : [DEBUG] : Switch-5 has left 
-2017-04-28 18:57:16,489 : Airnet_Infrastructure : [DEBUG] : Switch-2 has left 
-2017-04-28 18:57:16,499 : Airnet_Infrastructure : [DEBUG] : Switch-8 has left 
-2017-04-28 18:57:16,518 : Airnet_Infrastructure : [DEBUG] : Switch-9 has left 
-2017-04-28 18:57:16,530 : Airnet_Infrastructure : [DEBUG] : Switch-1 has left 
-2017-04-28 18:57:16,542 : Airnet_Infrastructure : [DEBUG] : Switch-4 has left 
-2017-04-28 18:57:16,549 : Airnet_Infrastructure : [DEBUG] : Switch-3 has left 
-2017-04-28 18:57:16,567 : Airnet_Infrastructure : [DEBUG] : Switch-7 has left 
-2017-04-28 18:57:16,582 : Airnet_Infrastructure : [DEBUG] : Switch-6 has left 
-2017-04-28 18:57:43,568 : Airnet_Runtime : [DEBUG] : 
+2017-04-30 17:53:02,182 : Airnet_Infrastructure : [DEBUG] : Switch-2 has left 
+2017-04-30 17:53:02,186 : Airnet_Infrastructure : [DEBUG] : Switch-1 has left 
+2017-04-30 17:53:02,202 : Airnet_Infrastructure : [DEBUG] : Switch-4 has left 
+2017-04-30 17:53:02,215 : Airnet_Infrastructure : [DEBUG] : Switch-3 has left 
+2017-04-30 17:55:51,440 : Airnet_Runtime : [DEBUG] : 
 
 **************************************************        **************************************************
                                                 STARTING DEBUG
 **************************************************        **************************************************
 
-2017-04-28 18:57:43,568 : Airnet_Runtime : [INFO] : Compilation started --
-2017-04-28 18:57:43,568 : Airnet_Runtime : [DEBUG] : Control program -- dynAuthentication.dynAuth
-2017-04-28 18:57:43,570 : Airnet_Runtime : [DEBUG] : Mapping program -- dynAuthentication.dynAuth_mapping
-2017-04-28 18:57:43,570 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
-2017-04-28 18:57:43,571 : Airnet_Runtime : [DEBUG] : Got topology graph 
-2017-04-28 18:57:43,571 : Airnet_Runtime : [DEBUG] : Got virtual topology
-2017-04-28 18:57:43,571 : Airnet_Runtime : [DEBUG] : Got edge policies
-2017-04-28 18:57:43,571 : Airnet_Runtime : [DEBUG] : Replaced in edge policies symbolic names by ipAddrs
-2017-04-28 18:57:43,572 : Airnet_Runtime : [DEBUG] : Compiling edge policies
-2017-04-28 18:57:43,575 : Airnet_Runtime : [DEBUG] : Edge rules generated : 9
+2017-04-30 17:55:51,440 : Airnet_Runtime : [INFO] : Compilation started --
+2017-04-30 17:55:51,440 : Airnet_Runtime : [DEBUG] : Control program -- toyExampleStat.toyExampleStat
+2017-04-30 17:55:51,472 : Airnet_Runtime : [DEBUG] : Mapping program -- toyExampleStat.toyExampleStat_mapping
+2017-04-30 17:55:51,479 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 17:55:51,479 : Airnet_Runtime : [DEBUG] : Got topology graph 
+2017-04-30 17:55:51,479 : Airnet_Runtime : [DEBUG] : Got virtual topology
+2017-04-30 17:55:51,479 : Airnet_Runtime : [DEBUG] : Got edge policies
+2017-04-30 17:55:51,481 : Airnet_Runtime : [DEBUG] : Replaced in edge policies symbolic names by ipAddrs
+2017-04-30 17:55:51,481 : Airnet_Runtime : [DEBUG] : Compiling edge policies
+2017-04-30 17:55:51,483 : Airnet_Runtime : [DEBUG] : Edge rules generated : 5
 ************
-match {'edge': 'IO', 'nw_src': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to FABRIC])
-match {'edge': 'WAP', 'nw_src': '172.16.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([authenticate()])
-match {'edge': 'AC', 'nw_dst': '172.16.0.0/16'} -- flowID==GUESTS_WS_FLOWS -- set([forward to FABRIC])
-match {'edge': 'AC', 'nw_dst': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to FABRIC])
-match {'edge': 'IO', 'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to ADMIN_NET])
-match {'edge': 'WAP', 'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to GUEST_NET])
-match {'edge': 'AC', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to WEB_SERVER])
-match {'edge': 'AC', 'nw_dst': '192.168.0.12'} -- identity -- set([forward to DATA_BASE])
+match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([forward to HA])
+match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB, saveStat()])
+match {'nw_proto': 1, 'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to Fabric])
+match {'nw_proto': 1, 'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to Fabric])
 identity -- identity -- set([])
 ************
-2017-04-28 18:57:43,575 : Airnet_Runtime : [DEBUG] : Compiling fabric policies
-2017-04-28 18:57:43,575 : Airnet_Runtime : [DEBUG] : Fabric rules generated : 4
+2017-04-30 17:55:51,483 : Airnet_Runtime : [DEBUG] : Compiling fabric policies
+2017-04-30 17:55:51,484 : Airnet_Runtime : [DEBUG] : Fabric rules generated : 2
 ************
-fabric='FABRIC' ,src='IO' flow='ADMIN_FLOWS' -- set([carry (AC,{})]) -- []
-fabric='FABRIC' ,src='WAP' flow='GUESTS_WS_FLOWS' -- set([carry (AC,{})]) -- []
-fabric='FABRIC' ,src='AC' flow='ADMIN_FLOWS' -- set([carry (IO,{})]) -- []
-fabric='FABRIC' ,src='AC' flow='GUESTS_WS_FLOWS' -- set([carry (WAP,{})]) -- []
+fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
 ************
-2017-04-28 18:57:43,576 : Airnet_Runtime : [DEBUG] : Ryu client started successfully
-2017-04-28 18:57:43,576 : Airnet_Runtime : [INFO] : Compilation finished -- Duration == 7ms
-2017-04-28 18:57:48,456 : Airnet_Infrastructure : [DEBUG] : Switch-1 has joined 
-2017-04-28 18:57:48,505 : Airnet_Infrastructure : [DEBUG] : Switch-2 has joined 
-2017-04-28 18:57:48,552 : Airnet_Infrastructure : [DEBUG] : Switch-3 has joined 
-2017-04-28 18:57:48,617 : Airnet_Infrastructure : [DEBUG] : Switch-4 has joined 
-2017-04-28 18:57:48,693 : Airnet_Infrastructure : [DEBUG] : Switch-5 has joined 
-2017-04-28 18:57:48,769 : Airnet_Infrastructure : [DEBUG] : Switch-6 has joined 
-2017-04-28 18:57:48,833 : Airnet_Infrastructure : [DEBUG] : Switch-7 has joined 
-2017-04-28 18:57:48,896 : Airnet_Infrastructure : [DEBUG] : Switch-8 has joined 
-2017-04-28 18:57:48,936 : Airnet_Infrastructure : [DEBUG] : Switch-9 has joined 
-2017-04-28 18:57:48,977 : Airnet_Infrastructure : [DEBUG] : Host-ce:1e:22:e3:0c:26 has joined 
-2017-04-28 18:57:51,985 : Airnet_Infrastructure : [DEBUG] : Host-16:47:39:e1:f6:64 has joined 
-2017-04-28 18:57:54,994 : Airnet_Infrastructure : [DEBUG] : Host-86:9c:14:0e:db:25 has joined 
-2017-04-28 18:57:58,002 : Airnet_Infrastructure : [DEBUG] : Host-e6:2a:5d:6e:6c:5d has joined 
-2017-04-28 18:58:03,009 : Airnet_Runtime : [INFO] : Proactive core policies enforcement started --
-2017-04-28 18:58:03,009 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
-2017-04-28 18:58:03,011 : Airnet_Runtime : [DEBUG] : Got topology graph 
-2017-04-28 18:58:03,012 : Airnet_Runtime : [DEBUG] : Replaced hwAddrs in topology graph by symbolic names
-2017-04-28 18:58:03,012 : Airnet_Runtime : [DEBUG] : Initialized a per-switch classifier
-2017-04-28 18:58:03,012 : Airnet_Runtime : [DEBUG] : Converting high-level policies to physical rules
-2017-04-28 18:58:03,013 : Airnet_Runtime : [DEBUG] : 
--- Ingress Rule : match {'edge': 'IO', 'nw_src': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to FABRIC])
-2017-04-28 18:58:03,013 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
-2017-04-28 18:58:03,014 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:58:03,014 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:58:03,014 : Airnet_Runtime : [DEBUG] : match {'nw_src': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to 1])
-2017-04-28 18:58:03,015 : Airnet_Runtime : [DEBUG] : 
--- Dynamic Function Rule : match {'edge': 'WAP', 'nw_src': '172.16.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([authenticate()])
-2017-04-28 18:58:03,015 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:58:03,016 : Airnet_Runtime : [DEBUG] : match {'nw_src': '172.16.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to OFPP_CONTROLLER])
-2017-04-28 18:58:03,016 : Airnet_Runtime : [DEBUG] : 
--- Ingress Rule : match {'edge': 'AC', 'nw_dst': '172.16.0.0/16'} -- flowID==GUESTS_WS_FLOWS -- set([forward to FABRIC])
-2017-04-28 18:58:03,016 : Airnet_Runtime : [DEBUG] : 2 switch(es) matched to the current rule
-2017-04-28 18:58:03,017 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:58:03,017 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:58:03,018 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.16.0.0/16'} -- flowID==GUESTS_WS_FLOWS -- set([forward to 1])
-2017-04-28 18:58:03,019 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:58:03,019 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:58:03,019 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.16.0.0/16'} -- flowID==GUESTS_WS_FLOWS -- set([forward to 1])
-2017-04-28 18:58:03,019 : Airnet_Runtime : [DEBUG] : 
--- Ingress Rule : match {'edge': 'AC', 'nw_dst': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to FABRIC])
-2017-04-28 18:58:03,019 : Airnet_Runtime : [DEBUG] : 2 switch(es) matched to the current rule
-2017-04-28 18:58:03,020 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:58:03,020 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:58:03,020 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to 1])
-2017-04-28 18:58:03,021 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:58:03,021 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:58:03,022 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to 1])
-2017-04-28 18:58:03,022 : Airnet_Runtime : [DEBUG] : 
--- Egress Rule : match {'edge': 'IO', 'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to ADMIN_NET])
-2017-04-28 18:58:03,022 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s1
-2017-04-28 18:58:03,023 : Airnet_Runtime : [DEBUG] : Destination found : ADMIN_NET
-2017-04-28 18:58:03,023 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:58:03,023 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to 2])
-2017-04-28 18:58:03,024 : Airnet_Runtime : [DEBUG] : 
--- Egress Rule : match {'edge': 'WAP', 'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to GUEST_NET])
-2017-04-28 18:58:03,024 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s2
-2017-04-28 18:58:03,025 : Airnet_Runtime : [DEBUG] : Destination found : GUEST_NET
-2017-04-28 18:58:03,025 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:58:03,025 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to 2])
-2017-04-28 18:58:03,025 : Airnet_Runtime : [DEBUG] : 
--- Egress Rule : match {'edge': 'AC', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to WEB_SERVER])
-2017-04-28 18:58:03,025 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s8
-2017-04-28 18:58:03,026 : Airnet_Runtime : [DEBUG] : Destination found : WEB_SERVER
-2017-04-28 18:58:03,026 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:58:03,027 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '192.168.0.11'} -- identity -- set([forward to 2])
-2017-04-28 18:58:03,027 : Airnet_Runtime : [DEBUG] : 
--- Egress Rule : match {'edge': 'AC', 'nw_dst': '192.168.0.12'} -- identity -- set([forward to DATA_BASE])
-2017-04-28 18:58:03,027 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s9
-2017-04-28 18:58:03,028 : Airnet_Runtime : [DEBUG] : Destination found : DATA_BASE
-2017-04-28 18:58:03,028 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:58:03,028 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '192.168.0.12'} -- identity -- set([forward to 2])
-2017-04-28 18:58:03,029 : Airnet_Runtime : [DEBUG] : Enforcing policies for fabrics
-2017-04-28 18:58:03,029 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='IO' flow='ADMIN_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:58:03,029 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:58:03,030 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_src': '172.15.0.0/16'}, 's3')]
-2017-04-28 18:58:03,030 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='WAP' flow='GUESTS_WS_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:58:03,030 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:58:03,031 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
-2017-04-28 18:58:03,031 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='ADMIN_FLOWS' -- set([carry (IO,{})]) -- []
-2017-04-28 18:58:03,031 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
-2017-04-28 18:58:03,032 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.15.0.0/16'}, 's7')]
-2017-04-28 18:58:03,032 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='GUESTS_WS_FLOWS' -- set([carry (WAP,{})]) -- []
-2017-04-28 18:58:03,033 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s2
-2017-04-28 18:58:03,033 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.16.0.0/16'}, 's7')]
-2017-04-28 18:58:03,036 : Airnet_Runtime : [DEBUG] : 
+2017-04-30 17:55:51,484 : Airnet_Runtime : [DEBUG] : Ryu client started successfully
+2017-04-30 17:55:51,484 : Airnet_Runtime : [INFO] : Compilation finished -- Duration == 45ms
+2017-04-30 17:55:57,275 : Airnet_Infrastructure : [DEBUG] : Switch-1 has joined 
+2017-04-30 17:55:57,298 : Airnet_Infrastructure : [DEBUG] : Switch-2 has joined 
+2017-04-30 17:55:57,347 : Airnet_Infrastructure : [DEBUG] : Switch-3 has joined 
+2017-04-30 17:55:57,393 : Airnet_Infrastructure : [DEBUG] : Switch-4 has joined 
+2017-04-30 17:55:57,405 : Airnet_Infrastructure : [DEBUG] : Host-be:c2:a1:78:89:d4 has joined 
+2017-04-30 17:55:58,404 : Airnet_Infrastructure : [DEBUG] : Host-52:11:68:7f:e6:3a has joined 
+2017-04-30 17:56:03,410 : Airnet_Runtime : [INFO] : Proactive core policies enforcement started --
+2017-04-30 17:56:03,410 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 17:56:03,410 : Airnet_Runtime : [DEBUG] : Got topology graph 
+2017-04-30 17:56:03,411 : Airnet_Runtime : [DEBUG] : Replaced hwAddrs in topology graph by symbolic names
+2017-04-30 17:56:03,411 : Airnet_Runtime : [DEBUG] : Initialized a per-switch classifier
+2017-04-30 17:56:03,411 : Airnet_Runtime : [DEBUG] : Converting high-level policies to physical rules
+2017-04-30 17:56:03,411 : Airnet_Runtime : [DEBUG] : 
+-- Egress Rule : match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([forward to HA])
+2017-04-30 17:56:03,411 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s1
+2017-04-30 17:56:03,412 : Airnet_Runtime : [DEBUG] : Destination found : HA
+2017-04-30 17:56:03,412 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:56:03,412 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
+2017-04-30 17:56:03,412 : Airnet_Runtime : [DEBUG] : 
+-- Dynamic Function Rule : match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB, saveStat()])
+2017-04-30 17:56:03,412 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s4
+2017-04-30 17:56:03,413 : Airnet_Runtime : [DEBUG] : Destination found : HB
+2017-04-30 17:56:03,413 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:56:03,413 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+2017-04-30 17:56:03,413 : Airnet_Runtime : [DEBUG] : 
+-- Ingress Rule : match {'nw_proto': 1, 'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to Fabric])
+2017-04-30 17:56:03,414 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 17:56:03,414 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 17:56:03,414 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:56:03,414 : Airnet_Runtime : [DEBUG] : match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to 1])
+2017-04-30 17:56:03,415 : Airnet_Runtime : [DEBUG] : 
+-- Ingress Rule : match {'nw_proto': 1, 'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to Fabric])
+2017-04-30 17:56:03,415 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 17:56:03,416 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 17:56:03,416 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:56:03,416 : Airnet_Runtime : [DEBUG] : match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to 1])
+2017-04-30 17:56:03,416 : Airnet_Runtime : [DEBUG] : Enforcing policies for fabrics
+2017-04-30 17:56:03,416 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 17:56:03,416 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 17:56:03,417 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 17:56:03,417 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 17:56:03,417 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 17:56:03,417 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 17:56:03,418 : Airnet_Runtime : [DEBUG] : 
 
  *** Physical rules to push on switches
-2017-04-28 18:58:03,036 : Airnet_Runtime : [DEBUG] : 
- ----- s9 rules : 
-match {'nw_dst': '172.16.0.0/16'} -- flowID==GUESTS_WS_FLOWS -- set([forward to 1])
-match {'nw_dst': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to 1])
-match {'nw_dst': '192.168.0.12'} -- identity -- set([forward to 2])
-2017-04-28 18:58:03,036 : Airnet_Runtime : [DEBUG] : 
- ----- s5 rules : 
-
-2017-04-28 18:58:03,037 : Airnet_Runtime : [DEBUG] : 
- ----- s1 rules : 
-match {'nw_src': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to 1])
-match {'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to 2])
-2017-04-28 18:58:03,037 : Airnet_Runtime : [DEBUG] : 
- ----- s7 rules : 
-match {'nw_src': '172.15.0.0/16', 'nw_dst': '192.168.0.12'} -- identity -- set([forward to 4])
-match {'nw_src': '172.15.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to 3])
-match {'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to 1])
-match {'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to 1])
-2017-04-28 18:58:03,037 : Airnet_Runtime : [DEBUG] : 
- ----- s8 rules : 
-match {'nw_dst': '172.16.0.0/16'} -- flowID==GUESTS_WS_FLOWS -- set([forward to 1])
-match {'nw_dst': '172.15.0.0/16'} -- flowID==ADMIN_FLOWS -- set([forward to 1])
-match {'nw_dst': '192.168.0.11'} -- identity -- set([forward to 2])
-2017-04-28 18:58:03,037 : Airnet_Runtime : [DEBUG] : 
- ----- s6 rules : 
-
-2017-04-28 18:58:03,038 : Airnet_Runtime : [DEBUG] : 
+2017-04-30 17:56:03,418 : Airnet_Runtime : [DEBUG] : 
  ----- s3 rules : 
-match {'nw_src': '172.15.0.0/16', 'nw_dst': '192.168.0.12'} -- identity -- set([forward to 3])
-match {'nw_src': '172.15.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to 3])
-match {'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to 1])
-match {'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to 2])
-2017-04-28 18:58:03,038 : Airnet_Runtime : [DEBUG] : 
+match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- identity -- set([forward to 1])
+2017-04-30 17:56:03,418 : Airnet_Runtime : [DEBUG] : 
  ----- s4 rules : 
-match {'nw_src': '172.15.0.0/16', 'nw_dst': '192.168.0.12'} -- identity -- set([forward to 2])
-match {'nw_src': '172.15.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to 2])
-match {'nw_dst': '172.15.0.0/16'} -- identity -- set([forward to 1])
-match {'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to 1])
-2017-04-28 18:58:03,038 : Airnet_Runtime : [DEBUG] : 
+match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to 1])
+2017-04-30 17:56:03,419 : Airnet_Runtime : [DEBUG] : 
  ----- s2 rules : 
-match {'nw_src': '172.16.0.0/16', 'nw_dst': '192.168.0.11'} -- identity -- set([forward to OFPP_CONTROLLER])
-match {'nw_dst': '172.16.0.0/16'} -- identity -- set([forward to 2])
-2017-04-28 18:58:03,095 : Airnet_Runtime : [INFO] : 
-# Proactive rules installed == 22
-2017-04-28 18:58:03,095 : Airnet_Runtime : [INFO] : Proactive core policies enforcement finished -- Duration == 86
-2017-04-28 18:58:16,466 : Airnet_Runtime : [DEBUG] : Runtime -- handling a Packet/in
-2017-04-28 18:58:16,467 : Airnet_Runtime : [DEBUG] : Runtime -- Found a bucket for this packet!
-2017-04-28 18:58:16,467 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
-2017-04-28 18:58:16,468 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:58:16,469 : Airnet_Runtime : [DEBUG] : Physical rule generated :
-2017-04-28 18:58:16,469 : Airnet_Runtime : [DEBUG] : match {'nw_proto': 1, 'nw_src': u'172.16.0.12', 'nw_dst': '192.168.0.11'} -- flowID==GUESTS_WS_FLOWS -- set([forward to 1])
-2017-04-28 18:58:16,473 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='IO' flow='ADMIN_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:58:16,473 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:58:16,474 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_src': '172.15.0.0/16'}, 's3')]
-2017-04-28 18:58:16,474 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='WAP' flow='GUESTS_WS_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:58:16,474 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:58:16,475 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_src': u'172.16.0.12', 'nw_dst': '192.168.0.11'}, 's3')]
-2017-04-28 18:58:16,475 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='ADMIN_FLOWS' -- set([carry (IO,{})]) -- []
-2017-04-28 18:58:16,475 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
-2017-04-28 18:58:16,476 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.15.0.0/16'}, 's7')]
-2017-04-28 18:58:16,476 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='GUESTS_WS_FLOWS' -- set([carry (WAP,{})]) -- []
-2017-04-28 18:58:16,476 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s2
-2017-04-28 18:58:16,476 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.16.0.0/16'}, 's7')]
-2017-04-28 18:58:16,486 : Airnet_Runtime : [INFO] : 
-Differentiated rules list enforcement started --
-2017-04-28 18:58:16,516 : Airnet_Runtime : [INFO] : Rules modified == 6
-2017-04-28 18:58:16,526 : Airnet_Runtime : [INFO] : Rules installed == 4
-2017-04-28 18:58:16,527 : Airnet_Runtime : [INFO] : Rules deleted == 0
-2017-04-28 18:58:16,527 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 41 ms
+match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- identity -- set([forward to 1])
+2017-04-30 17:56:03,419 : Airnet_Runtime : [DEBUG] : 
+ ----- s1 rules : 
+match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to 1])
+2017-04-30 17:56:03,442 : Airnet_Runtime : [INFO] : 
+# Proactive rules installed == 8
+2017-04-30 17:56:03,442 : Airnet_Runtime : [INFO] : Proactive core policies enforcement finished -- Duration == 31
+2017-04-30 17:57:43,014 : Airnet_Runtime : [DEBUG] : 
 
-2017-04-28 18:58:16,533 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s7 s6 s5 s4
-2017-04-28 18:58:16,545 : Airnet_Runtime : [INFO] : 
-Differentiated rules list enforcement started --
-2017-04-28 18:58:16,545 : Airnet_Runtime : [INFO] : Rules modified == 1
-2017-04-28 18:58:16,545 : Airnet_Runtime : [INFO] : Rules installed == 0
-2017-04-28 18:58:16,548 : Airnet_Runtime : [INFO] : Rules deleted == 1
-2017-04-28 18:58:16,548 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 4 ms
+**************************************************        **************************************************
+                                                STARTING DEBUG
+**************************************************        **************************************************
 
-2017-04-28 18:59:04,212 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
-2017-04-28 18:59:04,217 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='IO' flow='ADMIN_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:59:04,217 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:59:04,217 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_src': '172.15.0.0/16'}, 's3')]
-2017-04-28 18:59:04,217 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='WAP' flow='GUESTS_WS_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:59:04,217 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:59:04,218 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
-2017-04-28 18:59:04,218 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='ADMIN_FLOWS' -- set([carry (IO,{})]) -- []
-2017-04-28 18:59:04,218 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
-2017-04-28 18:59:04,218 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.15.0.0/16'}, 's7')]
-2017-04-28 18:59:04,218 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='GUESTS_WS_FLOWS' -- set([carry (WAP,{})]) -- []
-2017-04-28 18:59:04,219 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s2
-2017-04-28 18:59:04,219 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.16.0.0/16'}, 's7')]
-2017-04-28 18:59:04,228 : Airnet_Runtime : [INFO] : 
-Differentiated rules list enforcement started --
-2017-04-28 18:59:04,264 : Airnet_Runtime : [INFO] : Rules modified == 6
-2017-04-28 18:59:04,264 : Airnet_Runtime : [INFO] : Rules installed == 0
-2017-04-28 18:59:04,274 : Airnet_Runtime : [INFO] : Rules deleted == 3
-2017-04-28 18:59:04,274 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 46 ms
+2017-04-30 17:57:43,014 : Airnet_Runtime : [INFO] : Compilation started --
+2017-04-30 17:57:43,014 : Airnet_Runtime : [DEBUG] : Control program -- toyExampleStat.toyExampleStat
+2017-04-30 17:57:43,015 : Airnet_Runtime : [DEBUG] : Mapping program -- toyExampleStat.toyExampleStat_mapping
+2017-04-30 17:57:43,015 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 17:57:43,016 : Airnet_Runtime : [DEBUG] : Got topology graph 
+2017-04-30 17:57:43,016 : Airnet_Runtime : [DEBUG] : Got virtual topology
+2017-04-30 17:57:43,016 : Airnet_Runtime : [DEBUG] : Got edge policies
+2017-04-30 17:57:43,017 : Airnet_Runtime : [DEBUG] : Replaced in edge policies symbolic names by ipAddrs
+2017-04-30 17:57:43,017 : Airnet_Runtime : [DEBUG] : Compiling edge policies
+2017-04-30 17:57:43,018 : Airnet_Runtime : [DEBUG] : Edge rules generated : 5
+************
+match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([forward to HA])
+match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([saveStat(), forward to HB])
+match {'nw_proto': 1, 'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to Fabric])
+match {'nw_proto': 1, 'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to Fabric])
+identity -- identity -- set([])
+************
+2017-04-30 17:57:43,018 : Airnet_Runtime : [DEBUG] : Compiling fabric policies
+2017-04-30 17:57:43,018 : Airnet_Runtime : [DEBUG] : Fabric rules generated : 2
+************
+fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+************
+2017-04-30 17:57:43,019 : Airnet_Runtime : [DEBUG] : Ryu client started successfully
+2017-04-30 17:57:43,019 : Airnet_Runtime : [INFO] : Compilation finished -- Duration == 4ms
+2017-04-30 17:57:48,325 : Airnet_Infrastructure : [DEBUG] : Switch-1 has joined 
+2017-04-30 17:57:48,356 : Airnet_Infrastructure : [DEBUG] : Switch-2 has joined 
+2017-04-30 17:57:48,405 : Airnet_Infrastructure : [DEBUG] : Switch-3 has joined 
+2017-04-30 17:57:48,457 : Airnet_Infrastructure : [DEBUG] : Switch-4 has joined 
+2017-04-30 17:57:48,516 : Airnet_Infrastructure : [DEBUG] : Host-ae:a2:8a:55:31:99 has joined 
+2017-04-30 17:57:49,519 : Airnet_Infrastructure : [DEBUG] : Host-5a:8f:37:7f:32:a7 has joined 
+2017-04-30 17:57:54,525 : Airnet_Runtime : [INFO] : Proactive core policies enforcement started --
+2017-04-30 17:57:54,525 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 17:57:54,526 : Airnet_Runtime : [DEBUG] : Got topology graph 
+2017-04-30 17:57:54,526 : Airnet_Runtime : [DEBUG] : Replaced hwAddrs in topology graph by symbolic names
+2017-04-30 17:57:54,526 : Airnet_Runtime : [DEBUG] : Initialized a per-switch classifier
+2017-04-30 17:57:54,526 : Airnet_Runtime : [DEBUG] : Converting high-level policies to physical rules
+2017-04-30 17:57:54,526 : Airnet_Runtime : [DEBUG] : 
+-- Egress Rule : match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([forward to HA])
+2017-04-30 17:57:54,526 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s1
+2017-04-30 17:57:54,527 : Airnet_Runtime : [DEBUG] : Destination found : HA
+2017-04-30 17:57:54,527 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:57:54,527 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
+2017-04-30 17:57:54,527 : Airnet_Runtime : [DEBUG] : 
+-- Dynamic Function Rule : match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([saveStat(), forward to HB])
+2017-04-30 17:57:54,528 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s4
+2017-04-30 17:57:54,528 : Airnet_Runtime : [DEBUG] : Destination found : HB
+2017-04-30 17:57:54,529 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:57:54,529 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+2017-04-30 17:57:54,529 : Airnet_Runtime : [DEBUG] : 
+-- Ingress Rule : match {'nw_proto': 1, 'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to Fabric])
+2017-04-30 17:57:54,529 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 17:57:54,530 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 17:57:54,530 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:57:54,530 : Airnet_Runtime : [DEBUG] : match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to 1])
+2017-04-30 17:57:54,530 : Airnet_Runtime : [DEBUG] : 
+-- Ingress Rule : match {'nw_proto': 1, 'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to Fabric])
+2017-04-30 17:57:54,530 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 17:57:54,531 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 17:57:54,531 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:57:54,531 : Airnet_Runtime : [DEBUG] : match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to 1])
+2017-04-30 17:57:54,531 : Airnet_Runtime : [DEBUG] : Enforcing policies for fabrics
+2017-04-30 17:57:54,532 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 17:57:54,532 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 17:57:54,532 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 17:57:54,532 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 17:57:54,532 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 17:57:54,533 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 17:57:54,534 : Airnet_Runtime : [DEBUG] : 
 
-2017-04-28 18:59:04,282 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
-2017-04-28 18:59:04,287 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='IO' flow='ADMIN_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:59:04,287 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:59:04,288 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_src': '172.15.0.0/16'}, 's3')]
-2017-04-28 18:59:04,288 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='WAP' flow='GUESTS_WS_FLOWS' -- set([carry (AC,{})]) -- []
-2017-04-28 18:59:04,288 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s9 s8
-2017-04-28 18:59:04,289 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
-2017-04-28 18:59:04,289 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='ADMIN_FLOWS' -- set([carry (IO,{})]) -- []
-2017-04-28 18:59:04,289 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
-2017-04-28 18:59:04,290 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.15.0.0/16'}, 's7')]
-2017-04-28 18:59:04,290 : Airnet_Runtime : [DEBUG] : 
--- Fabric Rule : fabric='FABRIC' ,src='AC' flow='GUESTS_WS_FLOWS' -- set([carry (WAP,{})]) -- []
-2017-04-28 18:59:04,291 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s2
-2017-04-28 18:59:04,291 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '172.16.0.0/16'}, 's7')]
-2017-04-28 18:59:04,299 : Airnet_Runtime : [INFO] : 
+ *** Physical rules to push on switches
+2017-04-30 17:57:54,534 : Airnet_Runtime : [DEBUG] : 
+ ----- s4 rules : 
+match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to 1])
+2017-04-30 17:57:54,534 : Airnet_Runtime : [DEBUG] : 
+ ----- s3 rules : 
+match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- identity -- set([forward to 1])
+2017-04-30 17:57:54,534 : Airnet_Runtime : [DEBUG] : 
+ ----- s2 rules : 
+match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- identity -- set([forward to 1])
+2017-04-30 17:57:54,534 : Airnet_Runtime : [DEBUG] : 
+ ----- s1 rules : 
+match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to 1])
+2017-04-30 17:57:54,558 : Airnet_Runtime : [INFO] : 
+# Proactive rules installed == 8
+2017-04-30 17:57:54,559 : Airnet_Runtime : [INFO] : Proactive core policies enforcement finished -- Duration == 33
+2017-04-30 17:58:39,539 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 17:58:39,540 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 17:58:39,540 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:58:39,541 : Airnet_Runtime : [DEBUG] : match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- flowID==too_much_icmp_replies -- set([forward to 1])
+2017-04-30 17:58:39,543 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 17:58:39,543 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 17:58:39,543 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 17:58:39,544 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 17:58:39,544 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 17:58:39,544 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-04-30 17:58:39,547 : Airnet_Runtime : [INFO] : 
 Differentiated rules list enforcement started --
-2017-04-28 18:59:04,351 : Airnet_Runtime : [INFO] : Rules modified == 9
-2017-04-28 18:59:04,352 : Airnet_Runtime : [INFO] : Rules installed == 0
-2017-04-28 18:59:04,360 : Airnet_Runtime : [INFO] : Rules deleted == 3
-2017-04-28 18:59:04,360 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 62 ms
+2017-04-30 17:58:39,565 : Airnet_Runtime : [INFO] : Rules modified == 2
+2017-04-30 17:58:39,566 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-04-30 17:58:39,572 : Airnet_Runtime : [INFO] : Rules deleted == 2
+2017-04-30 17:58:39,572 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 25 ms
 
-2017-04-28 18:59:04,429 : Airnet_Infrastructure : [DEBUG] : Switch-5 has left 
-2017-04-28 18:59:04,443 : Airnet_Infrastructure : [DEBUG] : Switch-2 has left 
-2017-04-28 18:59:04,459 : Airnet_Infrastructure : [DEBUG] : Switch-8 has left 
-2017-04-28 18:59:04,471 : Airnet_Infrastructure : [DEBUG] : Switch-9 has left 
-2017-04-28 18:59:04,490 : Airnet_Infrastructure : [DEBUG] : Switch-1 has left 
-2017-04-28 18:59:04,510 : Airnet_Infrastructure : [DEBUG] : Switch-4 has left 
-2017-04-28 18:59:04,527 : Airnet_Infrastructure : [DEBUG] : Switch-3 has left 
-2017-04-28 18:59:04,534 : Airnet_Infrastructure : [DEBUG] : Switch-7 has left 
-2017-04-28 18:59:04,541 : Airnet_Infrastructure : [DEBUG] : Switch-6 has left 
+2017-04-30 17:58:44,540 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 17:58:44,542 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 17:58:44,542 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:58:44,542 : Airnet_Runtime : [DEBUG] : match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- flowID==too_much_icmp_replies -- set([forward to 1])
+2017-04-30 17:58:44,544 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 17:58:44,544 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 17:58:44,544 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 17:58:44,544 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 17:58:44,545 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 17:58:44,545 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-04-30 17:58:44,548 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-04-30 17:58:44,548 : Airnet_Runtime : [INFO] : Rules modified == 0
+2017-04-30 17:58:44,548 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-04-30 17:58:44,548 : Airnet_Runtime : [INFO] : Rules deleted == 0
+2017-04-30 17:58:44,549 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 1 ms
+
+2017-04-30 17:58:49,541 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 17:58:49,541 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 17:58:49,542 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 17:58:49,542 : Airnet_Runtime : [DEBUG] : match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- flowID==too_much_icmp_replies -- set([forward to 1])
+2017-04-30 17:58:49,544 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 17:58:49,544 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 17:58:49,545 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 17:58:49,546 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 17:58:49,546 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 17:58:49,546 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-04-30 17:58:49,551 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-04-30 17:58:49,551 : Airnet_Runtime : [INFO] : Rules modified == 0
+2017-04-30 17:58:49,551 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-04-30 17:58:49,552 : Airnet_Runtime : [INFO] : Rules deleted == 0
+2017-04-30 17:58:49,552 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 1 ms
+
+2017-04-30 17:58:50,684 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 17:58:50,686 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 17:58:50,686 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 17:58:50,687 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 17:58:50,687 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 17:58:50,688 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 17:58:50,688 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-04-30 17:58:50,692 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-04-30 17:58:50,693 : Airnet_Runtime : [INFO] : Rules modified == 0
+2017-04-30 17:58:50,693 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-04-30 17:58:50,702 : Airnet_Runtime : [INFO] : Rules deleted == 2
+2017-04-30 17:58:50,702 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 10 ms
+
+2017-04-30 17:58:50,709 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 17:58:50,711 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 17:58:50,711 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 17:58:50,712 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 17:58:50,712 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 17:58:50,713 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 17:58:50,713 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-04-30 17:58:50,718 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-04-30 17:58:50,718 : Airnet_Runtime : [INFO] : Rules modified == 0
+2017-04-30 17:58:50,718 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-04-30 17:58:50,719 : Airnet_Runtime : [INFO] : Rules deleted == 0
+2017-04-30 17:58:50,719 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 1 ms
+
+2017-04-30 17:58:50,725 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 17:58:50,727 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 17:58:50,728 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 17:58:50,728 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 17:58:50,729 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 17:58:50,729 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 17:58:50,729 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-04-30 17:58:50,733 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-04-30 17:58:50,733 : Airnet_Runtime : [INFO] : Rules modified == 0
+2017-04-30 17:58:50,733 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-04-30 17:58:50,733 : Airnet_Runtime : [INFO] : Rules deleted == 0
+2017-04-30 17:58:50,734 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 1 ms
+
+2017-04-30 17:58:50,741 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 17:58:50,744 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 17:58:50,744 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 17:58:50,745 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 17:58:50,745 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 17:58:50,745 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 17:58:50,746 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-04-30 17:58:50,749 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-04-30 17:58:50,749 : Airnet_Runtime : [INFO] : Rules modified == 0
+2017-04-30 17:58:50,750 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-04-30 17:58:50,750 : Airnet_Runtime : [INFO] : Rules deleted == 0
+2017-04-30 17:58:50,750 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 1 ms
+
+2017-04-30 17:58:50,792 : Airnet_Infrastructure : [DEBUG] : Switch-2 has left 
+2017-04-30 17:58:50,803 : Airnet_Infrastructure : [DEBUG] : Switch-1 has left 
+2017-04-30 17:58:50,822 : Airnet_Infrastructure : [DEBUG] : Switch-4 has left 
+2017-04-30 17:58:50,835 : Airnet_Infrastructure : [DEBUG] : Switch-3 has left 
+2017-04-30 18:01:43,397 : Airnet_Runtime : [DEBUG] : 
+
+**************************************************        **************************************************
+                                                STARTING DEBUG
+**************************************************        **************************************************
+
+2017-04-30 18:01:43,397 : Airnet_Runtime : [INFO] : Compilation started --
+2017-04-30 18:01:43,397 : Airnet_Runtime : [DEBUG] : Control program -- toyExampleDataCap.toyExampleDataCap
+2017-04-30 18:01:43,438 : Airnet_Runtime : [DEBUG] : Mapping program -- toyExampleDataCap.toyExampleDataCap_mapping
+2017-04-30 18:01:43,446 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 18:01:43,446 : Airnet_Runtime : [DEBUG] : Got topology graph 
+2017-04-30 18:01:43,446 : Airnet_Runtime : [DEBUG] : Got virtual topology
+2017-04-30 18:01:43,446 : Airnet_Runtime : [DEBUG] : Got edge policies
+2017-04-30 18:01:43,447 : Airnet_Runtime : [DEBUG] : Replaced in edge policies symbolic names by ipAddrs
+2017-04-30 18:01:43,447 : Airnet_Runtime : [DEBUG] : Compiling edge policies
+2017-04-30 18:01:43,448 : Airnet_Runtime : [DEBUG] : Edge rules generated : 5
+************
+match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([dataCap(), forward to HA])
+match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB])
+match {'nw_proto': 1, 'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to Fabric])
+match {'nw_proto': 1, 'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to Fabric])
+identity -- identity -- set([])
+************
+2017-04-30 18:01:43,448 : Airnet_Runtime : [DEBUG] : Compiling fabric policies
+2017-04-30 18:01:43,449 : Airnet_Runtime : [DEBUG] : Fabric rules generated : 2
+************
+fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+************
+2017-04-30 18:01:43,449 : Airnet_Runtime : [DEBUG] : Ryu client started successfully
+2017-04-30 18:01:43,449 : Airnet_Runtime : [INFO] : Compilation finished -- Duration == 52ms
+2017-04-30 18:01:50,358 : Airnet_Infrastructure : [DEBUG] : Switch-1 has joined 
+2017-04-30 18:01:50,385 : Airnet_Infrastructure : [DEBUG] : Switch-2 has joined 
+2017-04-30 18:01:50,431 : Airnet_Infrastructure : [DEBUG] : Switch-3 has joined 
+2017-04-30 18:01:50,490 : Airnet_Infrastructure : [DEBUG] : Switch-4 has joined 
+2017-04-30 18:01:50,569 : Airnet_Infrastructure : [DEBUG] : Host-ce:f2:fd:07:6f:04 has joined 
+2017-04-30 18:01:51,572 : Airnet_Infrastructure : [DEBUG] : Host-a6:de:f3:aa:a2:51 has joined 
+2017-04-30 18:01:56,574 : Airnet_Runtime : [INFO] : Proactive core policies enforcement started --
+2017-04-30 18:01:56,574 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 18:01:56,574 : Airnet_Runtime : [DEBUG] : Got topology graph 
+2017-04-30 18:01:56,575 : Airnet_Runtime : [DEBUG] : Replaced hwAddrs in topology graph by symbolic names
+2017-04-30 18:01:56,575 : Airnet_Runtime : [DEBUG] : Initialized a per-switch classifier
+2017-04-30 18:01:56,575 : Airnet_Runtime : [DEBUG] : Converting high-level policies to physical rules
+2017-04-30 18:01:56,576 : Airnet_Runtime : [DEBUG] : 
+-- Dynamic Function Rule : match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([dataCap(), forward to HA])
+2017-04-30 18:01:56,576 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s1
+2017-04-30 18:01:56,577 : Airnet_Runtime : [DEBUG] : Destination found : HA
+2017-04-30 18:01:56,578 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:01:56,578 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
+2017-04-30 18:01:56,578 : Airnet_Runtime : [DEBUG] : 
+-- Egress Rule : match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB])
+2017-04-30 18:01:56,578 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s4
+2017-04-30 18:01:56,579 : Airnet_Runtime : [DEBUG] : Destination found : HB
+2017-04-30 18:01:56,579 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:01:56,580 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+2017-04-30 18:01:56,580 : Airnet_Runtime : [DEBUG] : 
+-- Ingress Rule : match {'nw_proto': 1, 'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to Fabric])
+2017-04-30 18:01:56,580 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 18:01:56,581 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 18:01:56,581 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:01:56,582 : Airnet_Runtime : [DEBUG] : match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to 1])
+2017-04-30 18:01:56,582 : Airnet_Runtime : [DEBUG] : 
+-- Ingress Rule : match {'nw_proto': 1, 'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to Fabric])
+2017-04-30 18:01:56,582 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 18:01:56,584 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 18:01:56,584 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:01:56,584 : Airnet_Runtime : [DEBUG] : match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to 1])
+2017-04-30 18:01:56,584 : Airnet_Runtime : [DEBUG] : Enforcing policies for fabrics
+2017-04-30 18:01:56,585 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 18:01:56,585 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 18:01:56,585 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 18:01:56,586 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 18:01:56,586 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 18:01:56,587 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 18:01:56,588 : Airnet_Runtime : [DEBUG] : 
+
+ *** Physical rules to push on switches
+2017-04-30 18:01:56,588 : Airnet_Runtime : [DEBUG] : 
+ ----- s3 rules : 
+match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- identity -- set([forward to 1])
+2017-04-30 18:01:56,589 : Airnet_Runtime : [DEBUG] : 
+ ----- s4 rules : 
+match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to 1])
+2017-04-30 18:01:56,589 : Airnet_Runtime : [DEBUG] : 
+ ----- s2 rules : 
+match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- identity -- set([forward to 1])
+2017-04-30 18:01:56,589 : Airnet_Runtime : [DEBUG] : 
+ ----- s1 rules : 
+match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to 1])
+2017-04-30 18:01:56,613 : Airnet_Runtime : [INFO] : 
+# Proactive rules installed == 8
+2017-04-30 18:01:56,614 : Airnet_Runtime : [INFO] : Proactive core policies enforcement finished -- Duration == 39
+2017-04-30 18:03:01,094 : Airnet_Runtime : [DEBUG] : 
+
+**************************************************        **************************************************
+                                                STARTING DEBUG
+**************************************************        **************************************************
+
+2017-04-30 18:03:01,094 : Airnet_Runtime : [INFO] : Compilation started --
+2017-04-30 18:03:01,094 : Airnet_Runtime : [DEBUG] : Control program -- toyExampleDataCap.toyExampleDataCap
+2017-04-30 18:03:01,096 : Airnet_Runtime : [DEBUG] : Mapping program -- toyExampleDataCap.toyExampleDataCap_mapping
+2017-04-30 18:03:01,097 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 18:03:01,097 : Airnet_Runtime : [DEBUG] : Got topology graph 
+2017-04-30 18:03:01,097 : Airnet_Runtime : [DEBUG] : Got virtual topology
+2017-04-30 18:03:01,097 : Airnet_Runtime : [DEBUG] : Got edge policies
+2017-04-30 18:03:01,098 : Airnet_Runtime : [DEBUG] : Replaced in edge policies symbolic names by ipAddrs
+2017-04-30 18:03:01,098 : Airnet_Runtime : [DEBUG] : Compiling edge policies
+2017-04-30 18:03:01,099 : Airnet_Runtime : [DEBUG] : Edge rules generated : 5
+************
+match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([dataCap(), forward to HA])
+match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB])
+match {'nw_proto': 1, 'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to Fabric])
+match {'nw_proto': 1, 'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to Fabric])
+identity -- identity -- set([])
+************
+2017-04-30 18:03:01,099 : Airnet_Runtime : [DEBUG] : Compiling fabric policies
+2017-04-30 18:03:01,100 : Airnet_Runtime : [DEBUG] : Fabric rules generated : 2
+************
+fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+************
+2017-04-30 18:03:01,100 : Airnet_Runtime : [DEBUG] : Ryu client started successfully
+2017-04-30 18:03:01,100 : Airnet_Runtime : [INFO] : Compilation finished -- Duration == 6ms
+2017-04-30 18:03:07,227 : Airnet_Infrastructure : [DEBUG] : Switch-1 has joined 
+2017-04-30 18:03:07,266 : Airnet_Infrastructure : [DEBUG] : Switch-2 has joined 
+2017-04-30 18:03:07,350 : Airnet_Infrastructure : [DEBUG] : Switch-3 has joined 
+2017-04-30 18:03:07,390 : Airnet_Infrastructure : [DEBUG] : Switch-4 has joined 
+2017-04-30 18:03:07,409 : Airnet_Infrastructure : [DEBUG] : Host-fe:fe:ff:43:b3:cc has joined 
+2017-04-30 18:03:08,409 : Airnet_Infrastructure : [DEBUG] : Host-f6:3f:c3:8a:24:f3 has joined 
+2017-04-30 18:03:13,415 : Airnet_Runtime : [INFO] : Proactive core policies enforcement started --
+2017-04-30 18:03:13,415 : Airnet_Infrastructure : [DEBUG] : Graph Components Actualized
+2017-04-30 18:03:13,415 : Airnet_Runtime : [DEBUG] : Got topology graph 
+2017-04-30 18:03:13,415 : Airnet_Runtime : [DEBUG] : Replaced hwAddrs in topology graph by symbolic names
+2017-04-30 18:03:13,415 : Airnet_Runtime : [DEBUG] : Initialized a per-switch classifier
+2017-04-30 18:03:13,416 : Airnet_Runtime : [DEBUG] : Converting high-level policies to physical rules
+2017-04-30 18:03:13,416 : Airnet_Runtime : [DEBUG] : 
+-- Dynamic Function Rule : match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([dataCap(), forward to HA])
+2017-04-30 18:03:13,416 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s1
+2017-04-30 18:03:13,417 : Airnet_Runtime : [DEBUG] : Destination found : HA
+2017-04-30 18:03:13,417 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:03:13,417 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
+2017-04-30 18:03:13,417 : Airnet_Runtime : [DEBUG] : 
+-- Egress Rule : match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB])
+2017-04-30 18:03:13,418 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s4
+2017-04-30 18:03:13,418 : Airnet_Runtime : [DEBUG] : Destination found : HB
+2017-04-30 18:03:13,418 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:03:13,418 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+2017-04-30 18:03:13,418 : Airnet_Runtime : [DEBUG] : 
+-- Ingress Rule : match {'nw_proto': 1, 'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to Fabric])
+2017-04-30 18:03:13,418 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 18:03:13,419 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 18:03:13,419 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:03:13,419 : Airnet_Runtime : [DEBUG] : match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to 1])
+2017-04-30 18:03:13,419 : Airnet_Runtime : [DEBUG] : 
+-- Ingress Rule : match {'nw_proto': 1, 'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to Fabric])
+2017-04-30 18:03:13,420 : Airnet_Runtime : [DEBUG] : 1 switch(es) matched to the current rule
+2017-04-30 18:03:13,420 : Airnet_Runtime : [DEBUG] : Possible destination(s) found : s3 s2
+2017-04-30 18:03:13,421 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:03:13,421 : Airnet_Runtime : [DEBUG] : match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to 1])
+2017-04-30 18:03:13,421 : Airnet_Runtime : [DEBUG] : Enforcing policies for fabrics
+2017-04-30 18:03:13,421 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 18:03:13,421 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 18:03:13,421 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 18:03:13,422 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 18:03:13,422 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 18:03:13,422 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 18:03:13,423 : Airnet_Runtime : [DEBUG] : 
+
+ *** Physical rules to push on switches
+2017-04-30 18:03:13,423 : Airnet_Runtime : [DEBUG] : 
+ ----- s4 rules : 
+match {'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to 1])
+2017-04-30 18:03:13,423 : Airnet_Runtime : [DEBUG] : 
+ ----- s3 rules : 
+match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- identity -- set([forward to 1])
+2017-04-30 18:03:13,423 : Airnet_Runtime : [DEBUG] : 
+ ----- s2 rules : 
+match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '10.0.0.11'} -- identity -- set([forward to 1])
+2017-04-30 18:03:13,423 : Airnet_Runtime : [DEBUG] : 
+ ----- s1 rules : 
+match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
+match {'nw_proto': 1, 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to 1])
+2017-04-30 18:03:13,446 : Airnet_Runtime : [INFO] : 
+# Proactive rules installed == 8
+2017-04-30 18:03:13,447 : Airnet_Runtime : [INFO] : Proactive core policies enforcement finished -- Duration == 32
+2017-04-30 18:03:33,422 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:03:33,422 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '10.0.0.11'} -- identity -- set([])
+2017-04-30 18:03:33,424 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 18:03:33,424 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 18:03:33,425 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 18:03:33,425 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 18:03:33,425 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 18:03:33,426 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 18:03:33,428 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-04-30 18:03:33,443 : Airnet_Runtime : [INFO] : Rules modified == 3
+2017-04-30 18:03:33,443 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-04-30 18:03:33,449 : Airnet_Runtime : [INFO] : Rules deleted == 2
+2017-04-30 18:03:33,449 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 21 ms
+
+2017-04-30 18:03:37,310 : Airnet_Runtime : [DEBUG] : Runtime -- handling a Packet/in
+2017-04-30 18:03:53,422 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s1
+2017-04-30 18:03:53,423 : Airnet_Runtime : [DEBUG] : Destination found : HA
+2017-04-30 18:03:53,423 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:03:53,423 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
+2017-04-30 18:03:53,426 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 18:03:53,427 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 18:03:53,427 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 18:03:53,428 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 18:03:53,428 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 18:03:53,429 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 18:03:53,432 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-04-30 18:03:53,447 : Airnet_Runtime : [INFO] : Rules modified == 3
+2017-04-30 18:03:53,453 : Airnet_Runtime : [INFO] : Rules installed == 2
+2017-04-30 18:03:53,453 : Airnet_Runtime : [INFO] : Rules deleted == 0
+2017-04-30 18:03:53,453 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 21 ms
+
+2017-04-30 18:04:13,423 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:04:13,423 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '10.0.0.11'} -- identity -- set([])
+2017-04-30 18:04:13,426 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 18:04:13,426 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 18:04:13,427 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 18:04:13,427 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 18:04:13,427 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 18:04:13,428 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 18:04:13,431 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-04-30 18:04:13,445 : Airnet_Runtime : [INFO] : Rules modified == 3
+2017-04-30 18:04:13,445 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-04-30 18:04:13,451 : Airnet_Runtime : [INFO] : Rules deleted == 2
+2017-04-30 18:04:13,452 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 21 ms
+
+2017-04-30 18:04:33,423 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s1
+2017-04-30 18:04:33,424 : Airnet_Runtime : [DEBUG] : Destination found : HA
+2017-04-30 18:04:33,424 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:04:33,424 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
+2017-04-30 18:04:33,426 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 18:04:33,426 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 18:04:33,427 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 18:04:33,427 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 18:04:33,427 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 18:04:33,427 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 18:04:33,430 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-04-30 18:04:33,444 : Airnet_Runtime : [INFO] : Rules modified == 3
+2017-04-30 18:04:33,450 : Airnet_Runtime : [INFO] : Rules installed == 2
+2017-04-30 18:04:33,450 : Airnet_Runtime : [INFO] : Rules deleted == 0
+2017-04-30 18:04:33,451 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 20 ms
+
+2017-04-30 18:05:13,424 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:05:13,424 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '10.0.0.11'} -- identity -- set([])
+2017-04-30 18:05:13,428 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 18:05:13,428 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 18:05:13,428 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 18:05:13,429 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 18:05:13,429 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 18:05:13,429 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 18:05:13,432 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-04-30 18:05:13,447 : Airnet_Runtime : [INFO] : Rules modified == 3
+2017-04-30 18:05:13,447 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-04-30 18:05:13,454 : Airnet_Runtime : [INFO] : Rules deleted == 2
+2017-04-30 18:05:13,455 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 23 ms
+
+2017-04-30 18:05:33,424 : Airnet_Runtime : [DEBUG] : Ouput switch(es) found : s1
+2017-04-30 18:05:33,424 : Airnet_Runtime : [DEBUG] : Destination found : HA
+2017-04-30 18:05:33,425 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:05:33,425 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '10.0.0.11'} -- identity -- set([forward to 2])
+2017-04-30 18:05:33,427 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 18:05:33,427 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 18:05:33,428 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 18:05:33,428 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 18:05:33,428 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 18:05:33,429 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 18:05:33,433 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-04-30 18:05:33,447 : Airnet_Runtime : [INFO] : Rules modified == 3
+2017-04-30 18:05:33,452 : Airnet_Runtime : [INFO] : Rules installed == 2
+2017-04-30 18:05:33,453 : Airnet_Runtime : [INFO] : Rules deleted == 0
+2017-04-30 18:05:33,453 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 19 ms
+
+2017-04-30 18:05:53,425 : Airnet_Runtime : [DEBUG] : Physical rule generated :
+2017-04-30 18:05:53,425 : Airnet_Runtime : [DEBUG] : match {'nw_dst': '10.0.0.11'} -- identity -- set([])
+2017-04-30 18:05:53,427 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+2017-04-30 18:05:53,428 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s4
+2017-04-30 18:05:53,428 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '172.16.0.50'}, 's2')]
+2017-04-30 18:05:53,429 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+2017-04-30 18:05:53,429 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s1
+2017-04-30 18:05:53,430 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_proto': 1, 'nw_dst': '10.0.0.11'}, 's3')]
+2017-04-30 18:05:53,433 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-04-30 18:05:53,447 : Airnet_Runtime : [INFO] : Rules modified == 3
+2017-04-30 18:05:53,448 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-04-30 18:05:53,453 : Airnet_Runtime : [INFO] : Rules deleted == 2
+2017-04-30 18:05:53,453 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 20 ms
+

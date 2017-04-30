@@ -5,7 +5,7 @@ import sys
 """
 
 users---[s1]----|          |---[s5]---[s6]---|          |---[s8]---WS
-                |---[s3]---|                 |---[s7]---| 
+                |---[s3]---|                 |---[s7]---|
 guests---[s2]---|          |--------[s4] ----|          |---[s9]---CC
 
 """
@@ -18,8 +18,7 @@ from mininet.log import setLogLevel, info
 def emptyNet(controller_ip, controller_port):
 
 	"Create an empty network and add nodes to it."
-
-	net = Mininet( controller=Controller )
+	net = Mininet( controller=Controller , switch=switch)
 
 	info( '*** Adding controller\n' )
 	net.addController( 'c0', controller=RemoteController, ip=controller_ip, port=controller_port )
@@ -29,10 +28,10 @@ def emptyNet(controller_ip, controller_port):
 	h2 = net.addHost( 'guests' , ip= '172.16.0.12/16', defaultRoute = "via 172.16.0.12")
 	h3 = net.addHost( 'WS', ip='192.168.0.11/16', defaultRoute='via 192.168.0.11')
 	h4 = net.addHost( 'CC' , ip= '192.168.0.12/16', defaultRoute = "via 192.168.0.12")
-	
-	
+
+
 	info( '*** Adding switch\n' )
-	s1 = net.addSwitch( 's1' )
+	s1 = net.addSwitch( 's1' ,protocols='OpenFlow13')
 	s2 = net.addSwitch( 's2' )
 	s3 = net.addSwitch( 's3' )
 	s4 = net.addSwitch( 's4' )
@@ -40,7 +39,7 @@ def emptyNet(controller_ip, controller_port):
 	s6 = net.addSwitch( 's6' )
 	s7 = net.addSwitch( 's7' )
 	s8 = net.addSwitch( 's8' )
-	s9 = net.addSwitch( 's9') 
+	s9 = net.addSwitch( 's9')
 
 	info( '*** Creating links\n' )
 	net.addLink( s1, s3)
@@ -56,18 +55,18 @@ def emptyNet(controller_ip, controller_port):
 	net.addLink(s2, h2)
 	net.addLink(s8, h3)
 	net.addLink(s9, h4)
-	
+
 	info( '*** Starting network\n')
 	net.start()
 
 	print("*** Starting web service on ws")
-	h3.cmd( 'python -m SimpleHTTPServer 80 &' )	
+	h3.cmd( 'python -m SimpleHTTPServer 80 &' )
 
-	net.pingAll(timeout=1)	
+	net.pingAll(timeout=1)
 
 	info( '*** Running CLI\n' )
 	CLI( net )
-	
+
 	info( '*** Stopping network' )
 	net.stop()
 
@@ -77,4 +76,3 @@ if __name__ == '__main__':
 		print 'Usage: ', sys.argv[0], ' controller_ip controller_port'
 		sys.exit()
 	emptyNet(sys.argv[1], int(sys.argv[2]))
-

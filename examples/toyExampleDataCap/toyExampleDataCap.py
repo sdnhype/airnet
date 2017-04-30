@@ -19,13 +19,13 @@ data_threshold = 1000
 hosts_data_amount = {}
 hosts_permission = {}
 
-@DynamicControlFct(data="stat", every=10, limit="none")
+@DynamicControlFct(data="stat", every=20, limit="none")
 def dataCap(stat):
     """
         HOST_A can download at most 1000 bytes per 60 seconds
     """
-    dataCap.time +=1
-    print "Time == "+str(dataCap.time)+" minute(s)"
+    dataCap.time +=20
+    print "Time == "+str(dataCap.time)+" second(s)"
     try:
         if hosts_permission[stat.nw_dst] == "allow":
             hosts_data_amount[stat.nw_dst] = stat.byte_count - hosts_data_amount[stat.nw_dst]

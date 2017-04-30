@@ -1,0 +1,215 @@
+            ************************
+            *** AirNet use cases ***
+            ************************
+
+******************************************************************************
+******************************************************************************
+
+=======================
+== Static filtering  ==
+=======================
+
+# examples/staticFiltering/
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh staticFiltering.staticFiltering staticFiltering.staticFiltering_mapping
+
+-- Mininet
+
+$ sudo python topo_static_filtering.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> inet_h ping -c1 ws  ---> OK
+mininet> inet_h ping -c1 ssh_gw ---> KO
+mininet> inet_h ssh ssh_gw   ---> OK
+
+******************************************************************************
+******************************************************************************
+
+======================
+== Static 2 fabrics ==
+======================
+
+# examples/staticTwoFabrics/
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh staticTwoFabrics.twoFabrics staticTwoFabrics.twoFabrics_mapping
+
+-- Mininet
+
+$ sudo python topo_2_fabrics.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> user ping -c1 ssh  ---> OK
+mininet> user ping -c1 ws   ---> KO
+mininet> inet ping -c1 ssh  ---> KO
+
+mininet> inet wget ws  ---> OK
+mininet> inet wget ssh ---> KO
+
+******************************************************************************
+******************************************************************************
+
+=======================================
+== Static catch parallel composition ==
+=======================================
+
+# examples/staticParallelCatch/
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh staticParallelCatch.catchComposition staticParallelCatch.catchComposition_mapping
+
+-- Mininet
+
+$ sudo python catchComposition_topo.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> staff_net  ping -c1 WS1  OK
+mininet> guests_net ping -c1 WS2  OK
+mininet> admins_net ping -c1 DB   OK
+
+mininet> guests_net ping -c1 WS1  KO
+mininet> staff_net  ping -c1 DB   KO
+
+
+******************************************************************************
+******************************************************************************
+
+======================================
+== Static edge gw between 2 fabrics ==
+======================================
+
+# examples/staticEdgeGateway/
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh staticEdgeGateway.edge_between_fabs staticEdgeGateway.edge_between_fabs_mapping
+
+-- Mininet
+
+$ sudo python edge_between_fabs_topo.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> C01 ping -c1 WS  ---> OK
+
+******************************************************************************
+******************************************************************************
+
+============================
+== Dynamic authentication ==
+============================
+
+##### TODO : first packet is not reinjected into the data plane
+
+# examples/dynAuthentication/
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh dynAuthentication.dynAuth dynAuthentication.dynAuth_mapping
+
+-- Mininet
+
+$ sudo python topo_9sw_4hosts.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> users ping -c1 WS  ---> OK
+mininet> users ping -c1 CC  ---> OK
+mininet> guests wget WS     ---> OK  (guests IP on whitelist)
+
+mininet> guests ping -c1 WS  ---> KO the first time : BUG!
+mininet> guests ping -c1 WS  ---> OK the second time : XXX BUG ! not OK. FIX ME!
+
+******************************************************************************
+******************************************************************************
+
+============================
+== Dynamic Load Balancer  ==
+============================
+
+##### TODO : first packet is not reinjected into the data plane
+
+# examples/dynLB/
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh dynLB.dynLoadBalancer dynLB.dynLoadBalancer_mapping
+
+-- Mininet
+
+$ sudo python dynLoadBalancer_topo.py 192.168.56.1 6633
+
+-- Tests
+
+#PUBLIC IP == 10.0.0.50
+
+mininet> client1 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received, 20% packet loss)
+mininet> client1 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 5 received, 0% packet loss)
+
+
+mininet> client2 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received, 20% packet loss)
+mininet> client3 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received, 20% packet loss)
+mininet> client4 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received, 20% packet loss)
+
+******************************************************************************
+******************************************************************************
+
+=======================================
+== Statistics on Three Edges ==
+=======================================
+
+# examples/statThreeEdges/
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh statThreeEdges.statThreeEdges statThreeEdges.statThreeEdges_mapping
+
+-- Mininet
+
+$ sudo python statThreeEdges_topo.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> pingall --> OK

@@ -1,47 +1,13 @@
-[2017-04-25 02:52:41.525332] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 02:52:46.525526] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 02:52:51.525945] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 02:52:56.526406] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 02:53:01.526926] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 02:53:06.527277] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 02:53:11.527371] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 02:53:16.527504] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 02:53:21.527935] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 02:53:26.528143] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 02:53:31.528525] nw_src None nw_dst 172.16.0.50 | packet count 5 
-[2017-04-25 02:53:36.528812] nw_src None nw_dst 172.16.0.50 | packet count 7 
-[2017-04-25 14:13:51.103183] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 14:13:56.103076] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 14:14:01.103693] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 14:14:06.104146] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 14:14:11.104169] nw_src None nw_dst 172.16.0.50 | packet count 1 
-[2017-04-25 14:14:16.104849] nw_src None nw_dst 172.16.0.50 | packet count 5 
-[2017-04-25 14:14:21.104739] nw_src None nw_dst 172.16.0.50 | packet count 7 
-[2017-04-25 14:34:39.097369] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 14:35:24.690399] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 14:35:29.690266] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 14:35:34.690667] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 14:35:39.691058] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 14:35:44.692387] nw_src None nw_dst 172.16.0.50 | packet count 4 
-[2017-04-25 14:35:49.692392] nw_src None nw_dst 172.16.0.50 | packet count 7 
-[2017-04-25 14:37:54.145293] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 14:37:59.145299] nw_src None nw_dst 172.16.0.50 | packet count 4 
-[2017-04-25 14:38:04.146420] nw_src None nw_dst 172.16.0.50 | packet count 7 
-[2017-04-25 14:40:13.452201] nw_src None nw_dst 172.16.0.50 | packet count 4 
-[2017-04-25 14:40:18.452605] nw_src None nw_dst 172.16.0.50 | packet count 7 
-[2017-04-25 14:41:04.154607] nw_src None nw_dst 172.16.0.50 | packet count 1 
-[2017-04-25 14:41:09.154943] nw_src None nw_dst 172.16.0.50 | packet count 6 
-[2017-04-25 15:29:44.659270] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 15:29:49.659260] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 15:29:54.659806] nw_src None nw_dst 172.16.0.50 | packet count 0 
-[2017-04-25 15:29:59.660037] nw_src None nw_dst 172.16.0.50 | packet count 2 
-[2017-04-25 15:30:04.660195] nw_src None nw_dst 172.16.0.50 | packet count 7 
-[2017-04-25 15:30:09.660757] nw_src None nw_dst 172.16.0.50 | packet count 7 
-[2017-04-25 15:30:14.661326] nw_src None nw_dst 172.16.0.50 | packet count 7 
-[2017-04-25 15:30:19.661774] nw_src None nw_dst 172.16.0.50 | packet count 9 
-[2017-04-25 15:30:24.662157] nw_src None nw_dst 172.16.0.50 | packet count 14 
-[2017-04-25 15:30:29.662234] nw_src None nw_dst 172.16.0.50 | packet count 14 
-[2017-04-25 15:30:34.662257] nw_src None nw_dst 172.16.0.50 | packet count 14 
-[2017-04-25 15:30:39.662659] nw_src None nw_dst 172.16.0.50 | packet count 14 
-[2017-04-25 15:30:44.662836] nw_src None nw_dst 172.16.0.50 | packet count 14 
-[2017-04-25 15:30:49.663353] nw_src None nw_dst 172.16.0.50 | packet count 14 
+[2017-04-30 17:56:10.417647] nw_dst 172.16.0.50 | packet count 0 byte count 0
+[2017-04-30 17:56:15.418313] nw_dst 172.16.0.50 | packet count 0 byte count 0
+[2017-04-30 17:57:59.537145] nw_dst 172.16.0.50 | packet count 0 byte count 0
+[2017-04-30 17:58:04.537606] nw_dst 172.16.0.50 | packet count 0 byte count 0
+[2017-04-30 17:58:09.537543] nw_dst 172.16.0.50 | packet count 0 byte count 0
+[2017-04-30 17:58:14.539113] nw_dst 172.16.0.50 | packet count 0 byte count 0
+[2017-04-30 17:58:19.538081] nw_dst 172.16.0.50 | packet count 0 byte count 0
+[2017-04-30 17:58:24.538456] nw_dst 172.16.0.50 | packet count 0 byte count 0
+[2017-04-30 17:58:29.539196] nw_dst 172.16.0.50 | packet count 0 byte count 0
+[2017-04-30 17:58:34.539764] nw_dst 172.16.0.50 | packet count 1 byte count 98
+[2017-04-30 17:58:39.539711] nw_dst 172.16.0.50 | packet count 6 byte count 588
+[2017-04-30 17:58:44.540087] nw_dst 172.16.0.50 | packet count 7 byte count 686
+[2017-04-30 17:58:49.540729] nw_dst 172.16.0.50 | packet count 7 byte count 686

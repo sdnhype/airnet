@@ -11,8 +11,8 @@ from webob import Response
 from ryu.base import app_manager
 from ryu.controller import ofp_event, dpset
 from ryu.controller.handler import MAIN_DISPATCHER, CONFIG_DISPATCHER, set_ev_cls
-from ryu.ofproto import ofproto_v1_0, ofproto_v1_2, ofproto_v1_3, ofproto_v1_4
-from ryu.lib import ofctl_v1_0, ofctl_v1_2, ofctl_v1_3, ofctl_v1_4
+from ryu.ofproto import ofproto_v1_3
+from ryu.lib import ofctl_v1_3
 from ryu.app.wsgi import ControllerBase, WSGIApplication
 from ryu.topology import event, switches
 from rest_client import RyuTopologyClient
@@ -26,12 +26,7 @@ import json, ast
 logger = Logger("airnet_interface").getLog()
 
 # supported ofctl versions in this restful app
-supported_ofctl = {
-    ofproto_v1_0.OFP_VERSION: ofctl_v1_0,
-    ofproto_v1_2.OFP_VERSION: ofctl_v1_2,
-    ofproto_v1_3.OFP_VERSION: ofctl_v1_3,
-    ofproto_v1_4.OFP_VERSION: ofctl_v1_4,
-}
+supported_ofctl = {ofproto_v1_3.OFP_VERSION: ofctl_v1_3}
 
 packets = {}
 id_packet = 0
@@ -122,8 +117,8 @@ class PacketsController(ControllerBase):
 
         _ofp_version = dp.ofproto.OFP_VERSION
 
-        _ofctl = supported_ofctl.get(_ofp_version, None)
 
+        _ofctl = supported_ofctl.get(_ofp_version, None)
         if _ofctl is not None:
             if 'id_packet' not in flow:
                 sender.send_arp(dp,flow)
@@ -228,9 +223,9 @@ class FlowsController(ControllerBase):
 
         return Response(status=200)
 
-class RestStatsApi(app_manager.RyuApp):
+class RestApi_main(app_manager.RyuApp):
     """
-        This class receives statitics queries from the Airnet Hypervisor
+        This class receives statitics and packets queries from the Airnet Hypervisor
         Since the REST API is used, queries are represented by URLs
         URLs are associated with methods in StatsController class which will
         collect information and provide responses
@@ -238,10 +233,8 @@ class RestStatsApi(app_manager.RyuApp):
         to the Airnet Hypervisor through the REST API
         (The RyuTopologyClient class is used here)
     """
-    OFP_VERSIONS = [ofproto_v1_0.OFP_VERSION,
-                    ofproto_v1_2.OFP_VERSION,
-                    ofproto_v1_3.OFP_VERSION,
-                    ofproto_v1_4.OFP_VERSION]
+    OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
+
     _CONTEXTS = {
         'dpset': dpset.DPSet,
         'wsgi': WSGIApplication,
@@ -249,7 +242,7 @@ class RestStatsApi(app_manager.RyuApp):
     }
 
     def __init__(self, *args, **kwargs):
-        super(RestStatsApi, self).__init__(*args, **kwargs)
+        super(RestApi_main, self).__init__(*args, **kwargs)
 
         # Airnet REST Server
         self.client = RyuTopologyClient('localhost',9000)
@@ -285,7 +278,7 @@ class RestStatsApi(app_manager.RyuApp):
             Datas to redirect to FlowsController
         """
         uri = path3 + '/entry/{cmd}'
-        mapper.connect('Flows', uri,
+        mapper.connect('Fdlows', uri,
                        controller=FlowsController, action='modify_flow_entry',
                        conditions=dict(method=['POST']))
 
@@ -343,7 +336,7 @@ class RestStatsApi(app_manager.RyuApp):
         # get the packet information
         pkt = packet.Packet(data=msg.data)
         # get the layer 2 header
-        eth = pkt.get_protocol(ethernet.ethernet)
+        eth = pkt.get_protocols(ethernet.ethernet)[0]
 
         # ignore LLDP packets
         if eth.ethertype == ether_types.ETH_TYPE_LLDP:
@@ -359,7 +352,7 @@ class RestStatsApi(app_manager.RyuApp):
         # get the switch's id
         dpid = datapath.id
         # get the incoming port
-        port = msg.in_port
+        port = msg.match['in_port']
         # Initialize a dictionnary
         data = {}
         # Fulfill it with the switch information
@@ -416,12 +409,8 @@ class RestStatsApi(app_manager.RyuApp):
         msgs.append(msg)
 
         flags = 0
-        if dp.ofproto.OFP_VERSION == ofproto_v1_0.OFP_VERSION:
-            flags = dp.ofproto.OFPSF_REPLY_MORE
-        elif dp.ofproto.OFP_VERSION == ofproto_v1_2.OFP_VERSION:
-            flags = dp.ofproto.OFPSF_REPLY_MORE
-        elif dp.ofproto.OFP_VERSION >= ofproto_v1_3.OFP_VERSION:
-            flags = dp.ofproto.OFPMPF_REPLY_MORE
+        # OF 1.3
+        flags = dp.ofproto.OFPMPF_REPLY_MORE
 
         if msg.flags & flags:
             return
@@ -446,6 +435,7 @@ class RestStatsApi(app_manager.RyuApp):
         lock.set()
     """
 
+    """
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):
         datapath = ev.msg.datapath
@@ -468,3 +458,26 @@ class RestStatsApi(app_manager.RyuApp):
             command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
             priority=1,flags=0, actions=actions)
         datapath.send_msg(req_arp)
+    """
+
+    # OF13
+    @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
+    def switch_features_handler(self, ev):
+        datapath = ev.msg.datapath
+        ofproto = datapath.ofproto
+        parser = datapath.ofproto_parser
+
+        # install a rule for arp flows
+        """
+        match = parser.OFPMatch(eth_type=0x0806)
+        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
+
+        inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,
+                                             actions)]
+        req = parser.OFPFlowMod(
+            datapath=datapath, match=match, cookie=0,
+            idle_timeout=0, hard_timeout=0,
+            priority=1,flags=0, instructions=inst)
+
+        datapath.send_msg(req)
+        """
