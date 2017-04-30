@@ -1,0 +1,49 @@
+# =============================
+# examples/staticEdgeGateway/
+# =============================
+
+************************
+*** virtual topology ***
+************************
+
+C01(host) ---- E1 ---- FAB1 ---- E_GW ---- FAB2 ---- E2 ---- WS(host)
+
+Policies:
+
+- C01 <---> WS : Forward ALL FLOWS
+
+************************
+*** mininet topology ***
+************************
+
+h1 --- s1 ---s2---s3---s4--- s5 ---s6---s7---s8--- s9 --- h2
+
+***************
+*** mapping ***
+***************
+
+E1 -> s1, E_GW -> s5, E2 -> s9
+FAB1 -> s2, s3, s4
+FAB2 -> s6, s7, s8
+
+***************************
+*** running and testing ***
+***************************
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh staticEdgeGateway.edge_between_fabs staticEdgeGateway.edge_between_fabs_mapping
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- Mininet
+
+$ sudo python edge_between_fabs_topo.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> C01 ping -c1 WS  ---> OK
+mininet> WS ping -c1 C01  ---> OK

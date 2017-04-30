@@ -11,24 +11,10 @@
 
 # examples/staticFiltering/
 
--- RYU
+This is an example involving different types of policies filtering traffic
+based on the destination, network protocol, transport protocol or port number.
 
-$ cd controllers/ryu/
-$ ryu-manager --observe-links airnet_interface.py
-
--- AirNet
-
-$ ./launch_airnet_ryu.sh staticFiltering.staticFiltering staticFiltering.staticFiltering_mapping
-
--- Mininet
-
-$ sudo python topo_static_filtering.py 192.168.56.1 6633
-
--- Tests
-
-mininet> inet_h ping -c1 ws  ---> OK
-mininet> inet_h ping -c1 ssh_gw ---> KO
-mininet> inet_h ssh ssh_gw   ---> OK
+Virtual topology: 4 edges (one-to-one mapping), 1 fabric
 
 ******************************************************************************
 ******************************************************************************
@@ -102,22 +88,9 @@ mininet> staff_net  ping -c1 DB   KO
 
 # examples/staticEdgeGateway/
 
--- RYU
+One edge between two fabrics. Traffic forwarded through that edge.
 
-$ cd controllers/ryu/
-$ ryu-manager --observe-links airnet_interface.py
-
--- AirNet
-
-$ ./launch_airnet_ryu.sh staticEdgeGateway.edge_between_fabs staticEdgeGateway.edge_between_fabs_mapping
-
--- Mininet
-
-$ sudo python edge_between_fabs_topo.py 192.168.56.1 6633
-
--- Tests
-
-mininet> C01 ping -c1 WS  ---> OK
+Virtual topology: 3 edges (one-to-one mapping), 2 fabrics
 
 ******************************************************************************
 ******************************************************************************

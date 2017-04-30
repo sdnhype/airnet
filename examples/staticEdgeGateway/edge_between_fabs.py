@@ -3,9 +3,9 @@ from constants import *
 
 """
 
-C01(host) ---- E1 ---- FAB1 ---- E_GW ---- FAB2 ---- E2 ---- WS(host)
+* Virtual topo:
 
-C01 <---> WS : Fwd ALL FLOWS
+    C01(host) ---- E1 ---- FAB1 ---- E_GW ---- FAB2 ---- E2 ---- WS(host)
 
 """
 
@@ -38,19 +38,19 @@ def default_distribution_policy():
 
 def access_policies():
 
-    e1 = match(edge=E1, dst=WS) >> tag(IN_FLOWS) >> forward(FAB1)
+    e1 = match(edge=E1,   dst=WS) >> tag(IN_FLOWS) >> forward(FAB1)
     e2 = match(edge=E_GW, dst=WS) >> tag(IN_FLOWS) >> forward(FAB2)
 
-    e3 = match(edge=E2, src=WS) >> tag(OUT_FLOWS) >> forward(FAB2)
+    e3 = match(edge=E2,   src=WS) >> tag(OUT_FLOWS) >> forward(FAB2)
     e4 = match(edge=E_GW, src=WS) >> tag(OUT_FLOWS) >> forward(FAB1)
 
     return e1 + e2 + e3 + e4
 
 def transport_policy():
 
-    f1 = catch(fabric=FAB1, src=E1, flow=IN_FLOWS) >> carry(dst=E_GW)
-    f2 = catch(fabric=FAB2, src=E_GW, flow=IN_FLOWS) >> carry(dst=E2)
-    f3 = catch(fabric=FAB2, src=E2, flow=OUT_FLOWS) >> carry(dst=E_GW)
+    f1 = catch(fabric=FAB1, src=E1,   flow=IN_FLOWS)  >> carry(dst=E_GW)
+    f2 = catch(fabric=FAB2, src=E_GW, flow=IN_FLOWS)  >> carry(dst=E2)
+    f3 = catch(fabric=FAB2, src=E2,   flow=OUT_FLOWS) >> carry(dst=E_GW)
     f4 = catch(fabric=FAB1, src=E_GW, flow=OUT_FLOWS) >> carry(dst=E1)
 
     return f1 + f2 + f3 + f4
