@@ -9,48 +9,63 @@
                           TESTING EXAMPLES
 #######################################################################
 
-          **************  STATIC EXAMPLES *******************
+  **************  STATIC EXAMPLES *******************
 
------ I-   toyExample
+    ----- I-   toyExample
 
-          # launch the hypervisor
-                ~/airnet $ ./launch_airnet_ryu.sh toyExample.toyExample toyExample.toyExample_mapping
-          # launch the controller
-                ~/airnet/controllers/ryu $ ryu-manager --observe-links airnet_interface.py
-          # launch mininet
-                ~/topo$ sudo python topo_toyExample.py 192.168.56.1 6633
+              # launch the hypervisor
+                    ~/airnet $ ./launch_airnet_ryu.sh toyExample.toyExample toyExample.toyExample_mapping
+              # launch the controller
+                    ~/airnet/controllers/ryu $ ryu-manager --observe-links airnet_interface.py
+              # launch mininet
+                    ~/topo$ sudo python topo_toyExample.py 192.168.56.1 6633
 
-          # tests
-                mininet> host_A ping -c1 host_B --> OK
-
-
-
------ II-  toyExample_bis
-
-          # launch the hypervisor
-                ~/airnet $ ./launch_airnet_ryu.sh toyExample.toyExample_bis toyExample.toyExample_mapping
-          # launch the controller
-                ~/airnet/controllers/ryu $ ryu-manager --observe-links airnet_interface.py
-          # launch mininet
-                ~/topo$ sudo python topo_toyExample.py 192.168.56.1 6633
-
-          # tests
-                mininet> host_A ping -c1 host_B --> OK
-                mininet> host_A wget host_B --> OK (should be NOT OK -- bug !! fix priorities between match and drop)
+              # tests
+                    mininet> host_A ping -c1 host_B --> OK
 
 
 
+    ----- II-  toyExample_bis
+
+              # launch the hypervisor
+                    ~/airnet $ ./launch_airnet_ryu.sh toyExample.toyExample_bis toyExample.toyExample_mapping
+              # launch the controller
+                    ~/airnet/controllers/ryu $ ryu-manager --observe-links airnet_interface.py
+              # launch mininet
+                    ~/topo$ sudo python topo_toyExample.py 192.168.56.1 6633
+
+              # tests
+                    mininet> host_A ping -c1 host_B --> OK
+                    mininet> host_A wget host_B --> OK (should be NOT OK -- bug !! fix priorities between match and drop)
 
 
 
-          ************  DYNAMIC EXAMPLES *****************
+    ----- III- staticFiltering
+
+                    ~/airnet $ ./launch_airnet_ryu.sh staticFiltering.staticFiltering staticFiltering.staticFiltering_mapping
+
+                    ~/airnet/controllers/ryu $ ryu-manager --observe-links airnet_interface.py
+
+                    ~/topo$ sudo python topo_staticFiltering.py 192.168.56.1 6633
+
+              # tests
+                    mininet> inet_h ping -c1 ws  ---> OK
+
+                    mininet> inet_h ping -c1 ssh_gw ---> KO
+
+                    mininet> inet_h ssh ssh_gw   ---> OK
 
 
 
 
-          ************    STATISTICS     *****************
+  ************  DYNAMIC EXAMPLES *****************
 
------ I-   toyExampleStat
+
+
+
+  ************    STATISTICS     *****************
+
+    ----- I-   toyExampleStat
 
          # launch the hypervisor
                ~/airnet $ ./launch_airnet_ryu.sh toyExampleStat.toyExampleStat toyExampleStat.toyExampleStat_mapping
@@ -66,7 +81,7 @@
               -> once pings counter reaches 6, the dynamic fonction (savestat()) returns a policy
 
 
------ II-  toyExampleDataCap
+    ----- II-  toyExampleDataCap
 
              ~/airnet $ ./launch_airnet_ryu.sh toyExampleDataCap.toyExampleDataCap toyExampleDataCap.toyExampleDataCap_mapping
 
@@ -87,7 +102,7 @@
              mininet> host_B ping -c1 host_A --> OK (host_A can again use the network)
 
 
------ III- checkDataCap
+    ----- III- checkDataCap
 
             ~/airnet $ ./launch_airnet_ryu.sh checkDataCap.checkDataCap checkDataCap.checkDataCap_mapping
 
