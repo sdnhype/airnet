@@ -80,14 +80,15 @@ class PacketParser(object):
             ip = protos.get('ipv4')
             actions.append(dp.ofproto_parser.OFPActionSetField(ipv4_src=ip.get('src')))
             actions.append(dp.ofproto_parser.OFPActionSetField(ipv4_dst=ip.get('dst')))
-        tp = None
         if 'tcp' in protos:
             tp = protos.get('tcp')
-        elif 'udp' in protos:
-            tp = protos.get('udp')
-        if tp is not None:
             actions.append(dp.ofproto_parser.OFPActionSetField(tcp_src=tp.get('src_port')))
             actions.append(dp.ofproto_parser.OFPActionSeField(tcp_dst=tp.get('dst_port')))
+        elif 'udp' in protos:
+            tp = protos.get('udp')
+            actions.append(dp.ofproto_parser.OFPActionSetField(udp_src=tp.get('src_port')))
+            actions.append(dp.ofproto_parser.OFPActionSeField(udp_dst=tp.get('dst_port')))
+
         return actions
 
 

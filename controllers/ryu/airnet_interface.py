@@ -278,7 +278,7 @@ class RestApi_main(app_manager.RyuApp):
             Datas to redirect to FlowsController
         """
         uri = path3 + '/entry/{cmd}'
-        mapper.connect('Fdlows', uri,
+        mapper.connect('Flows', uri,
                        controller=FlowsController, action='modify_flow_entry',
                        conditions=dict(method=['POST']))
 
@@ -465,6 +465,7 @@ class RestApi_main(app_manager.RyuApp):
     def switch_features_handler(self, ev):
         datapath = ev.msg.datapath
         ofproto = datapath.ofproto
+        print ("OFPROTO {}".format(ofproto))
         parser = datapath.ofproto_parser
 
         # install a rule for arp flows

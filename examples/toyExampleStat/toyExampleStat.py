@@ -15,7 +15,7 @@ ALLOW ICMP HOST_B to HOSt_A
 
 
 """
-@DynamicControlFct(data="stat", every=5, limit="none")
+@DynamicControlFct(data="stat", every=10.0, limit="none")
 def saveStat( stat ):
     # Open log file
     logFile = open("statsLog.txt", 'a')

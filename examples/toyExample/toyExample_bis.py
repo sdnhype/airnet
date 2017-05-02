@@ -51,7 +51,7 @@ def default_distribution_policy():
 def access_policies():
 
     e1 = match(edge=E1, dst=HB) >> tag("flow_in") >> forward(FAB)
-    e2 = match(edge=E1, src=HA, tp_dst=80) >> drop
+    e2 = match(edge=E1, src=HA, tp_dst=80, nw_proto=TCP) >> drop
     e3 = match(edge=E2, dst=HA) >> tag("flow_out") >> forward(FAB)
 
     return e1 + e2 + e3
