@@ -1,0 +1,18 @@
+2017-05-02 16:57:03,028 : Airnet_Runtime : [DEBUG] : Replaced in edge policies symbolic names by ipAddrs
+2017-05-02 16:57:03,028 : Airnet_Runtime : [DEBUG] : Compiling edge policies
+2017-05-02 16:57:03,030 : Airnet_Runtime : [DEBUG] : Edge rules generated : 5
+************
+match {'edge': 'E1', 'nw_dst': '10.0.0.11'} -- identity -- set([forward to HA, dataCap()])
+match {'edge': 'E2', 'nw_dst': '172.16.0.50'} -- identity -- set([forward to HB])
+match {'nw_proto': 1, 'edge': 'E1', 'nw_dst': '172.16.0.50'} -- flowID==icmp_in -- set([forward to Fabric])
+match {'nw_proto': 1, 'edge': 'E2', 'nw_dst': '10.0.0.11'} -- flowID==icmp_out -- set([forward to Fabric])
+identity -- identity -- set([])
+************
+2017-05-02 16:57:03,030 : Airnet_Runtime : [DEBUG] : Compiling fabric policies
+2017-05-02 16:57:03,030 : Airnet_Runtime : [DEBUG] : Fabric rules generated : 2
+************
+fabric='Fabric' ,src='E1' flow='icmp_in' -- set([carry (E2,{})]) -- []
+fabric='Fabric' ,src='E2' flow='icmp_out' -- set([carry (E1,{})]) -- []
+************
+2017-05-02 16:57:03,031 : Airnet_Runtime : [DEBUG] : Ryu client started successfully
+2017-05-02 16:57:03,031 : Airnet_Runtime : [INFO] : Compilation finished -- Duration == 5ms

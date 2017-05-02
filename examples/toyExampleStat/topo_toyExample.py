@@ -1,20 +1,16 @@
 #!/usr/bin/python
+from mininet.net import Mininet
+from mininet.node import Controller, Node, RemoteController, OVSSwitch
+from mininet.cli import CLI
+from mininet.log import setLogLevel, info
+from mininet.util import waitListening
 from functools import partial
-from mininet.node import OVSSwitch
 import pdb
 import sys
 
 """
        host_A -- s1 -- s2 -- s3 -- s4 -- host_B
 """
-
-from mininet.net import Mininet
-from mininet.node import Controller, Node, RemoteController
-from mininet.cli import CLI
-from mininet.log import setLogLevel, info
-
-from mininet.util import waitListening
-
 
 def emptyNet(controller_ip, controller_port):
 

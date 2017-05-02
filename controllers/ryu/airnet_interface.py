@@ -435,7 +435,7 @@ class RestApi_main(app_manager.RyuApp):
         lock.set()
     """
 
-    """
+
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):
         datapath = ev.msg.datapath
@@ -443,21 +443,24 @@ class RestApi_main(app_manager.RyuApp):
         parser = datapath.ofproto_parser
 
         # install a drop rule by default
-        match_drop = parser.OFPMatch()
-        req_drop = parser.OFPFlowMod(
-            datapath=datapath, match=match_drop, cookie=0,
-            command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
-            priority=0,flags=0, actions=[])
-        datapath.send_msg(req_drop)
+
+        match = parser.OFPMatch()
+        inst = [parser.OFPInstructionActions(ofproto.OFPIT_CLEAR_ACTIONS,
+                                             [])]
+        req = parser.OFPFlowMod(
+            datapath=datapath, match=match,command=ofproto.OFPFC_ADD,
+            priority=0, instructions=inst)
+        datapath.send_msg(req)
 
         # install a rule for arp flows
-        match_arp = parser.OFPMatch(dl_type=0x0806)
+        match = parser.OFPMatch(eth_type=0x0806)
         actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
-        req_arp = parser.OFPFlowMod(
-            datapath=datapath, match=match_arp, cookie=0,
-            command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
-            priority=1,flags=0, actions=actions)
-        datapath.send_msg(req_arp)
+        inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,
+                                             actions)]
+        req = parser.OFPFlowMod(
+            datapath=datapath, match=match, command=ofproto.OFPFC_ADD,
+            priority=1,instructions=inst)
+        datapath.send_msg(req)
     """
 
     # OF13
@@ -469,7 +472,7 @@ class RestApi_main(app_manager.RyuApp):
         parser = datapath.ofproto_parser
 
         # install a rule for arp flows
-        """
+
         match = parser.OFPMatch(eth_type=0x0806)
         actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER)]
 
@@ -481,4 +484,4 @@ class RestApi_main(app_manager.RyuApp):
             priority=1,flags=0, instructions=inst)
 
         datapath.send_msg(req)
-        """
+    """

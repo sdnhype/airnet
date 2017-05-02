@@ -85,3 +85,25 @@
 
              wait for accept policy to apply(~= 20s)
              mininet> host_B ping -c1 host_A --> OK (host_A can again use the network)
+
+
+----- III- checkDataCap
+
+            ~/airnet $ ./launch_airnet_ryu.sh checkDataCap.checkDataCap checkDataCap.checkDataCap_mapping
+
+            ~/airnet/controllers/ryu $ ryu-manager --observe-links airnet_interface.py
+
+            ~/topo$ sudo python topo_toyExample.py 192.168.56.1 6633
+
+                     # tests
+                          statictics data are collected every 60 seconds
+                          if a host downloads more than 1000 bytes in 60s, its communications are blocked for 60s
+
+                          mininet> h3 ping -c1 -s 1024 h1 --> OK
+                          wait for reject policy to apply(max 59s)
+
+                          mininet> h3 ping -c1 h2 --> OK
+                          mininet> h3 ping -c1 h1 --> NOT OK (h1 coms are blocked)
+
+                          wait for accept policy to apply(~= 60s)
+                          mininet> h3 ping -c1 h1 --> OK (h1 can again use the network)
