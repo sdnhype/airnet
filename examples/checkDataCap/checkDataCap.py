@@ -12,7 +12,7 @@ hosts_data_amount = {}
 hosts_permission = {}
 
 #Network functions declaration
-@DynamicControlFct(data="stat", every=20.0, limit=None)
+@DynamicControlFct(data="stat", every=60.0, limit=None)
 def checkDataCap(stat, id):
     """
         every host can download at most 1000 bytes per 60 seconds

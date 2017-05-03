@@ -43,12 +43,12 @@ class PacketParser(object):
     dp: datapath du switch par lequel doit passer le packet
     packet: un dictionnaire contenant les entetes du packet sous cette forme
     {"port":..,"output":..,"id_packet":..,"dpid":..,"packet": {"ipv4":{.....},"tcp":{....},"icmp":{...},
-                                                                "udp":{.....},"dl_src":...,"dl_dst":...}}
+                                                                "udp":{.....},"eth_src":...,"eth_dst":...}}
     msg: donnees Openflow du packet
     """
     def send_packet(self,dp,packet,msg):
 
-        in_port = msg.in_port
+        in_port = msg.match['in_port']
         actions = self.build_actions(dp,packet)
         data = None
         if msg.buffer_id == dp.ofproto.OFP_NO_BUFFER:
@@ -63,7 +63,7 @@ class PacketParser(object):
     dp: datapath du switch par lequel doit passer le packet
     packet: un dictionnaire contenant les entetes du packet sous cette forme
     {"port":..,"output":..,"id_packet":..,"dpid":..,"packet": {"ipv4":{.....},"tcp":{....},"icmp":{...},
-                                                                "udp":{.....},"dl_src":...,"dl_dst":...}}
+                                                                "udp":{.....},"eth_src":...,"eth_dst":...}}
     """
     def build_actions(self,dp,packet):
 
@@ -72,22 +72,23 @@ class PacketParser(object):
         actions.append(dp.ofproto_parser.OFPActionOutput(out_port))
         protos = packet.get('packet')
         protos = ast.literal_eval(str(protos))
-        if 'dl_src' in protos:
-            actions.append(dp.ofproto_parser.OFPActionSetDlSrc(protos.get('dl_src')))
-        if 'dl_dst' in protos:
-            actions.append(dp.ofproto_parser.OFPActionSetDlDst(protos.get('dl_dst')))
+        if 'eth_src' in protos:
+            actions.append(dp.ofproto_parser.OFPActionSetField(eth_src=protos.get('eth_src')))
+        if 'eth_dst' in protos:
+            actions.append(dp.ofproto_parser.OFPActionSetField(eth_dst=protos.get('eth_dst')))
         if 'ipv4' in protos:
             ip = protos.get('ipv4')
-            actions.append(dp.ofproto_parser.OFPActionSetNwSrc(ip.get('src')))
-            actions.append(dp.ofproto_parser.OFPActionSetNwDst(ip.get('dst')))
-        tp = None
+            actions.append(dp.ofproto_parser.OFPActionSetField(ipv4_src=ip.get('src')))
+            actions.append(dp.ofproto_parser.OFPActionSetField(ipv4_dst=ip.get('dst')))
         if 'tcp' in protos:
             tp = protos.get('tcp')
+            actions.append(dp.ofproto_parser.OFPActionSetField(tcp_src=tp.get('src_port')))
+            actions.append(dp.ofproto_parser.OFPActionSeField(tcp_dst=tp.get('dst_port')))
         elif 'udp' in protos:
             tp = protos.get('udp')
-        if tp is not None:
-            actions.append(dp.ofproto_parser.OFPActionSetTpSrc(tp.get('src_port')))
-            actions.append(dp.ofproto_parser.OFPActionSetTpDst(tp.get('dst_port')))
+            actions.append(dp.ofproto_parser.OFPActionSetField(udp_src=tp.get('src_port')))
+            actions.append(dp.ofproto_parser.OFPActionSeField(udp_dst=tp.get('dst_port')))
+
         return actions
 
 
@@ -131,7 +132,7 @@ class PacketParser(object):
 
     """
     retourne un dictionnaire de la forme
-    {"ipv4":{.....},"tcp":{....},"icmp":{...},"udp":{.....},"dl_src":...,"dl_dst":...}
+    {"ipv4":{.....},"tcp":{....},"icmp":{...},"udp":{.....},"eth_src":...,"eth_dst":...}
     pour chaque protocole present dans le paquet on recupere la source et la destination
     packet: est un packet ryu recu avec Packet IN
     """
@@ -165,6 +166,6 @@ class PacketParser(object):
             retour['udp'] = d_ud
 
         eth = packet.get_protocol(ethernet.ethernet)
-        retour['dl_src'] = eth.src
-        retour['dl_dst'] = eth.dst
+        retour['eth_src'] = eth.src
+        retour['eth_dst'] = eth.dst
         return retour

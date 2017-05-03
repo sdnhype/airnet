@@ -50,6 +50,7 @@ class Client(object):
 				raise Exception
 		except Exception:
 			print("Exception occured while sending request for {}".format(action))
+			print("data {}".format(str(data)))
 
 	def send_and_read_request(self,method,action,data=None):
 		try:

@@ -1,26 +1,23 @@
 #!/usr/bin/python
+from mininet.net import Mininet
+from mininet.node import Controller, Node, RemoteController, OVSSwitch
+from mininet.cli import CLI
+from mininet.log import setLogLevel, info
+from mininet.util import waitListening
+from functools import partial
 import pdb
 import sys
 
 """
        host_A -- s1 -- s2 -- s3 -- s4 -- host_B
-
-
 """
-
-from mininet.net import Mininet
-from mininet.node import Controller, Node, RemoteController
-from mininet.cli import CLI
-from mininet.log import setLogLevel, info
-
-from mininet.util import waitListening
-
 
 def emptyNet(controller_ip, controller_port):
 
 
 	# "Create an empty network and add nodes to it."
-	net = Mininet( controller=Controller )
+	switch = partial( OVSSwitch, protocols='OpenFlow13' )
+	net = Mininet( controller=Controller ,switch=switch)
 
 	info( '*** Adding controller\n' )
 	net.addController( 'c0', controller=RemoteController, ip=controller_ip, port=controller_port )
@@ -44,6 +41,9 @@ def emptyNet(controller_ip, controller_port):
 
 	info( '*** Starting network\n')
 	net.start()
+
+	print("*** Starting web service on host_B")
+        h_B.cmd( 'python -m SimpleHTTPServer 80 &' )
 
 	net.pingAll(timeout=1)
 

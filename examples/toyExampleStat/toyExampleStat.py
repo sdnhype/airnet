@@ -15,14 +15,14 @@ ALLOW ICMP HOST_B to HOSt_A
 
 
 """
-@DynamicControlFct(data="stat", every=5, limit="none")
+@DynamicControlFct(data="stat", every=10.0, limit="none")
 def saveStat( stat ):
-
     # Open log file
     logFile = open("statsLog.txt", 'a')
     time = datetime.datetime.now()
-    logFile.write('[%s] nw_src %s nw_dst %s | packet count %s \n' % (time, stat.nw_src, stat.nw_dst, stat.packet_count))
+    logFile.write('[%s] nw_dst %s | packet count %s byte count %s\n' % (time, stat.nw_dst, stat.packet_count, stat.byte_count))
     logFile.close()
+    # the following instructions are useless
     if stat.packet_count > 5:
         policy = (match(edge=E2, dst=HA, nw_proto=ICMP) >> tag("too_much_icmp_replies") >> forward(FAB))
         return policy
