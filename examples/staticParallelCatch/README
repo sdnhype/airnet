@@ -1,0 +1,78 @@
+# ==============================
+# examples/staticParallelCatch/
+# ==============================
+
+************************
+*** virtual topology ***
+************************
+
+----------
+staff_net-|---|
+----------    |
+              |---[users_IO]----|
+----------    |                 |
+guests_net-|--|                 |                                   |--- WS1
+----------                      |              |---[users_egress]---|
+                                |---[fabric]---|                    |--- WS2
+-----------                     |              |
+admins_net-|-----[admins_IO]----|              |---[admins_egress]--- DB
+-----------
+
+Policies:
+
+    admins_net <--> DB   FWD ALL FLOWS
+    staff_net  <--> WS1  FWD ALL FLOWS
+    guests_net <--> WS2  FWD ALL FLOWS
+
+************************
+*** mininet topology ***
+************************
+
+(12 switches)
+
+staff_net---|---[s1]---|
+                       |
+guests_net--|---[s2]-- |                                                      |--- WS1
+                       |          |----[s5]----[s6]----|          |---[s11]---|--- WS2
+                       |---[s4]---|                    |---[s7]---|
+                       |          |--[s8]--[s9]--[s10]-|          |---[s12]-------- DB
+admins_net---|---[s3]--|
+
+***************
+*** mapping ***
+***************
+
+Edges:
+  users_IO -> s1, s2
+  admins_net -> s3
+  users_egress -> s11
+  admins_egress -> s12
+Fabric:
+  fab -> s4 to s10
+
+
+***************************
+*** running and testing ***
+***************************
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh staticParallelCatch.catchComposition staticParallelCatch.catchComposition_mapping
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- Mininet
+
+$ sudo python catchComposition_topo.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> staff_net  ping -c1 WS1  --> OK
+mininet> guests_net ping -c1 WS2  --> OK
+mininet> admins_net ping -c1 DB   --> OK
+
+mininet> guests_net ping -c1 WS1  --> KO
+mininet> staff_net  ping -c1 DB   --> KO
