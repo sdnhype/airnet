@@ -55,6 +55,8 @@
 
 - TO RENAME in airnet_interface: class RestStatsApi and URI path '/stats'.
 
+- UPGRADE interface to OpenFlow 1.3
+
 -----------
 -- Other
 -----------
