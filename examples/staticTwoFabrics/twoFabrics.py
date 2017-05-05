@@ -9,9 +9,6 @@ USERS ------|      \------FAB2------E3-----SSH_GW
 HTTP from * to WS          OK (via FAB1)
 ICMP from USERS to SSH_GW  OK (via FAB2)
 
-
-PS: mapping: twoFabrics_mapping(topo_2_fabrics.py) or twoFabrics_mapping_bis(topo_2_fabrics_bis.py)
-
 """
 
 WEB_FLOWS = "Web_Flows"

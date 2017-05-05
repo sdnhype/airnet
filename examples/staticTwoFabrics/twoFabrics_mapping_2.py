@@ -1,8 +1,8 @@
 from mapping import Mapping
 from constants import *
+
 """
-mininet_topo: topo_2_fabrics_bis.py
-TODO
+mininet_topo: twoFabrics_mapping
 """
 
 class Mymapping(Mapping):

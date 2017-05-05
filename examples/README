@@ -16,39 +16,15 @@ based on the destination, network protocol, transport protocol or port number.
 
 Virtual topology: 4 edges (one-to-one mapping), 1 fabric
 
-******************************************************************************
-******************************************************************************
-
 ======================
 == Static 2 fabrics ==
 ======================
 
 # examples/staticTwoFabrics/
 
--- RYU
+This is an example of AirNet program that uses two fabrics.
 
-$ cd controllers/ryu/
-$ ryu-manager --observe-links airnet_interface.py
-
--- AirNet
-
-$ ./launch_airnet_ryu.sh staticTwoFabrics.twoFabrics staticTwoFabrics.twoFabrics_mapping
-
--- Mininet
-
-$ sudo python topo_2_fabrics.py 192.168.56.1 6633
-
--- Tests
-
-mininet> user ping -c1 ssh  ---> OK
-mininet> user ping -c1 ws   ---> KO
-mininet> inet ping -c1 ssh  ---> KO
-
-mininet> inet wget ws  ---> OK
-mininet> inet wget ssh ---> KO
-
-******************************************************************************
-******************************************************************************
+Virtual topology: 3 edges (one-to-two and one-to-one mapping), 2 fabrics
 
 =======================================
 == Static catch parallel composition ==
@@ -56,31 +32,10 @@ mininet> inet wget ssh ---> KO
 
 # examples/staticParallelCatch/
 
--- RYU
+Testing 2 catch() instructions in parallel, same destination in the carry().
+Ex.: ( catch() + catch() ) >> carry()
 
-$ cd controllers/ryu/
-$ ryu-manager --observe-links airnet_interface.py
-
--- AirNet
-
-$ ./launch_airnet_ryu.sh staticParallelCatch.catchComposition staticParallelCatch.catchComposition_mapping
-
--- Mininet
-
-$ sudo python catchComposition_topo.py 192.168.56.1 6633
-
--- Tests
-
-mininet> staff_net  ping -c1 WS1  OK
-mininet> guests_net ping -c1 WS2  OK
-mininet> admins_net ping -c1 DB   OK
-
-mininet> guests_net ping -c1 WS1  KO
-mininet> staff_net  ping -c1 DB   KO
-
-
-******************************************************************************
-******************************************************************************
+Virtual topology: 3 edges (one-to-two and one-to-one mapping), 2 fabrics
 
 ======================================
 == Static edge gw between 2 fabrics ==

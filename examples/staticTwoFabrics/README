@@ -1,0 +1,89 @@
+# ===========================
+# examples/staticTwoFabrics/
+# ===========================
+
+************************
+*** virtual topology ***
+************************
+
+INTERNET ---|      /------FAB1------E2-----WS
+            |----E1
+USERS ------|      \------FAB2------E3-----SSH_GW
+
+
+Policies:
+
+HTTP from * to WS          OK (via FAB1)
+ICMP from USERS to SSH_GW  OK (via FAB2)
+
+************************************
+*** mininet topology and mapping ***
+************************************
+
+Topo 1)
+                         +--------[s8] ---+   +---[s9]---WS
+INET1 ---[s1]---|       /                 |  /
+                |---[s3]---[s4]---[s5]---[s7]
+USER1 ---[s2]---|       \                 |  \
+                         +--------[s6] ---+   +---[s10]---SSH_GW
+
+Mapping 1)
+
+Edges:
+  E1 --> s1, s2; E2 --> s9; E3 --> s10
+Fabrics:
+  FAB2 = {"s3", "s4", "s5", "s6", "s7"}
+  FAB1 = {"s3", "s7", "s8"}
+
+**********
+
+Topo 2)
+
+                  [s5]-------[s6]
+                 /			 /	 \
+             [s4]	     [s8]	  [s11] --- WS
+NETA---[s1]----|        /	 \       /
+               |---[s3]      [s7]---
+CO1----[s2]----|        \
+              [s9] ---- [s10]------[s12] --- SSH_GW
+
+Mapping 2)
+
+Edges:
+  E1 --> s1, s2; E2 --> s11; E3 --> s12
+Fabrics:
+  FAB2 = {"s3", "s4", "s5", "s6", "s7", "s8"}
+  FAB1 = {"s3", "s7", "s8"}
+
+***************************
+*** running and testing ***
+***************************
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh staticTwoFabrics.twoFabrics staticTwoFabrics.twoFabrics_mapping_1
+or:
+$ ./launch_airnet_ryu.sh staticTwoFabrics.twoFabrics staticTwoFabrics.twoFabrics_mapping_2
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- Mininet
+
+$ sudo python twoFabrics_topo_1.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> user ping -c1 ssh  ---> OK
+mininet> user ping -c1 ws   ---> KO
+mininet> inet ping -c1 ssh  ---> KO
+
+mininet> user wget ws  ---> OK
+mininet> inet wget ws  ---> OK
+mininet> inet wget ssh ---> KO
+
+or for topo 2:
+
+mininet> C01 ping -c1 SSH_GW ---> OK
