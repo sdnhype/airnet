@@ -1,0 +1,125 @@
+###########################################################################
+This document describes policies virtual composition different steps
+----
+Usecases in examples/toyExample dir are used here as samples
+###########################################################################
+
+
+Architecture
+------------
+
+                          toyExample_bis.py              toyExample_mapping.py
+                                        \            /
+                                         \          /
+                                          ----------
+                                              |
+                                    main_server_ryu.py (at 0.0.0.0:9000)
+                                   /                  \
+                                  /                    \
+                            runtime.py            infrastructure.py
+
+
+  * toy_Example_bis.py
+
+      Control program file which contains high-level policies and virtual topology
+
+  * toyExample_mapping.py
+
+      Mapping_program file which associates virtual topology elements with physical equipments
+
+
+Virtual Topology
+----------------
+
+  Represents the physical architecture abstraction -- Edge/Fabric model is used here
+
+  -- Utilisation in toyExample_bis.py
+
+    def virtual_network()...
+
+
+Sequential and Parallel Compositions
+------------------------------------
+
+  * Sequential Composition (>>)
+
+      Policy_1 >> Policy_2 :: Policy_2 will be applied to the packets returned by Policy_1
+
+
+      -- Utilisation in toyExample_bis.py
+
+          policies (match, tag, forward...) are sequentially combined to create control rules
+
+          pol_1 = match (...) >> tag (....) >> [action1,action2]
+            --> matching packets are tagged before action1 and action2 are applied to them
+
+
+  * Parallel Composition (+)
+
+      Policy_1 + Policy_2 :: Execution of Policy_1 before or after Policy_2 doesn't matter
+
+      -- Utilisation in toyExample_bis.py
+
+          pol_1 = match (...) >> tag (....) >> [action1]
+          pol_2 = match (...) >> tag (....) >> [action2]
+
+          return pol_1 + pol_2
+
+
+Policies Compilation ---> runtime.py.__init__()
+-----------------------------------------------
+
+  Step 1 : Get virtual_topology and High-level policies
+
+      toyExample_bis.py main() contains a dictionnary
+
+        "virtual_topology" : language.VTOPOlogy Object
+        "edge_policies"    : language.ParallelComposition or language.SequentialComposition Object
+        "fabric_policies"  : language.ParallelComposition or language.SequentialComposition Object
+
+        edges_policies / fabric_policies <---> distribution / transport separation
+
+
+  Step 2 : Get mapping_program
+
+      toyExample_mapping.py contains a MyMapping class
+
+      My Mapping associate virtual_topology elements to physical_topology equipments
+
+          self.addHostMap(HA, "10.0.0.11")
+
+
+  Step 3 : Replace symbolic names by ipAddr in edge_policies
+
+    In edge_policies match fields, src or dst are imperatively host or network addrs
+
+    toyExample_mapping.py allows to perform the substitutions
+
+
+  Step 4 : Compile Edge_policies
+
+    Edge_Policies can be :
+
+      - SequentialComposition Object : Policies are separated by >> operator
+                                       (match (..) >> tag >> action1 )
+
+      - ParallelComposition Object   : Policies are separated by + operator
+                                       (pol_1 + pol_2)
+
+
+    * Edge_policies as a SequentialComposition object
+
+        PS: A -> B means B inherited from A
+
+        Policy -> EdgePolicy -> CompositionPolicy -> SequentialComposition
+
+        Compiling a SequentialComposition Object means compile each one of its policies
+
+          SequentialComposition object = Pol_1 >> Pol_2 >> Pol_3 >> ...
+
+          Each policy compilation generates a classifier which contains at least the default drop rule
+
+
+          Pol_1/Pol_2/Pol_3 type can be :
+
+            - match : pol_1.compile() generates 

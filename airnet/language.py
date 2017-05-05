@@ -217,7 +217,6 @@ class match(EdgePolicy):
         r2 = Rule(identity, identity, set())
         return Classifier([r1, r2])
 
-
     def intersec(self, pol):
         """
         return a new math which is the result of the intersection between self and pol
@@ -302,25 +301,6 @@ class match(EdgePolicy):
                         return False
             elif v != other.map[f]:
                 return False
-        return True
-
-    def checkFields(self,other):
-        """
-        used with covers to check if self fields cover other fields
-        """
-        for (k,v) in self.map.items():
-            if k=='edge':
-                if not other.map.has_key(k) or v != other.map[k]:
-                    return False
-            elif k=='nw_src':
-                if not other.map.has_key(k) or v != other.map[k]:
-                    return False
-            elif k=='nw_dst':
-                if not other.map.has_key(k) or v != other.map[k]:
-                    return False
-            elif k=='tp_dst':
-                if not other.map.has_key(k) or v != other.map[k]:
-                    return False
         return True
 
     # to be able to use match object as dictionary key
@@ -455,7 +435,7 @@ class tag(EdgePolicy):
         return (isinstance(other, tag)) and (self.label == other.label)
 
     def __repr__(self):
-        return "flowID==" + self.label
+        return "flow==" + self.label
 
 class across(EdgePolicy):
     """
@@ -743,11 +723,11 @@ class SequentialComposition(CompositionPolicy):
         else:
             return SequentialComposition(self.policies + [policy])
 
-
     def generateClassifier(self):
         # call compile() method for each CompositionPolicy and basic policy in self.policies
         # return a list of classifiers
         classifiers = map(lambda p: p.compile(), self.policies)
+        print (" \n\n".join([p.getLogRules() for p in classifiers]))
         # sequential composition of all classifiers
         return reduce(lambda acc, c: acc >> c, classifiers)
 
