@@ -31,41 +31,65 @@
     match(edge=X, nw_dst=D, tp_dst=HTTP) >> drop(...)
 
 
---------------------
--- RYU interface
---------------------
+-- Examples
+------------
 
-- PACKET_OUT with dynamic control functions (with the RYU controller)
-  (to inject the first packet back into the data plane)
+- statThreeEdges use case (for TouSIX)
+  WORK IN PROGRESS.
 
-- STATISTICS in dynamic control functions. OK in POX but what about RYU?
-  ---> WORK IN PROGRESS by Mayoro.
-
-- Default LLDP rule added by RYU in OF table: where does it come from? is it working?
-  ---> DONE:
-  ---> It comes from RYU's default behavior.
-  ---> to remove, call ryu-manager with the --noinstall-lldp-flow option
-
-- Add TABLE-MISS with a drop in RYU's airnet_interface module
-
-- Add ARP rule (forwarding to controller) in RYU's airnet_interface module, or elsewhere?
-  Messaoud added them only on border switches!
-
-- TO DELETE: controllers/ryu/ofctl_rest, controllers/ryu/appRyu
-
-- TO RENAME in airnet_interface: class RestStatsApi and URI path '/stats'.
-
-- UPGRADE interface to OpenFlow 1.3
-
------------
 -- Other
------------
-
-- Log module (from the virtual composition phase to the physical rules)
-  ---> DONE by Mayoro.
+---------
 
 - tools.py module: is it really useful? shouldn't it be somewhere else?
 
 - TO DELETE: stage_runtime.py, stage_arp_proxy.py ??
 
 - MOVE airnet/pox_client and airnet/ryu_client in folder airnet/backends/
+
+
+***********************
+*** DONE (by Mayoro)***
+***********************
+
+-- Examples
+-------------
+
+- Verifying and integrating checkDataCap use case.
+  DONE.
+
+-- RYU interface
+------------------
+
+- PACKET_OUT with dynamic control functions (with the RYU controller)
+  (to inject the first packet back into the data plane)
+  DONE.
+
+- STATISTICS in dynamic control functions. OK in POX but what about RYU?
+  DONE in RYU.
+
+- Default LLDP rule added by RYU in OF table: where does it come from? is it working?
+  DONE:
+  ---> It comes from RYU's default behavior.
+  ---> to remove, call ryu-manager with the --noinstall-lldp-flow option
+
+- Add TABLE-MISS with a drop in RYU's airnet_interface module
+  DONE.
+
+- Add ARP rule (forwarding to controller) in RYU's airnet_interface module, or elsewhere?
+  Messaoud added them only on border switches!
+  DONE. (on all switches for the moment)
+
+- TO DELETE: controllers/ryu/ofctl_rest, controllers/ryu/appRyu
+  DONE.
+
+- RENAME in airnet_interface: class RestStatsApi and URI path '/stats'.
+  DONE.
+
+- UPGRADE interface to OpenFlow 1.3
+  DONE.
+
+-- Other
+-----------
+
+- Log module (from the virtual composition phase to the physical rules)
+  DONE.
