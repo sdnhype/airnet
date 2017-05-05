@@ -1,0 +1,942 @@
+2017-05-05 14:35:44,121 : Airnet_Runtime : [DEBUG] : 
+ ----- s2 rules : 
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'nw_dst': '10.0.0.1'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'nw_dst': '10.0.0.2'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:01', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'nw_dst': '10.0.0.3'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'nw_dst': '10.0.0.4'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'nw_dst': '10.0.0.5'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:06', 'nw_dst': '10.0.0.6'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'nw_dst': '10.0.0.7'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'nw_dst': '10.0.0.8'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:07', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'dl_src': '00:00:00:00:00:09', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:08', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:01', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:02', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:03', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:04', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:05', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:06', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:07', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'dl_src': '00:00:00:00:00:08', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:09', 'nw_dst': '10.0.0.9'} -- identity -- set([forward to 3])
+2017-05-05 14:35:44,123 : Airnet_Runtime : [DEBUG] : 
+ ----- s11 rules : 
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:02'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:03'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:04'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:05'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:06'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:07'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:08'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:01', 'dl_src': '00:00:00:00:00:09'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:01'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:01'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:03'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:04'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:05'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:06'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:07'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:08'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02', 'dl_src': '00:00:00:00:00:09'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:02'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:01'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:02'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:04'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:05'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:06'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:07'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:08'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:03', 'dl_src': '00:00:00:00:00:09'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:03'} -- identity -- set([forward to 3])
+match {'nw_dst': '10.0.0.4'} -- flowID==for_D -- set([forward to 4])
+match {'nw_dst': '10.0.0.5'} -- flowID==for_E -- set([forward to 4])
+match {'nw_dst': '10.0.0.6'} -- flowID==for_F -- set([forward to 4])
+match {'nw_dst': '10.0.0.7'} -- flowID==for_G -- set([forward to 4])
+match {'nw_dst': '10.0.0.8'} -- flowID==for_H -- set([forward to 4])
+match {'nw_dst': '10.0.0.9'} -- flowID==for_I -- set([forward to 4])
+2017-05-05 14:35:44,124 : Airnet_Runtime : [DEBUG] : 
+ ----- s22 rules : 
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:01'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:02'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:03'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:05'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:06'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:07'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:08'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04', 'dl_src': '00:00:00:00:00:09'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:04'} -- identity -- set([forward to 1])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:01'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:02'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:03'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:04'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:06'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:07'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:08'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:05', 'dl_src': '00:00:00:00:00:09'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:05'} -- identity -- set([forward to 2])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:01'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:02'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:03'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:04'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:05'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:07'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:08'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:06', 'dl_src': '00:00:00:00:00:09'} -- identity -- set([forward to 3])
+match {'dl_dst': '00:00:00:00:00:06'} -- identity -- set([forward to 3])
+match {'nw_dst': '10.0.0.1'} -- flowID==for_A -- set([forward to 4])
+match {'nw_dst': '10.0.0.2'} -- flowID==for_B -- set([forward to 4])
+match {'nw_dst': '10.0.0.3'} -- flowID==for_C -- set([forward to 4])
+match {'nw_dst': '10.0.0.7'} -- flowID==for_G -- set([forward to 4])
+match {'nw_dst': '10.0.0.8'} -- flowID==for_H -- set([forward to 4])
+match {'nw_dst': '10.0.0.9'} -- flowID==for_I -- set([forward to 4])
+2017-05-05 14:35:46,738 : Airnet_Runtime : [INFO] : 
+# Proactive rules installed == 828
+2017-05-05 14:35:46,739 : Airnet_Runtime : [INFO] : Proactive core policies enforcement finished -- Duration == 3979
+2017-05-05 14:37:12,641 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:12,642 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:12,643 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.1'}, 's2')]
+2017-05-05 14:37:12,644 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:12,644 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:12,645 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.1'}, 's3')]
+2017-05-05 14:37:12,645 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:12,645 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:12,646 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.2'}, 's2')]
+2017-05-05 14:37:12,647 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:12,647 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:12,647 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.2'}, 's3')]
+2017-05-05 14:37:12,648 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:12,648 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:12,649 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.3'}, 's2')]
+2017-05-05 14:37:12,650 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:12,650 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:12,650 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.3'}, 's3')]
+2017-05-05 14:37:12,651 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:12,651 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:12,651 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:12,651 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:12,651 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:12,652 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.4'}, 's3')]
+2017-05-05 14:37:12,652 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:12,652 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:12,653 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:12,653 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:12,653 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:12,653 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.5'}, 's3')]
+2017-05-05 14:37:12,654 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:12,654 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:12,654 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:12,654 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:12,654 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:12,656 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.6'}, 's3')]
+2017-05-05 14:37:12,656 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:12,656 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:12,657 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:12,657 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:12,657 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:12,657 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.7'}, 's2')]
+2017-05-05 14:37:12,658 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_H' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:12,658 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:12,658 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:12,658 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:12,658 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:12,659 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.7'}, 's2')]
+2017-05-05 14:37:12,659 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_I' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:12,659 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:12,660 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:12,660 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:12,660 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:12,660 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.7'}, 's2')]
+2017-05-05 14:37:13,760 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-05-05 14:37:14,831 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:14,832 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:14,832 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.1'}, 's2')]
+2017-05-05 14:37:14,833 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:14,833 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:14,834 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.1'}, 's3')]
+2017-05-05 14:37:14,834 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:14,834 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:14,835 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.2'}, 's2')]
+2017-05-05 14:37:14,835 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:14,835 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:14,836 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.2'}, 's3')]
+2017-05-05 14:37:14,837 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:14,837 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:14,838 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.3'}, 's2')]
+2017-05-05 14:37:14,838 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:14,838 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:14,839 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.3'}, 's3')]
+2017-05-05 14:37:14,840 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:14,840 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:14,840 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:14,840 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:14,841 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:14,841 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.4'}, 's3')]
+2017-05-05 14:37:14,842 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:14,842 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:14,842 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:14,842 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:14,842 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:14,842 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.5'}, 's3')]
+2017-05-05 14:37:14,843 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:14,843 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:14,843 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:14,844 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:14,844 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:14,844 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.6'}, 's3')]
+2017-05-05 14:37:14,845 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:14,845 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:14,845 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:14,846 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:14,846 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:14,847 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.7'}, 's2')]
+2017-05-05 14:37:14,847 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_H' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:14,848 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:14,848 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:14,848 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:14,848 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:14,849 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.7'}, 's2')]
+2017-05-05 14:37:14,850 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_I' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:14,850 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:14,850 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:14,851 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:14,851 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:14,852 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.7'}, 's2')]
+2017-05-05 14:37:15,258 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-05-05 14:37:16,138 : Airnet_Runtime : [INFO] : Rules modified == 216
+2017-05-05 14:37:16,138 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-05-05 14:37:16,715 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:16,715 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:16,715 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:16,716 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:16,716 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:16,716 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.1'}, 's3')]
+2017-05-05 14:37:16,717 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:16,717 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:16,717 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:16,717 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:16,718 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:16,718 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.2'}, 's3')]
+2017-05-05 14:37:16,719 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:16,719 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:16,719 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:16,719 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:16,719 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:16,720 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.3'}, 's3')]
+2017-05-05 14:37:16,720 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:16,720 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:16,720 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:16,720 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:16,721 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:16,721 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.4'}, 's3')]
+2017-05-05 14:37:16,721 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:16,722 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:16,722 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:16,722 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:16,722 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:16,723 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.5'}, 's3')]
+2017-05-05 14:37:16,724 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:16,724 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:16,724 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:16,724 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:16,724 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:16,725 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.6'}, 's3')]
+2017-05-05 14:37:16,725 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:16,725 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:16,725 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:16,726 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:16,726 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:16,726 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:16,726 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_H' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:16,726 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:16,726 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:16,726 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:16,726 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:16,726 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:16,727 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_I' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:16,727 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:16,727 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:16,727 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:16,727 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:16,727 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:16,981 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-05-05 14:37:17,638 : Airnet_Runtime : [INFO] : Rules modified == 162
+2017-05-05 14:37:17,639 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-05-05 14:37:18,781 : Airnet_Runtime : [INFO] : Rules deleted == 567
+2017-05-05 14:37:18,782 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 1800 ms
+
+2017-05-05 14:37:18,862 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:18,862 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:18,862 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:18,862 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:18,863 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:18,863 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.1'}, 's3')]
+2017-05-05 14:37:18,864 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:18,864 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:18,864 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:18,864 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:18,864 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:18,865 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.2'}, 's3')]
+2017-05-05 14:37:18,865 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:18,865 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:18,865 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:18,865 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:18,866 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:18,866 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.3'}, 's3')]
+2017-05-05 14:37:18,866 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:18,866 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:18,867 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:18,867 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:18,867 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:18,868 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.4'}, 's3')]
+2017-05-05 14:37:18,868 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:18,868 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:18,868 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:18,869 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:18,869 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:18,869 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.5'}, 's3')]
+2017-05-05 14:37:18,870 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:18,870 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:18,870 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:18,870 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:18,870 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:18,871 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.6'}, 's3')]
+2017-05-05 14:37:18,871 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:18,871 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:18,871 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:18,872 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:18,872 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:18,872 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:18,872 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_H' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:18,872 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:18,872 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:18,872 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:18,872 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:18,872 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:18,873 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_I' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:18,873 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:18,873 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:18,873 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:18,873 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:18,873 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:18,928 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-05-05 14:37:18,929 : Airnet_Runtime : [INFO] : Rules modified == 0
+2017-05-05 14:37:18,929 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-05-05 14:37:19,249 : Airnet_Runtime : [INFO] : Rules deleted == 162
+2017-05-05 14:37:19,249 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 321 ms
+
+2017-05-05 14:37:19,316 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,316 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,316 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,316 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,317 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,317 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.1'}, 's3')]
+2017-05-05 14:37:19,318 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,318 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,318 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,318 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,318 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,319 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.2'}, 's3')]
+2017-05-05 14:37:19,319 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,319 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,319 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,320 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,320 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,320 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.3'}, 's3')]
+2017-05-05 14:37:19,321 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,321 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,321 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,321 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,321 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,322 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.4'}, 's3')]
+2017-05-05 14:37:19,322 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,322 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,322 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,323 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,323 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,323 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.5'}, 's3')]
+2017-05-05 14:37:19,324 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,324 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,324 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,324 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,324 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,325 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.6'}, 's3')]
+2017-05-05 14:37:19,325 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,325 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,325 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,325 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,326 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,326 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,326 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_H' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,326 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,326 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,326 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,326 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,326 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,327 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_I' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,327 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,327 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,327 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,327 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,328 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,385 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-05-05 14:37:19,385 : Airnet_Runtime : [INFO] : Rules modified == 0
+2017-05-05 14:37:19,386 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-05-05 14:37:19,386 : Airnet_Runtime : [INFO] : Rules deleted == 0
+2017-05-05 14:37:19,386 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 0 ms
+
+2017-05-05 14:37:19,445 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,445 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,446 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,446 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,446 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,447 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.1'}, 's3')]
+2017-05-05 14:37:19,448 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,448 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,448 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,448 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,449 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,449 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.2'}, 's3')]
+2017-05-05 14:37:19,450 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,450 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,451 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,451 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,451 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,452 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.3'}, 's3')]
+2017-05-05 14:37:19,453 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,453 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,453 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,453 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,454 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,454 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.4'}, 's3')]
+2017-05-05 14:37:19,455 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,456 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,456 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,456 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,456 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,457 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.5'}, 's3')]
+2017-05-05 14:37:19,458 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,458 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,458 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,459 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,459 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,460 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.6'}, 's3')]
+2017-05-05 14:37:19,460 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,461 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,461 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,461 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,461 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,462 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,462 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_H' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,462 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,462 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,463 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,463 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,463 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,464 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_I' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,464 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,464 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,464 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,464 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,465 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,520 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-05-05 14:37:19,521 : Airnet_Runtime : [INFO] : Rules modified == 0
+2017-05-05 14:37:19,521 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-05-05 14:37:19,521 : Airnet_Runtime : [INFO] : Rules deleted == 0
+2017-05-05 14:37:19,521 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 1 ms
+
+2017-05-05 14:37:19,582 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,582 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,582 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,583 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,583 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,583 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.1'}, 's3')]
+2017-05-05 14:37:19,584 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,584 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,584 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,584 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,584 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,585 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.2'}, 's3')]
+2017-05-05 14:37:19,585 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,585 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,585 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,586 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,586 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,587 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.3'}, 's3')]
+2017-05-05 14:37:19,588 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,588 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,588 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,588 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,589 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,589 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.4'}, 's3')]
+2017-05-05 14:37:19,590 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,590 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,591 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,591 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,591 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,592 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.5'}, 's3')]
+2017-05-05 14:37:19,593 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,593 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,593 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,594 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,594 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,594 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.6'}, 's3')]
+2017-05-05 14:37:19,595 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,595 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,596 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,596 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,596 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,596 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,597 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_H' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,597 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,597 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,598 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,598 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,598 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,598 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_I' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,599 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,599 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,599 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,599 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,600 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,659 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-05-05 14:37:19,659 : Airnet_Runtime : [INFO] : Rules modified == 0
+2017-05-05 14:37:19,659 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-05-05 14:37:19,660 : Airnet_Runtime : [INFO] : Rules deleted == 0
+2017-05-05 14:37:19,660 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 1 ms
+
+2017-05-05 14:37:19,719 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,719 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,720 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,720 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_A' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,720 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,720 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.1'}, 's3')]
+2017-05-05 14:37:19,721 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,721 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,721 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,721 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_B' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,721 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,722 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.2'}, 's3')]
+2017-05-05 14:37:19,722 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,723 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,723 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,723 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_C' -- set([carry (E1,{})]) -- []
+2017-05-05 14:37:19,723 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s11
+2017-05-05 14:37:19,723 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.3'}, 's3')]
+2017-05-05 14:37:19,724 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,724 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,724 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,724 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_D' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,724 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,725 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.4'}, 's3')]
+2017-05-05 14:37:19,725 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,725 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,725 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,726 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_E' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,726 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,726 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.5'}, 's3')]
+2017-05-05 14:37:19,727 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,727 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,727 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,727 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E3' flow='for_F' -- set([carry (E2,{})]) -- []
+2017-05-05 14:37:19,727 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s22
+2017-05-05 14:37:19,728 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : [(match {'nw_dst': '10.0.0.6'}, 's3')]
+2017-05-05 14:37:19,728 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,728 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,728 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,728 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,728 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,729 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,729 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_H' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,729 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,729 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,729 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,729 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,729 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,729 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E1' flow='for_I' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,730 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,730 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,730 : Airnet_Runtime : [DEBUG] : 
+-- Fabric Rule : fabric='FAB' ,src='E2' flow='for_G' -- set([carry (E3,{})]) -- []
+2017-05-05 14:37:19,730 : Airnet_Runtime : [DEBUG] : Egress Switch(es) Found : s33
+2017-05-05 14:37:19,730 : Airnet_Runtime : [DEBUG] : Matching_flow and src_switch : []
+2017-05-05 14:37:19,784 : Airnet_Runtime : [INFO] : 
+Differentiated rules list enforcement started --
+2017-05-05 14:37:19,784 : Airnet_Runtime : [INFO] : Rules modified == 0
+2017-05-05 14:37:19,785 : Airnet_Runtime : [INFO] : Rules installed == 0
+2017-05-05 14:37:19,785 : Airnet_Runtime : [INFO] : Rules deleted == 0
+2017-05-05 14:37:19,785 : Airnet_Runtime : [INFO] : Differentiated rules list enforcement finished -- Duration == 0 ms
+

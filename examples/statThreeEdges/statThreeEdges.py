@@ -70,13 +70,15 @@ def virtual_network():
 # ============================================================================
 
 # Generic distribution policy
+"""
 def distribute(VID, destination):
     p = match(edge=VID, dst=destination) >> (saveStat() + forward(destination))
     return p
 """
 # Generic MAC distribution policy
 def distribute_mac(VID, destination):
-    p = match(edge=VID, dl_dst=(globals()["MAC_"+destination])) >> (forward(destination) + saveStat())
+    #p = match(edge=VID, dl_dst=(globals()["MAC_"+destination])) >> (forward(destination) + saveStat())
+    p = match(edge=VID, dl_dst=(globals()["MAC_"+destination])) >> forward(destination)
     return p
 """
 # Distribute traffic to the different members connected to the 3 edges
@@ -92,7 +94,7 @@ def distribute_mac_edges():
     distribute_e2 = distribute_mac(E2, D) + distribute_mac(E2, E) + distribute_mac(E2, F)
     distribute_e3 = distribute_mac(E3, G) + distribute_mac(E3, H) + distribute_mac(E3, I)
     return distribute_e1 + distribute_e2 + distribute_e3
-"""
+
 
 # Generic tagging policy
 def set_tag(VID, destination, label):
@@ -139,29 +141,36 @@ def fabric_policies():
 # DYNAMIC CONTROL POLICIES
 # ============================================================================
 
-@DynamicControlFct(data="stat", every=10, split=["nw_src"])
+@DynamicControlFct(data="stat", every=30.0)
 def saveStat( stat ):
     # Open log file
-    logFile = open("statsLog_ThreeEdges.txt", 'a')
+    logFile = open("log/statsLog_ThreeEdges.txt", 'a')
     time = datetime.datetime.now()
     #logFile.write('[%s] dl_dst  %s | packet count %s | byte count %s\n' % (time, stat.dl_dst, stat.packet_count,stat.byte_count))
-    logFile.write('[%s] nw_src %s nw_dst  %s | packet count %s | byte count %s\n' % (time, stat.nw_src,stat.nw_dst, stat.packet_count,stat.byte_count))
+    logFile.write('[%s] dl_src %s dl_dst  %s | packet count %s | byte count %s\n' % (time, stat.dl_src,stat.dl_dst, stat.packet_count,stat.byte_count))
     logFile.close()
     return identity
 
-"""
+
 # Generic statistics policy
 def edgeStatForX(oneEdge, oneDestination):
-    #p = match(edge=oneEdge, dst=oneDestination) >> (saveStat() + forward(oneDestination))
-    p = match(edge=oneEdge, dl_dst=(globals()["MAC_"+oneDestination])) >> saveStat()
-    return p
+    p = []
+    for x in "ABCDEFGHI":
+        if x == oneDestination.upper():
+            continue
+        p.append(match(edge=oneEdge, dl_dst=(globals()["MAC_"+oneDestination]), dl_src=(globals()["MAC_"+x])) >> saveStat())
+
+    p1,p2,p3,p4,p5,p6,p7,p8 = p
+
+    return p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8
 
 def statPolicy():
+    #s1 = edgeStatForX(E1, A)
     s1 = edgeStatForX(E1, A) + edgeStatForX(E1, B) + edgeStatForX(E1, C)
     s2 = edgeStatForX(E2, D) + edgeStatForX(E2, E) + edgeStatForX(E2, F)
     s3 = edgeStatForX(E3, G) + edgeStatForX(E3, H) + edgeStatForX(E3, I)
     return s1 + s2 + s3
-"""
+
 
 # ============================================================================
 # Main function
@@ -169,8 +178,8 @@ def statPolicy():
 def main():
 
     topology = virtual_network()
-    all_edges = distribute_edges() + tag_edges()
-    #all_edges = distribute_mac_edges() + tag_edges()
+    #all_edges = distribute_edges() + tag_edges()
+    all_edges = distribute_mac_edges() + tag_edges() + statPolicy()
     all_fabric = fabric_policies()
 
     return {"virtual_topology": topology,

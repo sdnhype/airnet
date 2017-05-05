@@ -36,3 +36,6 @@ FOR_F = "for_F"
 FOR_G = "for_G"
 FOR_H = "for_H"
 FOR_I = "for_I"
+
+# Protos
+IPV4=0x800
