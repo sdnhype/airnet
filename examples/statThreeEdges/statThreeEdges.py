@@ -98,7 +98,8 @@ def distribute_mac_edges():
 
 # Generic tagging policy
 def set_tag(VID, destination, label):
-    p = match(edge=VID, dst=destination) >> tag(label) >> forward(FAB)
+    # p = match(edge=VID, dst=destination) >> tag(label) >> forward(FAB)
+    p = match(edge=VID, dl_dst=(globals()["MAC_"+destination])) >> tag(label) >> forward(FAB)
     return p
 
 # Tag traffic according to final destination
