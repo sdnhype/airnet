@@ -88,57 +88,45 @@ Control Program Content
 Runtime Start --> Policies compilation
 --------------------------------------
 
-  Step 1 : Get virtual_topology and High-level policies
-
-      toyExample_bis.py main() contains a dictionnary
+  Step 1 : Get control_program dictionary
 
         "virtual_topology" : language.VTOPOlogy Object
         "edge_policies"    : language.ParallelComposition or language.SequentialComposition Object
         "fabric_policies"  : language.ParallelComposition or language.SequentialComposition Object
 
-        edges_policies / fabric_policies <---> distribution / transport separation
 
+  Step 2 : Compile Edge_policies
 
-  Step 2 : Get mapping_program
-
-      toyExample_mapping.py contains a MyMapping class
-
-      My Mapping associate virtual_topology elements to physical_topology equipments
-
-          self.addHostMap(HA, "10.0.0.11")
-
-
-  Step 3 : Replace symbolic names by ipAddr in edge_policies
-
-    In edge_policies match fields, src or dst are imperatively host or network addrs
-
-    toyExample_mapping.py allows to perform the substitutions
-
-
-  Step 4 : Compile Edge_policies
-
-    Edge_Policies can be :
-
-      - SequentialComposition Object : Policies are separated by >> operator
-                                       (match (..) >> tag >> action1 )
-
-      - ParallelComposition Object   : Policies are separated by + operator
-                                       (pol_1 + pol_2)
-
-d
     * Edge_policies as a SequentialComposition object
 
-        PS: A -> B means B inherited from A
+        SequentialComposition inherits CompositionPolicy which inherits EdgePolicy which inherits Policy
 
-        Policy -> EdgePolicy -> CompositionPolicy -> SequentialComposition
+        SequentialComposition Object format --> pol_1 >> pol_2 >> pol_3 >>...
 
-        Compiling a SequentialComposition Object means compile each one of its policies
+        Compile a sequentialComposition object means compile each one of its policies
 
-          SequentialComposition object = Pol_1 >> Pol_2 >> Pol_3 >> ...
+        Compile a policy return a classifier in which at least one rule is stored
 
-          Each policy compilation generates a classifier which contains at least the default drop rule
+        E.G.: e = match(....) >> tag(...) >> [action1]
 
+          e.compile() --> match.compile() >> tag.compile() >> action.compile()
 
-          Pol_1/Pol_2/Pol_3 type can be :
+            match.compile() --> returns a classifier with at least two rules
+                                r1 = Rule(match(...),identity,set[identity])
+                                r2 = Rule(identity,identity,set[]) # drop rule
 
-            - match : pol_1.compile() generates
+            tag.compile()   --> returns a classifier with one rule
+                                r1 = Rule(identity,flow=="...",set[identity])
+
+            action.compile()--> returns a classifier with one rule at least
+                                r1 = Rule(identity,identity,set[action1])
+
+            The compilation generates 3 classifiers which will be combined
+            The rshift operator (>>) is used here and redefined in Classifier class
+
+            The rshift operation applied here generates a classifier with two full rules
+
+            r1 = Rule(match(...),flow=="...",set[action1])
+            r2 = identity, identity, set[]
+
+    * Edge_policies as a ParallelComposition object
