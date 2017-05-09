@@ -106,7 +106,7 @@ Policies Compilation ---> runtime.py.__init__()
       - ParallelComposition Object   : Policies are separated by + operator
                                        (pol_1 + pol_2)
 
-
+d
     * Edge_policies as a SequentialComposition object
 
         PS: A -> B means B inherited from A
@@ -122,4 +122,4 @@ Policies Compilation ---> runtime.py.__init__()
 
           Pol_1/Pol_2/Pol_3 type can be :
 
-            - match : pol_1.compile() generates 
+            - match : pol_1.compile() generates

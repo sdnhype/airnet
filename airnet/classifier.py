@@ -99,10 +99,31 @@ class Classifier(object):
                         label = r2.label
                     else:
                         label = r1.label
-                #####
+
+                actions = set()
+                # trying here to handle drop and forward intersection bug
+                # r1 and r2 have an intersection (different from identity)
+                if r1.match is not identity and r2.match is not identity:
+                    # r2 is more specific than r1
+                    # so if r1 action is drop the intersection takes
+                    # the drop action aside from r2 actions
+                    if r1.match.covers(r2.match):
+                        if len(r1.actions) != 0:
+                            for a1 in r1.actions:
+                                actions.add(a1)
+                        return Rule(intersection,label,actions)
+
+                    elif r2.match.covers(r1.match):
+                        if len(r2.actions) != 0:
+                            for a2 in r2.actions:
+                                actions.add(a2)
+                        return Rule(intersection,label,actions)
+                    else:
+                        if len(r1.actions)==0 or len(r2.actions)==0:
+                            return Rule(intersection,label,actions)
+
                 # if they have the same forward action, we use only one
                 # we assume that they have the same forward destination
-                actions = set()
                 contain_forward = False
                 for a1 in r1.actions:
                     if isinstance(a1, forward):
@@ -276,7 +297,6 @@ class Classifier(object):
             # si aucune regle ne couvre "r", je place "r" dans la cls optimise
                 opt_c.rules.append(r)
         return opt_c
-
 
 class FabricClassifier(object):
     """

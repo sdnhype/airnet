@@ -727,7 +727,6 @@ class SequentialComposition(CompositionPolicy):
         # call compile() method for each CompositionPolicy and basic policy in self.policies
         # return a list of classifiers
         classifiers = map(lambda p: p.compile(), self.policies)
-        print (" \n\n".join([p.getLogRules() for p in classifiers]))
         # sequential composition of all classifiers
         return reduce(lambda acc, c: acc >> c, classifiers)
 
