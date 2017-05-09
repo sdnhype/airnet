@@ -1,73 +1,92 @@
-###########################################################################
-This document describes policies virtual composition different steps
-----
-Usecases in examples/toyExample dir are used here as samples
-###########################################################################
+################################################################################
+
+The following content describes the virtual composition different steps
+
+Indeed, during the runtime module start, sequential and parallel compositions
+are used to combine high-level policies in order to create control rules
+which will be stored in classifiers
+
+################################################################################
 
 
 Architecture
 ------------
 
-                          toyExample_bis.py              toyExample_mapping.py
+                         control_program              mapping_program
                                         \            /
                                          \          /
                                           ----------
                                               |
-                                    main_server_ryu.py (at 0.0.0.0:9000)
-                                   /                  \
-                                  /                    \
-                            runtime.py            infrastructure.py
+                                         main_program
+                                              |
+                                          ----------
+                                        /           \
+                                       /             \
+                         runtime_module               infra_module
 
 
-  * toy_Example_bis.py
 
-      Control program file which contains high-level policies and virtual topology
+Files
+-----
 
-  * toyExample_mapping.py
+  + control_program --> contains high-level policies and virtual topology
 
-      Mapping_program file which associates virtual topology elements with physical equipments
-
-
-Virtual Topology
-----------------
-
-  Represents the physical architecture abstraction -- Edge/Fabric model is used here
-
-  -- Utilisation in toyExample_bis.py
-
-    def virtual_network()...
+  * mapping_program --> associates virtual topology elements with physical equipments
 
 
-Sequential and Parallel Compositions
-------------------------------------
+
+Policies Composition
+--------------------
 
   * Sequential Composition (>>)
-
-      Policy_1 >> Policy_2 :: Policy_2 will be applied to the packets returned by Policy_1
-
-
-      -- Utilisation in toyExample_bis.py
-
-          policies (match, tag, forward...) are sequentially combined to create control rules
-
-          pol_1 = match (...) >> tag (....) >> [action1,action2]
-            --> matching packets are tagged before action1 and action2 are applied to them
+    ---------------------------
+      "pol_1 >> pol_2" --> pol_2 will be applied to the packets returned by pol_1
 
 
   * Parallel Composition (+)
-
-      Policy_1 + Policy_2 :: Execution of Policy_1 before or after Policy_2 doesn't matter
-
-      -- Utilisation in toyExample_bis.py
-
-          pol_1 = match (...) >> tag (....) >> [action1]
-          pol_2 = match (...) >> tag (....) >> [action2]
-
-          return pol_1 + pol_2
+    ------------------------
+      "pol_1 + pol_2"  --> execution order between pol_1 and pol_2 doesn't matter
 
 
-Policies Compilation ---> runtime.py.__init__()
------------------------------------------------
+Control Program Content
+-----------------------
+
+  The control program contents a dictionary with 3 keys ; virtual_topology, edge_policies, fabric_policies
+
+  virtual_topology the virtual topology which is mapped to the physical architecture in the mapping program
+  edge_policies and fabric_policies represents the distribution and transport high-level policies
+
+  + Virtual Topology
+    ----------------
+      virtual topology description is out the purpose of this document
+
+  + Edge Policies
+    -------------
+      describes the combineation of dristribution and access policies
+
+        sequential composition of match, tag and actions policies
+          --> e1 = match(flow1) >> tag(label1) >> [action1a,action1b]
+
+        parallel composition of rules
+          --> e1 + e2
+
+        mix of sequential and parallel composition
+          --> e = (match(flow1) + match(flow2)) >> tag(label) >> (action1 + action2)
+
+              match(flow1)+match(flow2) = intersection between flow1 and flow2
+              (match(flow1) + match(flow2)) >> tag(label) = sequentialComposition
+              (action1 + action2) = parallelComposition
+
+  + Fabric Policies
+    -------------
+      describes the transport Policies
+      The principles are the same as those described earlier in the Edge Policies section
+
+      Here, the distribution policies (match, tag) are replaced by transport policies (catch, carry)
+
+
+Runtime Start --> Policies compilation
+--------------------------------------
 
   Step 1 : Get virtual_topology and High-level policies
 

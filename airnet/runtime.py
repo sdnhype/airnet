@@ -649,7 +649,7 @@ class Runtime():
         logger.debug("\n\n *** Physical rules to push on switches")
         for edge in self.topology_graph.edges :
             if edge[1] == "switch":
-                logger.debug("\n ----- %s rules : \n%s" % (edge[0], "\n".join([str(j) for j in self.physical_switches_classifiers[edge[0]]])))
+                logger.debug("\n ----- %s rules : (%d)\n %s" % (edge[0], len(self.physical_switches_classifiers[edge[0]]),"\n".join([str(j) for j in self.physical_switches_classifiers[edge[0]]])))
 
         self.nexus.install_rules_on_dp(self.physical_switches_classifiers)
         logger.info("\n# Proactive rules installed == " + str(countOfMessages(self.physical_switches_classifiers)))
