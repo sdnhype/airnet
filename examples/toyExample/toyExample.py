@@ -49,25 +49,23 @@ def default_distribution_policy():
 def access_policies():
 
     e1 = match(edge=E1, dst=HB, nw_proto=ICMP) >> tag("icmp_in") >> forward(FAB)
-#    e2 = match(edge=E2, dst=HA, nw_proto=ICMP) >> tag("icmp_out") >> forward(FAB)
+    e2 = match(edge=E2, dst=HA, nw_proto=ICMP) >> tag("icmp_out") >> forward(FAB)
 
-#    return e1 + e2
-    return e1
+    return e1 + e2
 
 def transport_policy():
 
     f1 = catch(fabric=FAB, src=E1, flow="icmp_in") >> carry(dst=E2)
     f2 = catch(fabric=FAB, src=E2, flow="icmp_out") >> carry(dst=E1)
 
-    return f1 + f2
+    return f1
 # ===============
 # Main function
 # ===============
 def main():
 
     topology = virtual_network()
-    #in_network_functions = default_distribution_policy() + access_policies()
-    in_network_functions = access_policies()
+    in_network_functions = default_distribution_policy() + access_policies()
     transport_function = transport_policy()
 
     return {"virtual_topology": topology,

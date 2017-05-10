@@ -1,10 +1,8 @@
 ################################################################################
-
-The following content describes the virtual composition different steps
-
-Indeed, during the runtime module start, sequential and parallel compositions
-are used to combine high-level policies in order to create control rules
-which will be stored in classifiers
+The following content describes the virtual composition steps
+  Indeed, during the runtime module start, sequential and parallel
+    compositions are used to combine high-level policies in order to create
+      control rules which will be stored in classifiers
 
 ################################################################################
 
@@ -153,7 +151,7 @@ Runtime Start --> Policies compilation
 
         (e1 + e2) is a ParallelComposition object with e1 and e2 SequentialComposition objects
 
-        (e1 + e2).compile() --> (e1.compile() + e2.compile())*
+        (e1 + e2).compile() --> (e1.compile() + e2.compile())
 
           After e1.compile() we have in classifier C1 :
             r1a = Rule(match(F1),flow=="F1",set[action1])
@@ -188,3 +186,67 @@ Runtime Start --> Policies compilation
                   -- action1
                   -- action2
                   -- action1 + action2
+
+
+  Step 3 : Compile Fabric_policies
+
+    * Fabric_policies as a FabricSequentialComposition object
+
+        FabricSequentialComposition inherits FabricCompositionPolicy which inherits FabricPolicy
+        which inherits Policy
+
+        FabricSequentialComposition Object format --> pol_1 >> pol_2 >> pol_3 >>...
+
+        Compile a FabricsequentialComposition object means compile each one of its policies
+
+        E.G.: f = catch(....) >> carry(...) >> [via (...)]
+
+          e.compile() --> catch.compile() >> carry.compile() >> via.compile()
+
+            catch.compile() --> returns a classifier with one rule
+                                r1 = Rule(catch(...),{identity},list())
+
+            carry.compile() --> returns a classifier with one rule
+                                r1 = Rule(identity,{self},list[])
+
+            via.compile()   --> returns a classifier with one rule at least
+                                r1 = Rule(identity,{identity},[self])
+
+            The compilation generates 3 classifiers which will be combined through the >> operator
+            The FabricSequentialComposition operator (>>) used here is redefined in FabricClassifier
+            class (__rshift__)
+
+            The rshift operation applied in this example generates a fabric classifier with one transport rule
+
+            r1 = FabricRule(catch(...),carry('..':[..]),[via(...)])
+
+    * Fabric_policies as a FabricParallelComposition object
+
+      FabricParallelComposition inherits FabricCompositionPolicy which inherits FabricPolicy
+      which inherits Policy
+
+      FabricParallelComposition Object format --> pol_1 + pol_2 + pol_3 +...
+
+      Compile a parallelComposition means compile each one of its policies
+
+      E.G. : f1 = catch(X1) >> carry(L1) >> via(DM1)
+             f2 = catch(X2) >> carry(L2) >> []
+             return f1 + f2
+
+        (f1 + f2) is a FabricParallelComposition object with f1 and f2 FabricSequentialComposition objects
+
+        (f1 + f2).compile() --> (f1.compile() + f2.compile())
+
+          After f1.compile() we have in classifier C1 :
+            r1 = FabricRule(catch(X1),carry(L1),[via(DM1)])
+
+          After f2.compile() we have in classifier C2 :
+            r2 = FabricRule(catch(X2),carry(L2),[])
+
+          The FabricParallelComposition generates 2 classifiers which will be combined through the + operator
+          The FabricParallelComposition operator (+) used here is redefined in the FabricClassifier class (__add__)
+
+          The FabricParallelComposition of these C1 and C2 generates 2 rules:
+
+            r1 = FabricRule(catch(X1),carry(L1),[via(DM1)])
+            r2 = FabricRule(catch(X2),carry(L2),[])
