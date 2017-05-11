@@ -49,10 +49,10 @@ Policies Composition
 Control Program Content
 -----------------------
 
-  The control program contents a dictionary with 3 keys ; virtual_topology, edge_policies, fabric_policies
+  The control program contains a dictionary with 3 keys: virtual_topology, edge_policies, fabric_policies
 
-  virtual_topology the virtual topology which is mapped to the physical architecture in the mapping program
-  edge_policies and fabric_policies represents the distribution and transport high-level policies
+  virtual_topology is the virtual topology which is mapped to the physical architecture in the mapping program
+  edge_policies and fabric_policies represent edge and transport high-level policies
 
   + Virtual Topology
     ----------------
@@ -60,7 +60,7 @@ Control Program Content
 
   + Edge Policies
     -------------
-      describes the combineation of dristribution and access policies
+      describe the combination of distribution and access policies
 
         sequential composition of match, tag, actions (forward, modify...) policies
           --> e1 = match(flow1) >> tag(label1) >> [action1a,action1b]
@@ -77,7 +77,7 @@ Control Program Content
 
   + Fabric Policies
     -------------
-      describes the transport Policies
+      describe transport Policies
       The principles are the same as those described earlier in the Edge Policies section
 
       Here, the distribution policies (match, tag) are replaced by transport policies (catch, carry)
@@ -88,7 +88,7 @@ Runtime Start --> Policies compilation
 
   Step 1 : Get control_program dictionary
 
-        "virtual_topology" : language.VTOPOlogy Object
+        "virtual_topology" : language.VTopology Object
         "edge_policies"    : language.ParallelComposition or language.SequentialComposition Object
         "fabric_policies"  : language.ParallelComposition or language.SequentialComposition Object
 
@@ -110,21 +110,21 @@ Runtime Start --> Policies compilation
           e.compile() --> match.compile() >> tag.compile() >> action.compile()
 
             match.compile() --> returns a classifier with at least two rules
-                                r1 = Rule(match(...),identity,set[identity])
-                                r2 = Rule(identity,identity,set[]) # drop rule
+                                r1 = Rule(match(...), identity, set[identity])
+                                r2 = Rule(identity, identity, set[]) # drop rule
 
             tag.compile()   --> returns a classifier with one rule
-                                r1 = Rule(identity,flow=="...",set[identity])
+                                r1 = Rule(identity, flow=="...", set[identity])
 
             action.compile()--> returns a classifier with one rule at least
-                                r1 = Rule(identity,identity,set[action1])
+                                r1 = Rule(identity, identity, set[action1])
 
             The compilation generates 3 classifiers which will be combined through the >> operator
             The SequentialComposition operator (>>) used here is redefined in Classifier class (__rshift__)
 
             The rshift operation applied in this example generates a classifier with two full rules
 
-            r1 = Rule(match(...),flow=="...",set[action1])
+            r1 = Rule(match(...), flow=="...", set[action1])
             r2 = identity, identity, set[]
 
 
@@ -154,11 +154,11 @@ Runtime Start --> Policies compilation
         (e1 + e2).compile() --> (e1.compile() + e2.compile())
 
           After e1.compile() we have in classifier C1 :
-            r1a = Rule(match(F1),flow=="F1",set[action1])
+            r1a = Rule(match(F1), flow=="F1", set[action1])
             r1b = identity, identity, set[]
 
           After e2.compile() we have in classifier C2 :
-            r2a = Rule(match(F2),flow=="F2",set[action2])
+            r2a = Rule(match(F2), flow=="F2", set[action2])
             r2b = identity, identity, set[]
 
           The ParallelComposition generates 2 classifiers which will be combined through the + operator
@@ -168,15 +168,15 @@ Runtime Start --> Policies compilation
 
             -- 3 rules if there is no intersection between F1 and F2
 
-                r1 = Rule(match(F1),flow=="F1",set[action1])
-                r2 = Rule(match(F2),flow=="F2",set[action2])
+                r1 = Rule(match(F1), flow=="F1", set[action1])
+                r2 = Rule(match(F2), flow=="F2", set[action2])
                 r3 = identity, identity, set[]
 
             -- 4 rules if there is an intersection between F1 and F2
 
-                r0 = Rule(match(F'),flow=="F'",set[action'])
-                r1 = Rule(match(F1),flow=="F1",set[action1])
-                r2 = Rule(match(F2),flow=="F2",set[action2])
+                r0 = Rule(match(F'), flow=="F'", set[action'])
+                r1 = Rule(match(F1), flow=="F1", set[action1])
+                r2 = Rule(match(F2), flow=="F2", set[action2])
                 r3 = identity, identity, set[]
 
                 r0 is the rule for the intersection flow F' between F1 and F2
@@ -197,7 +197,7 @@ Runtime Start --> Policies compilation
 
         FabricSequentialComposition Object format --> pol_1 >> pol_2 >> pol_3 >>...
 
-        Compile a FabricsequentialComposition object means compile each one of its policies
+        Compile a FabricSequentialComposition object means compile each one of its policies
 
         E.G.: f = catch(....) >> carry(...) >> [via (...)]
 
@@ -218,7 +218,7 @@ Runtime Start --> Policies compilation
 
             The rshift operation applied in this example generates a fabric classifier with one transport rule
 
-            r1 = FabricRule(catch(...),carry('..':[..]),[via(...)])
+            r1 = FabricRule(catch(...), carry('..':[..]), [via(...)])
 
     * Fabric_policies as a FabricParallelComposition object
 
@@ -238,15 +238,15 @@ Runtime Start --> Policies compilation
         (f1 + f2).compile() --> (f1.compile() + f2.compile())
 
           After f1.compile() we have in classifier C1 :
-            r1 = FabricRule(catch(X1),carry(L1),[via(DM1)])
+            r1 = FabricRule(catch(X1), carry(L1), [via(DM1)])
 
           After f2.compile() we have in classifier C2 :
-            r2 = FabricRule(catch(X2),carry(L2),[])
+            r2 = FabricRule(catch(X2), carry(L2), [])
 
           The FabricParallelComposition generates 2 classifiers which will be combined through the + operator
           The FabricParallelComposition operator (+) used here is redefined in the FabricClassifier class (__add__)
 
           The FabricParallelComposition of these C1 and C2 generates 2 rules:
 
-            r1 = FabricRule(catch(X1),carry(L1),[via(DM1)])
-            r2 = FabricRule(catch(X2),carry(L2),[])
+            r1 = FabricRule(catch(X1), carry(L1), [via(DM1)])
+            r2 = FabricRule(catch(X2), carry(L2), [])
