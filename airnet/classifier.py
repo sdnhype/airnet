@@ -107,18 +107,7 @@ class Classifier(object):
                     # r2 is more specific than r1
                     # so if r1 action is drop the intersection takes
                     # the drop action aside from r2 actions
-                    if r1.match.covers(r2.match):
-                        if len(r1.actions) != 0:
-                            for a1 in r1.actions:
-                                actions.add(a1)
-                        return Rule(intersection,label,actions)
-
-                    elif r2.match.covers(r1.match):
-                        if len(r2.actions) != 0:
-                            for a2 in r2.actions:
-                                actions.add(a2)
-                        return Rule(intersection,label,actions)
-                    else:
+                    if r1.match.covers(r2.match) == False and r2.match.covers(r1.match) == False :
                         if len(r1.actions)==0 or len(r2.actions)==0:
                             return Rule(intersection,label,actions)
 
