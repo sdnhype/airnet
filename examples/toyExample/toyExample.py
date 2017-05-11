@@ -58,14 +58,13 @@ def transport_policy():
     f1 = catch(fabric=FAB, src=E1, flow="icmp_in") >> carry(dst=E2)
     f2 = catch(fabric=FAB, src=E2, flow="icmp_out") >> carry(dst=E1)
 
-    return f1 + f2
+    return f1
 # ===============
 # Main function
 # ===============
 def main():
 
     topology = virtual_network()
-    inf_base = default_distribution_policy()
     in_network_functions = default_distribution_policy() + access_policies()
     transport_function = transport_policy()
 

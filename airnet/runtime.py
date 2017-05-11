@@ -17,7 +17,6 @@ import copy, time, logging, pdb
 ########## Code audit ########"
 #TODO: define formel rules and audit the code.
 #TODO: generateur
-#TODO: named tuples
 #TODO: setters and getters
 #TODO: private _functions and _var
 #TODO: simplify algo : functions inside complex functions
@@ -25,11 +24,8 @@ import copy, time, logging, pdb
 #*************** CODE AUDIT BY MAYORO ************
 #TODO: Understand #483 and #245
 #TODO: limit should be none at #295
-#TODO: Make a drop rule for all (#736 and #756)
 #TODO: remove #1179 function since not used
-#TODO: Understand reduce utilisation at #1172
 #TODO! Stop Stats Thread when Switch Leaves
-#TODO: Sequential composition structure
 #TODO: Drop Representation on #909
 #TODO: comment #49
 #TODO: #TODO: important on #736 (if we have many types of actions we got a problem)
@@ -38,7 +34,6 @@ import copy, time, logging, pdb
 #TODO: enforce dynamic-function on #222
 #TODO: utility of  #595
 #TODO; #388 see later
-#TODO: #147 solve the dropAll rule always generated after compilation
 #TODO: #158 services chaining by enforcing another netFunction rule instead of basic ones
 #TODO: #196 optimization to look out
 #TODO: #628 bug on identity
@@ -574,7 +569,7 @@ class Runtime():
                                                                                       fab_rule.flow.flow, classifiers)
 
 
-            logger.debug("Matching_flow and src_switch : {}".format(str(flow_ingress_match_switch_list)))
+            logger.debug("Sender_switch and Flow : {}".format(str(flow_ingress_match_switch_list)))
             # for each egress physical switches
             for egress_switch in flow_egress_switches:
                 # for each egress rule of this egress physical switch
@@ -649,7 +644,7 @@ class Runtime():
         logger.debug("\n\n *** Physical rules to push on switches")
         for edge in self.topology_graph.edges :
             if edge[1] == "switch":
-                logger.debug("\n ----- %s rules : \n%s" % (edge[0], "\n".join([str(j) for j in self.physical_switches_classifiers[edge[0]]])))
+                logger.debug("\n ----- %s rules : (%d)\n %s" % (edge[0], len(self.physical_switches_classifiers[edge[0]]),"\n".join([str(j) for j in self.physical_switches_classifiers[edge[0]]])))
 
         self.nexus.install_rules_on_dp(self.physical_switches_classifiers)
         logger.info("\n# Proactive rules installed == " + str(countOfMessages(self.physical_switches_classifiers)))

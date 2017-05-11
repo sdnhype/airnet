@@ -123,12 +123,17 @@ class VTopology(object):
 
 class Policy(object):
     """
-    Top-level abstract class for all policies (edge and fabric)
+        Top-Level abstract class for all policies
+        (edge and fabric)
     """
     def __init__(self):
         self._classifier = None
 
     def compile(self):
+        """
+            compile a policy generates a classifier
+            in which rules are stored
+        """
         self._classifier = self.generateClassifier()
         return self._classifier
 
@@ -136,10 +141,12 @@ class Policy(object):
         return self.__class__.__name__
 
 ################ Singleton policies ####################
+
 @singleton
 class identity(Policy):
     """
-    The identity policy (or neutral policy), leave all packets unchanged
+        identity is a neutral policy
+        it performs none changes
     """
     def __init__(self):
         self.map = {}
@@ -149,7 +156,6 @@ class identity(Policy):
 
     def covers(self, other):
         return True
-    # pas de generate classifier car y a pas d'instruction identity
 
     def __eq__(self, other):
         return ( id(self) == id(other)
@@ -161,9 +167,9 @@ class identity(Policy):
 @singleton
 class drop(Policy):
     """
-    the drop policy (or absorbing element), produce the empty set of packets
+        drop is an absorbing element
+        it generates a rule with an empty set of actions
     """
-
     def generateClassifier(self):
         return Classifier([Rule(identity, identity, set())])
 
@@ -178,18 +184,15 @@ class drop(Policy):
 
 ################ Edge policies ####################
 
-
-
 class EdgePolicy(Policy):
     """
-    abstract class for all edge policies
+        abstract class for all edge policies
     """
     def __add__(self, policy):
         if isinstance(policy, ParallelComposition):
             return ParallelComposition([self] + policy.policies)
         else:
             return ParallelComposition([self, policy])
-
 
     def __rshift__(self, policy):
         if isinstance(policy, SequentialComposition):
@@ -217,7 +220,6 @@ class match(EdgePolicy):
         r2 = Rule(identity, identity, set())
         return Classifier([r1, r2])
 
-
     def intersec(self, pol):
         """
         return a new math which is the result of the intersection between self and pol
@@ -232,6 +234,7 @@ class match(EdgePolicy):
             elif (IPv4Network(opfx) in IPv4Network(ipfx)):
                 most_specific = opfx
             return most_specific
+
         # fct logic start here
         if pol == identity:
             return self
@@ -304,25 +307,6 @@ class match(EdgePolicy):
                 return False
         return True
 
-    def checkFields(self,other):
-        """
-        used with covers to check if self fields cover other fields
-        """
-        for (k,v) in self.map.items():
-            if k=='edge':
-                if not other.map.has_key(k) or v != other.map[k]:
-                    return False
-            elif k=='nw_src':
-                if not other.map.has_key(k) or v != other.map[k]:
-                    return False
-            elif k=='nw_dst':
-                if not other.map.has_key(k) or v != other.map[k]:
-                    return False
-            elif k=='tp_dst':
-                if not other.map.has_key(k) or v != other.map[k]:
-                    return False
-        return True
-
     # to be able to use match object as dictionary key
     def __hash__(self):
         return hash(repr(self.map))
@@ -392,20 +376,7 @@ class modify(EdgePolicy):
                     tcp['dst_port'] = self.map["tp_dst"]
                 protos['tcp'] = tcp
             packet['packet'] = unicode(protos)
-            """
-            if 'ipv4' in protos:
-                pdb.set_trace()
-                ip = protos.get('ipv4')
-                ip['src'] = self.map["nw_src"]
-                ip['dst'] = self.map["nw_dst"]
-                protos['ipv4'] = ip
-            if 'tcp' in protos:
-                tcp = protos.get('tcp')
-                tcp['src_port'] = self.map["tp_src"]
-                tcp['dst_port'] = self.map["tp_dst"]
-                protos['tcp'] = tcp
-            packet['packet'] = unicode(protos)
-            """
+        """
         else:
         # End EDIT Telly
             if "dl_src" in self.map:
@@ -428,6 +399,7 @@ class modify(EdgePolicy):
                 if hasattr(tcp, "dstport"):
                     if "tp_dst" in self.map:
                         tcp.dsttp = self.map["tp_dst"]
+        """
 
     def generateClassifier(self):
         return Classifier([Rule(identity, identity, {self})])
@@ -455,7 +427,7 @@ class tag(EdgePolicy):
         return (isinstance(other, tag)) and (self.label == other.label)
 
     def __repr__(self):
-        return "flowID==" + self.label
+        return "flow==" + self.label
 
 class across(EdgePolicy):
     """
@@ -480,9 +452,115 @@ class across(EdgePolicy):
         return ("across by: " + self.dataMachine + " | " + self.dataFct)
 
 
-"""
-TODO: Dynamic policies
-"""
+################ Fabric policies ####################
+
+class FabricPolicy(Policy):
+    """
+    abstract class for all fabric policies
+    """
+    def __add__(self, policy):
+        if isinstance(policy, FabricParallelComposition):
+            return FabricParallelComposition([self] + policy.policies)
+        else:
+            return FabricParallelComposition([self, policy])
+
+
+    def __rshift__(self, policy):
+        if isinstance(policy, FabricSequentialComposition):
+            return FabricSequentialComposition([self] + policy.policies)
+        else:
+            return FabricSequentialComposition([self, policy])
+
+class catch(FabricPolicy):
+    """
+    the catch policy, match flows based on a label that has been inserted beforehand by an edge.
+
+    :param **kwargs: field (fabric, flow) matches in keyword-argument format
+    """
+
+    def __init__(self, src, fabric, flow):
+        self.flow = flow
+        self.fabric = fabric
+        self.src= src
+
+    def generateClassifier(self):
+        """
+        Matched packets are kept, non-matched packets are dropped.
+        """
+        return FabricClassifier([FabricRule(self, {identity}, list())])
+
+    def __repr__(self):
+        return "fabric='{}' ,src='{}' flow='{}'".format(self.fabric,self.src,self.flow)
+
+class carry(FabricPolicy):
+    """
+    carry a flow at one of fabric's port
+
+    :param destination: virtual device which is directly connected to the fabric (or fabric's port number)
+    :param **constraints: bandwidth constraint (the only constraint that is covered for now)
+    """
+
+    def __init__(self, dst, **constraints):
+        self.destination = dst
+        if constraints is not None:
+            self.constraints = dict(**constraints)
+        else:
+            self.constraints = None
+
+    def __repr__(self):
+        return "carry ({},{})".format(self.destination,str(self.constraints))
+
+    def generateClassifier(self):
+        return FabricClassifier([FabricRule(identity, {self}, list())])
+
+class via(FabricPolicy):
+    """
+    allows to redirect a flow towards a data machine
+
+    :param dataMachine: target data machine
+    :param dataFct: target data function
+    """
+    def __init__(self, data_machine, data_fct):
+        self._data_machine = data_machine
+        self._data_fct = data_fct
+
+    @property
+    def data_machine(self):
+        return self._data_machine
+
+    @property
+    def data_fct(self):
+        return self._data_fct
+
+    def generateClassifier(self):
+        return FabricClassifier([FabricRule(identity, {identity}, [self])])
+
+    def __eq__(self, other):
+        return (isinstance(other, via) and
+                self.data_machine == other.data_machine and
+                self.data_fct == other.data_fct)
+
+    def __repr__(self):
+        return ("via dataMachine " + self.data_machine +
+                 " and dataFct " + self.data_fct)
+
+
+################ Dynamic Policies ####################
+
+def DataFct(**decorator_kwargs):
+    def data_fct_decorator(fct ):
+        def fct_warper(**fct_kwargs):
+            return DataFctPolicy(fct, fct_kwargs, decorator_kwargs)
+        return fct_warper
+    return data_fct_decorator
+
+def DynamicControlFct(**decorator_kwargs):
+    def dynamic_fct_decorator(fct ):
+        def fct_warper(**fct_kwargs):
+            return DynamicPolicy(fct, fct_kwargs, decorator_kwargs)
+        return fct_warper
+    return dynamic_fct_decorator
+
 class NetworkFunction(EdgePolicy):
     """
     base class for network functions
@@ -574,128 +652,21 @@ class DynamicPolicy(NetworkFunction):
     def __repr__(self):
         return "{}()".format(self.callback.__name__)
 
-def DataFct(**decorator_kwargs):
-    def data_fct_decorator(fct ):
-        def fct_warper(**fct_kwargs):
-            return DataFctPolicy(fct, fct_kwargs, decorator_kwargs)
-        return fct_warper
-    return data_fct_decorator
-
-def DynamicControlFct(**decorator_kwargs):
-    def dynamic_fct_decorator(fct ):
-        def fct_warper(**fct_kwargs):
-            return DynamicPolicy(fct, fct_kwargs, decorator_kwargs)
-        return fct_warper
-    return dynamic_fct_decorator
-
-
-
-
-################ Fabric policies ####################
-
-
-
-class FabricPolicy(Policy):
-    """
-    abstract class for all edge policies
-    not yet being used
-    """
-    def __add__(self, policy):
-        if isinstance(policy, FabricParallelComposition):
-            return FabricParallelComposition([self] + policy.policies)
-        else:
-            return FabricParallelComposition([self, policy])
-
-
-    def __rshift__(self, policy):
-        if isinstance(policy, FabricSequentialComposition):
-            return FabricSequentialComposition([self] + policy.policies)
-        else:
-            return FabricSequentialComposition([self, policy])
-
-class catch(FabricPolicy):
-    """
-    the catch policy, match flows based on a label that has been inserted beforehand by an edge.
-
-    :param **kwargs: field (fabric, flow) matches in keyword-argument format
-    """
-
-    def __init__(self, src, fabric, flow):
-        self.flow = flow
-        self.fabric = fabric
-        self.src= src
-
-    def generateClassifier(self):
-        """
-        Matched packets are kept, non-matched packets are dropped.
-        """
-        #r1 = FabricRule(self, identity)
-        #r2 = FabricRule(identity, set())
-        #return Classifier([r1, r2])
-        return FabricClassifier([FabricRule(self, {identity}, list())])
-
-    def __repr__(self):
-        return "fabric='{}' ,src='{}' flow='{}'".format(self.fabric,self.src,self.flow)
-
-class carry(FabricPolicy):
-    """
-    carry a flow at one of fabric's port
-
-    :param destination: virtual device which is directly connected to the fabric (or fabric's port number)
-    :param **constraints: bandwidth constraint (the only constraint that is covered for now)
-    """
-
-    def __init__(self, dst, **constraints):
-        self.destination = dst
-        if constraints is not None:
-            self.constraints = dict(**constraints)
-        else:
-            self.constraints = None
-
-    def __repr__(self):
-        return "carry ({},{})".format(self.destination,str(self.constraints))
-
-    def generateClassifier(self):
-        return FabricClassifier([FabricRule(identity, {self}, list())])
-
-class via(FabricPolicy):
-    """
-    allows to redirect a flow towards a data machine
-
-    :param dataMachine: target data machine
-    :param dataFct: target data function
-    """
-    def __init__(self, data_machine, data_fct):
-        self._data_machine = data_machine
-        self._data_fct = data_fct
-
-    @property
-    def data_machine(self):
-        return self._data_machine
-
-    @property
-    def data_fct(self):
-        return self._data_fct
-
-    def generateClassifier(self):
-        return FabricClassifier([FabricRule(identity, {identity}, [self])])
-
-    def __eq__(self, other):
-        return (isinstance(other, via) and
-                self.data_machine == other.data_machine and
-                self.data_fct == other.data_fct)
-
-    def __repr__(self):
-        return ("via dataMachine " + self.data_machine +
-                 " and dataFct " + self.data_fct)
-
 
 ################ Composition policies ################
 
 
 class CompositionPolicy(EdgePolicy):
     """
-    Abstract class for policy composition (edge and fabric)
+    Abstract class for edge policies composition
+    :param policies: the policies ( a list) to be combined
+    """
+    def __init__(self, policies):
+        self.policies = list(policies)
+
+class FabricCompositionPolicy(FabricPolicy):
+    """
+    Abstract class for fabric policies composition
     :param policies: the policies ( a list) to be combined
     """
     def __init__(self, policies):
@@ -714,12 +685,6 @@ class ParallelComposition(CompositionPolicy):
     def __init__(self, policies):
         super(ParallelComposition, self).__init__(policies)
 
-    def __add__(self, policy):
-        if isinstance(policy, ParallelComposition):
-            return ParallelComposition(self.policies + policy.policies)
-        else:
-            return ParallelComposition(self.policies + [policy])
-
     def generateClassifier(self):
         # call compile method for each basic policy in self.policies
         # and return a list of classifiers
@@ -737,13 +702,6 @@ class SequentialComposition(CompositionPolicy):
     def __init__(self, policies):
         CompositionPolicy.__init__(self, policies)
 
-    def __rshift__(self, policy):
-        if isinstance(policy, SequentialComposition):
-            return SequentialComposition(self.policies + policy.policies)
-        else:
-            return SequentialComposition(self.policies + [policy])
-
-
     def generateClassifier(self):
         # call compile() method for each CompositionPolicy and basic policy in self.policies
         # return a list of classifiers
@@ -753,7 +711,7 @@ class SequentialComposition(CompositionPolicy):
 
 ################# Fabric policies composition ##################
 
-class FabricParallelComposition(CompositionPolicy):
+class FabricParallelComposition(FabricCompositionPolicy):
     """
     Combinator for several fabric policies in parallel.
 
@@ -763,12 +721,6 @@ class FabricParallelComposition(CompositionPolicy):
     def __init__(self, policies):
         super(FabricParallelComposition, self).__init__(policies)
 
-    def __add__(self, policy):
-        if isinstance(policy, FabricParallelComposition):
-            return FabricParallelComposition(self.policies + policy.policies)
-        else:
-            return FabricParallelComposition(self.policies + [policy])
-
     def generateClassifier(self):
         # call compile method for each basic policy in self.policies
         # and return a list of classifiers
@@ -776,20 +728,14 @@ class FabricParallelComposition(CompositionPolicy):
         # parallel composition of all classifiers
         return reduce(lambda acc, c: acc + c, classifiers)
 
-class FabricSequentialComposition(CompositionPolicy):
+class FabricSequentialComposition(FabricCompositionPolicy):
     """
     Combinator for several fabric policies in sequence.
 
     :param policies: the policies to be combined.
     """
     def __init__(self, policies):
-        CompositionPolicy.__init__(self, policies)
-
-    def __rshift__(self, policy):
-        if isinstance(policy, FabricSequentialComposition):
-            return FabricSequentialComposition(self.policies + policy.policies)
-        else:
-            return FabricSequentialComposition(self.policies + [policy])
+        FabricCompositionPolicy.__init__(self, policies)
 
     def generateClassifier(self):
         # call compile method for each basic policy in self.policies
