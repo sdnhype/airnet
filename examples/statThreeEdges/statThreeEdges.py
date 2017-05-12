@@ -20,8 +20,9 @@ import datetime
     - Distributed packets to D, E, F on E2
     - Distributed packets to G, H, I on E3
 
-TODO...
-
+    - Forward to hosts based on MAC destination address
+    - Poll statistics (packet and byte counters) on edges E1, E2 and E3
+       --> statistics according to destination AND source MAC addresses.
 """
 
 # =================
@@ -69,25 +70,11 @@ def virtual_network():
 # STATIC POLICIES
 # ============================================================================
 
-# Generic distribution policy
-"""
-def distribute(VID, destination):
-    p = match(edge=VID, dst=destination) >> (saveStat() + forward(destination))
-    return p
-"""
 # Generic MAC distribution policy
 def distribute_mac(VID, destination):
-    #p = match(edge=VID, dl_dst=(globals()["MAC_"+destination])) >> (forward(destination) + saveStat())
     p = match(edge=VID, dl_dst=(globals()["MAC_"+destination])) >> forward(destination)
     return p
-"""
-# Distribute traffic to the different members connected to the 3 edges
-def distribute_edges():
-    distribute_e1 = distribute(E1, A) + distribute(E1, B) + distribute(E1, C)
-    distribute_e2 = distribute(E2, D) + distribute(E2, E) + distribute(E2, F)
-    distribute_e3 = distribute(E3, G) + distribute(E3, H) + distribute(E3, I)
-    return distribute_e1 + distribute_e2 + distribute_e3
-"""
+
 # Distribute traffic (BASED ON MAC @) to the different members connected to the 3 edges
 def distribute_mac_edges():
     distribute_e1 = distribute_mac(E1, A) + distribute_mac(E1, B) + distribute_mac(E1, C)
@@ -95,28 +82,22 @@ def distribute_mac_edges():
     distribute_e3 = distribute_mac(E3, G) + distribute_mac(E3, H) + distribute_mac(E3, I)
     return distribute_e1 + distribute_e2 + distribute_e3
 
-
 # Generic tagging policy
 def set_tag(VID, destination, label):
-    # p = match(edge=VID, dst=destination) >> tag(label) >> forward(FAB)
     p = match(edge=VID, dl_dst=(globals()["MAC_"+destination])) >> tag(label) >> forward(FAB)
     return p
 
 # Tag traffic according to final destination
 def tag_edges():
-
     tag_a = set_tag(E2, A, FOR_A) + set_tag(E3, A, FOR_A)
     tag_b = set_tag(E2, B, FOR_B) + set_tag(E3, B, FOR_B)
     tag_c = set_tag(E2, C, FOR_C) + set_tag(E3, C, FOR_C)
-
     tag_d = set_tag(E1, D, FOR_D) + set_tag(E3, D, FOR_D)
     tag_e = set_tag(E1, E, FOR_E) + set_tag(E3, E, FOR_E)
     tag_f = set_tag(E1, F, FOR_F) + set_tag(E3, F, FOR_F)
-
     tag_g = set_tag(E2, G, FOR_G) + set_tag(E1, G, FOR_G)
     tag_h = set_tag(E2, H, FOR_H) + set_tag(E1, H, FOR_H)
     tag_i = set_tag(E2, I, FOR_I) + set_tag(E1, I, FOR_I)
-
     return tag_a + tag_b + tag_c + tag_d + tag_e + tag_f + tag_g + tag_h + tag_i
 
 # Generic transport policy
@@ -147,11 +128,10 @@ def saveStat( stat ):
     # Open log file
     logFile = open("log/statsLog_ThreeEdges.txt", 'a')
     time = datetime.datetime.now()
-    #logFile.write('[%s] dl_dst  %s | packet count %s | byte count %s\n' % (time, stat.dl_dst, stat.packet_count,stat.byte_count))
-    logFile.write('[%s] dl_src %s dl_dst  %s | packet count %s | byte count %s\n' % (time, stat.dl_src,stat.dl_dst, stat.packet_count,stat.byte_count))
+    logFile.write('[%s] dl_src %s dl_dst  %s | packet count %s | byte count %s\n'
+                % (time, stat.dl_src,stat.dl_dst, stat.packet_count, stat.byte_count))
     logFile.close()
     return identity
-
 
 # Generic statistics policy
 def edgeStatForX(oneEdge, oneDestination):
@@ -179,7 +159,7 @@ def statPolicy():
 def main():
 
     topology = virtual_network()
-    #all_edges = distribute_edges() + tag_edges()
+    # all_edges = distribute_mac_edges() + tag_edges()
     all_edges = distribute_mac_edges() + tag_edges() + statPolicy()
     all_fabric = fabric_policies()
 
