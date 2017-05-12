@@ -39,7 +39,7 @@ import copy, time, logging, pdb
 #TODO: #628 bug on identity
 
 # LOGGER CONSTRUCTION
-handler_info = logging.StreamHandler()
+handler_info = Logger("Airnet_Runtime","log/info.log").handler
 handler_info.setLevel(logging.INFO)
 logger = Logger("Airnet_Runtime").getLog()
 logger.addHandler(handler_info)
@@ -59,6 +59,7 @@ class Runtime():
                                                 STARTING DEBUG\n**************************************************\
         **************************************************\n")
 
+        print("Compilation started --")
         logger.info("Compilation started --")
         _compilation_duration = int(round(time.time() * 1000))
 
@@ -100,13 +101,13 @@ class Runtime():
         # then compile edge_policies --> return a Classifier object
         logger.debug("Compiling edge policies")
         self.edge_policies = self.edge_policies.compile()
-        logger.debug("Edge rules generated : {}\n************\n{}************".format(self.edge_policies.getNbRules(),self.edge_policies.getLogRules()))
+        logger.info("Edge rules generated : {}\n************\n{}************".format(self.edge_policies.getNbRules(),self.edge_policies.getLogRules()))
 
         # compile also fabric_policies --> return a FabricClassifier object
         self.fabric_policies = main_module["fabric_policies"]
         logger.debug("Compiling fabric policies")
         self.fabric_policies = self.fabric_policies.compile()
-        logger.debug("Fabric rules generated : {}\n************\n{}************".format(self.fabric_policies.getNbRules(),self.fabric_policies.getLogRules()))
+        logger.info("Fabric rules generated : {}\n************\n{}************".format(self.fabric_policies.getNbRules(),self.fabric_policies.getLogRules()))
 
         # the Airnet client which will send instructions to the RYU controller
         self.nexus = RyuClient(self)
@@ -117,6 +118,7 @@ class Runtime():
 
         _compilation_duration = int(round(time.time() * 1000)) - _compilation_duration
         #logger.info("Compilation finished -- Time == " + str(int(round(time.time() * 1000))))
+        print("Compilation finished -- Duration == " + str(_compilation_duration) + "ms")
         logger.info("Compilation finished -- Duration == " + str(_compilation_duration) + "ms")
 
         # communication point with physical switches
@@ -641,10 +643,10 @@ class Runtime():
         self.physical_switches_classifiers = self.opt_physical_classifires(self.physical_switches_classifiers)
 
         # For debug
-        logger.debug("\n\n *** Physical rules to push on switches")
+        logger.info("\n\n *** Physical rules to push on switches")
         for edge in self.topology_graph.edges :
             if edge[1] == "switch":
-                logger.debug("\n ----- %s rules : (%d)\n %s" % (edge[0], len(self.physical_switches_classifiers[edge[0]]),"\n".join([str(j) for j in self.physical_switches_classifiers[edge[0]]])))
+                logger.info("\n ----- %s rules : (%d)\n %s" % (edge[0], len(self.physical_switches_classifiers[edge[0]]),"\n".join([str(j) for j in self.physical_switches_classifiers[edge[0]]])))
 
         self.nexus.install_rules_on_dp(self.physical_switches_classifiers)
         logger.info("\n# Proactive rules installed == " + str(countOfMessages(self.physical_switches_classifiers)))
