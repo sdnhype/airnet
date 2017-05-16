@@ -61,7 +61,6 @@ class Runtime():
 
         print("Compilation started --")
         logger.info("Compilation started --")
-        print("Compilation started --")
         _compilation_duration = int(round(time.time() * 1000))
 
         logger.debug("Control program -- {}".format(control_program))
@@ -121,7 +120,6 @@ class Runtime():
         #logger.info("Compilation finished -- Time == " + str(int(round(time.time() * 1000))))
         print("Compilation finished -- Duration == " + str(_compilation_duration) + "ms")
         logger.info("Compilation finished -- Duration == " + str(_compilation_duration) + "ms")
-        print("Compilation finished -- Duration == " + str(_compilation_duration) + "ms")
 
         # communication point with physical switches
         # EL TODO: chose the controler in the class constructor
