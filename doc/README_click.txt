@@ -41,9 +41,9 @@
 
    ATTENTION : les VM click et mininet doivent avoir leur interface internal
                network en mode promiscuous (sinon les paquets qui ne leur sont
-               destinés ne remontent pas dane le kernel !) 
+               destinés ne remontent pas dans le kernel !)
 
-  La VM mininet aura donc au moins 4 interfaces : 
+  La VM mininet aura donc au moins 4 interfaces :
     - eth0  NAT vers l'exterieur
     - eth1  host only network
     - eth2  internal network vers VM Click
@@ -83,7 +83,4 @@ FromDevice(eth2) -> Queue(2000) -> ToDevice(eth2);
 10. Tester avec ping et dpctl dump-flows.
 
 (la connectivité doit fonctionner et les paquets doivent apparaitre sur tcpdump
-des VM click) 
-
-
-
+des VM click)

@@ -312,7 +312,7 @@ class match(EdgePolicy):
         return hash(repr(self.map))
 
     def __eq__(self, other):
-        return ( (isinstance(other, match) and self.map == other.map)
+        return ((isinstance(other, match) and self.map == other.map)
                  or (len(self.map) == 0 and other == identity) )
 
     def __repr__(self):

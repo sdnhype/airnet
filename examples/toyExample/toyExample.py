@@ -58,7 +58,7 @@ def transport_policy():
     f1 = catch(fabric=FAB, src=E1, flow="icmp_in") >> carry(dst=E2)
     f2 = catch(fabric=FAB, src=E2, flow="icmp_out") >> carry(dst=E1)
 
-    return f1
+    return f1 + f2
 # ===============
 # Main function
 # ===============

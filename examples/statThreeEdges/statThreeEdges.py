@@ -151,8 +151,7 @@ def statPolicy():
     s2 = edgeStatForX(E2, D) + edgeStatForX(E2, E) + edgeStatForX(E2, F)
     s3 = edgeStatForX(E3, G) + edgeStatForX(E3, H) + edgeStatForX(E3, I)
     return s1 + s2 + s3
-
-
+    
 # ============================================================================
 # Main function
 # ============================================================================
