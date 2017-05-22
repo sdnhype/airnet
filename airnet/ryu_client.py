@@ -188,7 +188,8 @@ class RyuClient(object):
 		for act in actions:
 			if isinstance(act, forward):
 				if act.output == "OFPP_CONTROLLER":
-					act.output = 0xfffd #controller port
+					print("we get there")
+					act.output = 0xfffffffd #controller port
 				actions_mod.append({'type':'OUTPUT','port':act.output})
 		return actions_mod
 

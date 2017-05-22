@@ -559,7 +559,7 @@ class Runtime():
                                 self.add_fabric_flow_routing_entry(fab_rule.flow.fabric,
                                                                    intersection_match,
                                                                    item[1],
-                                                                   egress_switch, None
+                                                                   egress_switch, None)
         self.enforce_fabric_physical_rules(fabric, classifiers)
 
     def enforce_ingressPolicies(self, rule, classifiers):
