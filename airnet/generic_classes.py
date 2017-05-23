@@ -55,7 +55,6 @@ class Bucket(object):
             print "This packet can't be splitted"
 
     def add_packet(self, dpid, packet_match, packet):
-        print("add packet")
         if self.limit is None:
             self.data.append(packet)
             self.runtime.apply_netFunction_fromPacket(dpid, self.match, packet_match, packet)

@@ -69,7 +69,6 @@ class PacketParser(object):
 
         actions = []
         out_port = int(packet.get('output'))
-        actions.append(dp.ofproto_parser.OFPActionOutput(out_port))
         protos = packet.get('packet')
         protos = ast.literal_eval(str(protos))
         if 'eth_src' in protos:
@@ -88,7 +87,7 @@ class PacketParser(object):
             tp = protos.get('udp')
             actions.append(dp.ofproto_parser.OFPActionSetField(udp_src=tp.get('src_port')))
             actions.append(dp.ofproto_parser.OFPActionSeField(udp_dst=tp.get('dst_port')))
-
+        actions.append(dp.ofproto_parser.OFPActionOutput(out_port))
         return actions
 
 

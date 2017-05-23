@@ -224,16 +224,10 @@ class Runtime():
                     self.nexus.send_packet_out(switch, packet, output)
 
         dyc_rule = None
-        print("Bucket Match {}".format(packet))
-        print("Packet Match {}\n".format(packet_match))
 
         for rule in self.nwFct_rules:
-            print("Net rules : {}".format(rule))
             if rule.match.map == bucket_match.map:
                 dyc_rule = rule
-                break
-
-        print("dyc_rule {}".format(dyc_rule))
 
         for act in dyc_rule.actions:
             if isinstance(act, modify):

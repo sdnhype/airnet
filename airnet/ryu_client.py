@@ -178,17 +178,16 @@ class RyuClient(object):
 		for act in actions:
 			if isinstance(act, modify):
 				if "nw_dst" in act.map:
-					actions_mod.append({'type':'SET_NW_DST','nw_dst':act.map["nw_dst"]})
+					actions_mod.append({'type':'SET_FIELD','field':'ipv4_dst','value':act.map["nw_dst"]})
 				if "nw_src" in act.map:
-					actions_mod.append({'type':'SET_NW_SRC','nw_src':act.map["nw_src"]})
+					actions_mod.append({'type':'SET_FIELD','field':'ipv4_src','value':act.map["nw_src"]})
 				if "dl_dst" in act.map:
-					actions_mod.append({'type':'SET_DL_DST','dl_dst':act.map["dl_dst"]})
+					actions_mod.append({'type':'SET_FIELD','field':'eth_dst','value':act.map["dl_dst"]})
 				if "dl_src" in act.map:
-					actions_mod.append({'type':'SET_DL_SRC','dl_src':act.map["dl_src"]})
+					actions_mod.append({'type':'SET_FIELD','field':'eth_src','value':act.map["dl_src"]})
 		for act in actions:
 			if isinstance(act, forward):
 				if act.output == "OFPP_CONTROLLER":
-					print("we get there")
 					act.output = 0xfffffffd #controller port
 				actions_mod.append({'type':'OUTPUT','port':act.output})
 		return actions_mod
@@ -226,7 +225,6 @@ class RyuClient(object):
 				c.addFlow(data)
 		# First rules are installed
 		self.runtime_mode = True
-
 
 	def installNewRules(self, classifiers):
 		c = ConfigureFlow('localhost',8080)
