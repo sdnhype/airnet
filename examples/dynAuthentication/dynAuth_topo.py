@@ -11,13 +11,15 @@ guests---[s2]---|          |--------[s4] ----|          |---[s9]---CC
 """
 
 from mininet.net import Mininet
-from mininet.node import Controller, RemoteController
+from mininet.node import Controller, RemoteController, OVSSwitch
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info
+from functools import partial
 
 def emptyNet(controller_ip, controller_port):
 
 	"Create an empty network and add nodes to it."
+    switch = partial( OVSSwitch, protocols='OpenFlow13')
 	net = Mininet( controller=Controller , switch=switch)
 
 	info( '*** Adding controller\n' )
@@ -62,7 +64,8 @@ def emptyNet(controller_ip, controller_port):
 	print("*** Starting web service on ws")
 	h3.cmd( 'python -m SimpleHTTPServer 80 &' )
 
-	net.pingAll(timeout=1)
+    net.ping([h1, h2], timeout=1)
+    net.ping([h3, h4], timeout=1)
 
 	info( '*** Running CLI\n' )
 	CLI( net )

@@ -70,7 +70,8 @@ def defautNet(controller_ip, controller_port):
     info( '*** Starting network\n')
     net.start()
 
-    net.pingAll(timeout=1)
+    net.ping([h1, h2], timeout=1)
+    net.ping([h3, h4], timeout=1)
 
     info( '*** Running CLI\n' )
     CLI( net )

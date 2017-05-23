@@ -52,7 +52,8 @@ def emptyNet(controller_ip, controller_port):
 	info( '*** Starting network\n')
 	net.start()
 
-	net.pingAll(timeout=1)
+    net.ping([h1, h2], timeout=1)
+    net.ping([h1, h3], timeout=1)
 
 	info( '*** Running CLI\n' )
 	CLI( net )

@@ -33,16 +33,18 @@ client4---|
 """
 
 from mininet.net import Mininet
-from mininet.node import Controller, RemoteController
+from mininet.node import Controller, RemoteController, OVSSwitch
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info
+from functools import partial
 
 def emptyNet(controller_ip, controller_port):
 
     "Create an empty network and add nodes to it."
 
     # autoStaticArp=True
-    net = Mininet( controller=Controller, autoSetMacs=True )
+    switch = partial( OVSSwitch, protocols='OpenFlow13' )
+    net = Mininet( controller=Controller, switch=switch , autoSetMacs=True)
 
     info( '*** Adding controller\n' )
     net.addController( 'c0', controller=RemoteController, ip=controller_ip, port=controller_port )
@@ -99,7 +101,9 @@ def emptyNet(controller_ip, controller_port):
     h3.cmd('ip neigh add 10.0.0.50 lladdr 00:26:55:42:9a:62 dev client3-eth0')
     h4.cmd('ip neigh add 10.0.0.50 lladdr 00:26:55:42:9a:62 dev client4-eth0')
 
-    net.pingAll(timeout=1)
+    net.ping([h1, h2], timeout=1)
+    net.ping([h3, h4], timeout=1)
+    net.ping([h5, h6], timeout=1)
 
     info( '*** Running CLI\n' )
     CLI( net )

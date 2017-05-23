@@ -21,14 +21,16 @@ FAB2 -> s6, s7, s8
 """
 
 from mininet.net import Mininet
-from mininet.node import Controller, RemoteController
+from mininet.node import Controller, RemoteController, OVSSwitch
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info
+from functools import partial
 
 def defaultNet(controller_ip, controller_port):
 
     # Create an empty network and add nodes to it.
-    net = Mininet( controller=Controller )
+    switch = partial( OVSSwitch, protocols='OpenFlow13' )
+    net = Mininet( controller=Controller, switch=switch )
 
     info( '*** Adding controller\n' )
     net.addController( 'c0', controller=RemoteController, ip=controller_ip, port=controller_port )
@@ -65,7 +67,7 @@ def defaultNet(controller_ip, controller_port):
     info( '*** Starting network\n')
     net.start()
 
-    net.pingAll(timeout=1)
+    net.ping([h1, h2], timeout=1)
 
     info( '*** Running CLI\n' )
     CLI( net )

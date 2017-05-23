@@ -18,7 +18,7 @@ ALLOW ICMP HOST_B to HOSt_A
 @DynamicControlFct(data="stat", every=10.0, limit="none")
 def saveStat( stat ):
     # Open log file
-    logFile = open("statsLog.txt", 'a')
+    logFile = open("log/statsLog.txt", 'a')
     time = datetime.datetime.now()
     logFile.write('[%s] nw_dst %s | packet count %s byte count %s\n' % (time, stat.nw_dst, stat.packet_count, stat.byte_count))
     logFile.close()
