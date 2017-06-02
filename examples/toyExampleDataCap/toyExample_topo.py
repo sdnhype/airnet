@@ -45,7 +45,7 @@ def emptyNet(controller_ip, controller_port):
 	print("*** Starting web service on host_B")
         h_B.cmd( 'python -m SimpleHTTPServer 80 &' )
 
-	net.pingAll(timeout=1)
+	net.ping([h_A, h_B], timeout=1)
 
 	info( '*** Running CLI\n' )
 	CLI( net )

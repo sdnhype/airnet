@@ -22,7 +22,7 @@ from functools import partial
 def emptyNet(controller_ip, controller_port):
 
 	"Create an empty network and add nodes to it."
-    switch = partial( OVSSwitch, protocols='OpenFlow13')
+    	switch = partial( OVSSwitch, protocols='OpenFlow13')
 	net = Mininet( controller=Controller , switch=switch)
 
 	info( '*** Adding controller\n' )
@@ -50,16 +50,16 @@ def emptyNet(controller_ip, controller_port):
 	net.addLink(s1, h1)
 	net.addLink(s6, h2)
 
-    from mininet.link import Intf
+    	from mininet.link import Intf
 	switch3 = net.switches[2]
-    _intf = Intf("eth2", node=switch3)
+	_intf = Intf("eth2", node=switch3)
 
 	info( '*** Starting network\n')
 	net.start()
 
 	print("*** Starting web service on ws")
 
-    net.ping([h1, h2], timeout=1)
+    	net.ping([h1, h2], timeout=1)
 
 	info( '*** Running CLI\n' )
 	CLI( net )

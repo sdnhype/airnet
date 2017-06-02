@@ -19,7 +19,7 @@ from functools import partial
 def emptyNet(controller_ip, controller_port):
 
 	"Create an empty network and add nodes to it."
-    switch = partial( OVSSwitch, protocols='OpenFlow13')
+    	switch = partial( OVSSwitch, protocols='OpenFlow13')
 	net = Mininet( controller=Controller , switch=switch)
 
 	info( '*** Adding controller\n' )
@@ -33,7 +33,7 @@ def emptyNet(controller_ip, controller_port):
 
 
 	info( '*** Adding switch\n' )
-	s1 = net.addSwitch( 's1' )
+	s1 = net.addSwitch( 's1' ,protocols='OpenFlow13')
 	s2 = net.addSwitch( 's2' )
 	s3 = net.addSwitch( 's3' )
 	s4 = net.addSwitch( 's4' )
@@ -64,8 +64,8 @@ def emptyNet(controller_ip, controller_port):
 	print("*** Starting web service on ws")
 	h3.cmd( 'python -m SimpleHTTPServer 80 &' )
 
-    net.ping([h1, h2], timeout=1)
-    net.ping([h3, h4], timeout=1)
+    	net.ping([h1, h2], timeout=1)
+    	net.ping([h3, h4], timeout=1)
 
 	info( '*** Running CLI\n' )
 	CLI( net )

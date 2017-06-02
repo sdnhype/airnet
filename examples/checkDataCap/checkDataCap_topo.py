@@ -18,7 +18,7 @@ def emptyNet(controller_ip, controller_port):
 
 
 	# "Create an empty network and add nodes to it."
-    switch = partial( OVSSwitch, protocols='OpenFlow13')
+    	switch = partial( OVSSwitch, protocols='OpenFlow13')
 	net = Mininet( controller=Controller, switch=switch )
 
 	info( '*** Adding controller\n' )
@@ -52,8 +52,8 @@ def emptyNet(controller_ip, controller_port):
 	info( '*** Starting network\n')
 	net.start()
 
-    net.ping([h1, h2], timeout=1)
-    net.ping([h1, h3], timeout=1)
+    	net.ping([h1, h2], timeout=1)
+    	net.ping([h1, h3], timeout=1)
 
 	info( '*** Running CLI\n' )
 	CLI( net )
