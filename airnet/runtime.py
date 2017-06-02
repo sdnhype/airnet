@@ -484,7 +484,7 @@ class Runtime():
         """
         def via_data_machine(actions):
 
-            #check if the flow need to passes through a data machine
+            # check if the flow need to passes through a data machine
 
             from language import via
             for act in actions:
@@ -1377,7 +1377,7 @@ class Runtime():
         excludes_nodes = excludes_nodes - self.mapping.fabrics[fabric]
 
         # optimize routing table before convertion into physical rules
-        optimize_routing_table(fabric)
+        # optimize_routing_table(fabric)
 
         for rule in self.fabrics_flows_routing_table[fabric]:
             #rule[0] == intersec_match, rule[1] == input_switch, rule[2] == output_switch, rule[3]==via_list
@@ -1422,12 +1422,12 @@ class Runtime():
 
         def get_data_machine_switch(data_machine):
             """
-            return a tuple that contain the switch and the port to witch dm is connected
+            return a tuple that contain the switch and the port to which dm is connected
             nq:parm: data machine name
             :return: (switch, port)
             """
             adjacents = set()
-            #can't use graph get_adjacent method, because it is integrated to SPF algo, fix it
+            # can't use graph get_adjacent method, because it is integrated to SPF algo, fix it
             for link in self.topology_graph.vertices[data_machine]:
                 adjacents.add(link[1])
             dm_switch = adjacents.pop()
@@ -1437,8 +1437,10 @@ class Runtime():
 
         start = rule[1]
         last = None
+
         for dm in rule[3]:
             intermediate = get_data_machine_switch(dm)
+
             path = self.topology_graph.SPF(start, intermediate[0], excludes_nodes)
             output_port_path = self.get_output_port_path(path)
             dm_switches = get_corresponding_switches(rule[3])
