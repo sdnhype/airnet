@@ -297,12 +297,12 @@ class RestApi_main(app_manager.RyuApp):
 
     @set_ev_cls(event.EventSwitchEnter)
     def _event_switch_enter_handler(self, ev):
-        logger.debug("*** Switch-{} Enter Event ".format(ev.switch.dp.id))
+        logger.debug("\n*** Switch-{} Enter Event ".format(ev.switch.dp.id))
 
         # convert switch object informations to a dict
         msg = ev.switch.to_dict()
 
-        logger.debug("\n\n{}".format("\n".join([str(porti) for porti in msg['ports']])))
+        logger.debug("{}".format("\n".join([str(porti) for porti in msg['ports']])))
         self.client.switchEnter(msg)
 
     @set_ev_cls(event.EventSwitchLeave)
