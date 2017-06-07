@@ -1377,7 +1377,7 @@ class Runtime():
         excludes_nodes = excludes_nodes - self.mapping.fabrics[fabric]
 
         # optimize routing table before convertion into physical rules
-        # optimize_routing_table(fabric)
+        optimize_routing_table(fabric)
 
         for rule in self.fabrics_flows_routing_table[fabric]:
             #rule[0] == intersec_match, rule[1] == input_switch, rule[2] == output_switch, rule[3]==via_list
