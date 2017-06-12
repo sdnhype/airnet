@@ -25,17 +25,6 @@
             p = (match(edge="LB", nw_src=...) >> ... modify(...) >> forward(...))
             # ***
 
-- Virtual composition: 2 matches having an intersection and different actions.
-  Example:
-    match(edge=X, nw_dst=D) >> tag(...) >> forward(...)
-    match(edge=X, nw_dst=D, tp_dst=HTTP) >> drop(...)
-
-
--- Examples
-------------
-
-- statThreeEdges use case (for TouSIX)
-  WORK IN PROGRESS.
 
 -- Other
 ---------
@@ -50,6 +39,19 @@
 ***********************
 *** DONE (by Mayoro)***
 ***********************
+
+
+-- Virtual composition
+------------------------
+2 matches having an intersection and different opposite actions: forward vs. drop.
+  Example:
+    match(edge=X, nw_dst=D) >> tag(...) >> forward(...)
+    match(edge=X, nw_dst=D, tp_dst=HTTP) >> drop(...)
+  --> Priority on drop. DONE.
+
+-- Number of physical rules optimization in fabric (cf. statThreeEdges use case for TouSIX)
+ --> DONE.
+
 
 -- Examples
 -------------
