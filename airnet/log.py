@@ -9,7 +9,7 @@ class Logger :
         self.handler = logging.handlers.RotatingFileHandler(file,mode="a",maxBytes=1000000, backupCount=1, encoding="utf-8")
         self.handler.setFormatter(self.formatter)
 
-    def getLog(self, level="DEBUG") :
+    def Log(self, level="DEBUG") :
         if level.upper() == "INFO" :
             self.handler.setLevel(logging.INFO)
             self.logger.setLevel(logging.INFO)

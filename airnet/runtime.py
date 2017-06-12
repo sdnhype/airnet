@@ -5,7 +5,7 @@ from classifier import Rule
 from collections import namedtuple
 from lib.ipaddr import IPv4Network
 from tools import countOfMessages
-from generic_classes import Bucket,PeriodicTimer
+from lib.dynamicFct import Bucket,PeriodicTimer
 from log import Logger
 import copy, time, logging, pdb
 
@@ -24,7 +24,7 @@ import copy, time, logging, pdb
 # LOGGER CONSTRUCTION
 handler_info = Logger("Airnet_Runtime","log/info.log").handler
 handler_info.setLevel(logging.INFO)
-logger = Logger("Airnet_Runtime").getLog()
+logger = Logger("Airnet_Runtime").Log()
 logger.addHandler(handler_info)
 
 class Runtime():

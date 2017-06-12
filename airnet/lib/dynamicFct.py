@@ -3,10 +3,6 @@ from tools import match_from_packet
 from language import identity,match
 import copy
 
-#TODO: what's the point on #66
-#TODO: merge tools.py on #84
-#TODO: addPacket on #91
-
 class Bucket(object):
     """
         Containers for data/stats received from the controller
@@ -18,7 +14,7 @@ class Bucket(object):
         self.limit = limit
         self.split = split
         self.data = []
-        # here we can multiples micro-flows
+        # here we can have multiples micro-flows
         if split is not None:
             self.nb_packets = {}
             self.locked = {}

@@ -7,7 +7,7 @@
 # TODO: remove default drop rule in __add__
 # TODO: description for __rshift__
 
-import copy, pdb
+import copy
 
 class Rule(object):
     """ defines an edge logical control rule """
@@ -128,16 +128,16 @@ class Classifier(object):
                     if isinstance(a2, forward) and not contain_forward:
                         # we get here when there is no forward action in r1
                         actions.add(a2)
-                    """
-                    elif isinstance(a2, DataFctPolicy):
-                        nwFct_added = False
-                        for act in actions:
-                            if isinstance(act, DataFctPolicy):
-                                nwFct_added = True
-                                act.add_parallel_fct(a2)
-                        if not nwFct_added:
-                            actions.add(a2)
-                    """
+                        """
+                        elif isinstance(a2, DataFctPolicy):
+                            nwFct_added = False
+                            for act in actions:
+                                if isinstance(act, DataFctPolicy):
+                                    nwFct_added = True
+                                    act.add_parallel_fct(a2)
+                            if not nwFct_added:
+                                actions.add(a2)
+                        """
                     elif not isinstance(a2, forward):
                         actions.add(a2)
                     else:
@@ -215,10 +215,10 @@ class Classifier(object):
             # if act == identity or isinstance(act, tag) --> deleted
             if act == identity:
                 return pkts
-            """
-            elif isinstance(act, DataFctPolicy):
+                """
+                elif isinstance(act, DataFctPolicy):
                 return identity
-            """
+                """
             elif isinstance(act, modify):
                 new_match_dict = {}
                 if pkts == identity:

@@ -3,7 +3,7 @@
 	Interacts with RYU REST Server
 """
 from language import identity, forward, modify, match
-from generic_classes import Stat_object
+from lib.dynamicFct import Stat_object
 import ast, pdb, httplib, json, copy
 
 # **************** CODE AUDIT  by Mayoro *******************
