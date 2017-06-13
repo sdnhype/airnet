@@ -1,8 +1,6 @@
-"""
-  " @author Messaoud AOUADJ
-  " @author Emmanuel LAVINAL
-  " @author Mayoro BADJI
-"""
+# AIRNET PROJECT
+# Copyright (c) 2017 Messaoud AOUADJ, Emmanuel LAVINAL, Mayoro BADJI
+
 # TODO: mac_addr associated with more than one ip_addr in Phy_Host
 # TODO: assert avoids us to us critical log in _handle_SwitchJoin and Leave
 # TODO: finalize rarp mechanism

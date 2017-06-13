@@ -1,3 +1,6 @@
+# AIRNET PROJECT
+# Copyright (c) 2017 Messaoud AOUADJ, Emmanuel LAVINAL, Mayoro BADJI
+
 from heapq import *
 
 class Graph(object):

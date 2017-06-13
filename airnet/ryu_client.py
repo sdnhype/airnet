@@ -3,7 +3,7 @@
 	Interacts with RYU REST Server
 """
 from language import identity, forward, modify, match
-from lib.dynamicFct import Stat_object
+from lib.dynamicFct import Stat
 import ast, pdb, httplib, json, copy
 
 # **************** CODE AUDIT  by Mayoro *******************
@@ -382,7 +382,7 @@ class RyuClient(object):
 			packet_count = h[u'packet_count']
 
 		# construct the stat object
-		stat = Stat_object(byte_count,packet_count,**target_match.map)
+		stat = Stat(byte_count,packet_count,**target_match.map)
 
 		return stat
 

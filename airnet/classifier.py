@@ -1,9 +1,6 @@
-"""
-  " @author Messaoud AOUADJ
-  " @author Emmanuel LAVINAL
-  " @author Mayoro BADJI
-"""
-# TODO: remove DataFctPolicy section in __add__ , _commute_test
+# AIRNET PROJECT
+# Copyright (c) 2017 Messaoud AOUADJ, Emmanuel LAVINAL, Mayoro BADJI
+
 # TODO: remove default drop rule in __add__
 # TODO: description for __rshift__
 
