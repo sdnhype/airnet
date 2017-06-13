@@ -20,7 +20,6 @@ from infrastructure import Infrastructure
 from flask import Flask,json,request,Response
 from pprint import pprint
 from runtime import Runtime
-#from ryu_client import RyuClient
 import thread,time,sys
 
 # WSGI Application
@@ -66,7 +65,7 @@ def handle_link_add():
 	dpid2 = int(dst['dpid'],16)
 	port2 = int(dst['port_no'])
 	infra._handle_LinkEvent(dpid1,port1,dpid2,port2,True)
-	# static rules are installed
+	# Proactive (static) rules are installed
 	if runtime.nexus.runtime_mode:
 		# topology must change
 		runtime.handle_topology_change()
@@ -103,7 +102,7 @@ def handle_host_add():
 	# add the new host to the global topology view
 	infra._handle_host_tracker_HostEvent(dpid, port, mac, ipadrs, True)
 	if len(runtime.mapping.hosts) == len (infra.hosts):
-		# all hosts have been discovered, enforce static rules
+		# all hosts have been discovered, enforce proactive rules
 		thread.start_new_thread(launch,())
 	return 'OK'
 
@@ -119,7 +118,7 @@ def launch():
 	time.sleep(5)
 	# show the global topology view with all equipments
 	runtime.infra.view()
-	# enforce static rules
+	# enforce proactive rules
 	runtime.enforce_policies()
 
 def main():

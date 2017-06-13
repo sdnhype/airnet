@@ -1,33 +1,41 @@
+# AIRNET PROJECT
+# Copyright (c) 2017 Messaoud AOUADJ, Emmanuel LAVINAL, Mayoro BADJI
 """
-	Airnet Hypervisor REST Client
-	Interacts with RYU REST Server
+	Airnet REST GenericClient which sends intructions to the Controller REST Server
+		-> Flow Instructions (add, delete, update)
+		-> Packet Instructions (PacketOut)
+		-> Stats Instructions about a flow
+	Sends intructions currently to {localhost:8080}
 """
 from language import identity, forward, modify, match
 from lib.dynamicFct import Stat
-import ast, pdb, httplib, json, copy
+from log import Logger
+import ast, httplib, json, copy
 
-# **************** CODE AUDIT  by Mayoro *******************
-#TODO: which installNewRules to delete on #220 and #243
-#TODO: which modifyExistingRules to delete on #280 and #322
-#TODO: mapping 1 edge --> n switches to handle in send_stat_request on #337
+#TODO: mapping 1 edge --> n switches to handle in send_StatsRequest
+#TODO: can we have another ARP message type ? in handle_PacketIn
 
 ARP_REQUEST = 1
 ARP_REPLY = 2
 
-class Client(object):
-	"""
-		Corresponds to the RYU REST Server to which requests are sent
-	"""
+logger = Logger("Airnet_CLIENT","log/error.log").Log("ERROR")
+
+class GenericClient(object):
+	""" sends instructions to the controller REST server """
 	def __init__(self,host,port,prefix):
-		super(Client, self).__init__()
+		"""
+			@param host   : ipAddr of the REST server
+			@param port   : listening port of the REST server
+			@param prefix : determines the type of the instruction
+						    (pkt, stat, flow)
+		"""
+		super(GenericClient, self).__init__()
 		self.host = host
 		self.port = port
 		self.prefix = '/'+prefix+'/'
 
 	def send_request(self,method,action,data=None):
-		"""
-			Send requests through the httplib library
-		"""
+		""" sends requests through the httplib library """
 		# initiate the connection
 		conn = httplib.HTTPConnection(self.host, self.port)
 		url = self.prefix + action
@@ -49,8 +57,9 @@ class Client(object):
 			else:
 				raise Exception
 		except Exception:
-			print("Exception occured while sending request for {}".format(action))
-			print("data {}".format(str(data)))
+			print("Exception occured !! see log/error.log for details")
+			logger.error("Unable to send request for {}".format(action))
+			logger.error("Data {}".format(str(data)))
 
 	def send_and_read_request(self,method,action,data=None):
 		try:
@@ -59,10 +68,8 @@ class Client(object):
 		except Exception:
 			return None
 
-class ConfigureFlow(Client):
- 	"""
-		Perform and send actions on flows to the RYU Controller
-	"""
+class ConfigureFlow(GenericClient):
+ 	""" formats and sends requests on flow entries """
 	prefix_config = 'Flows/entry'
 
  	def __init__(self,host,port):
@@ -72,74 +79,70 @@ class ConfigureFlow(Client):
 	 	try:
  			self.send_request('POST','add',data)
 		except Exception:
-			print 'Add flow : Exception'
+			print '!!!'
 
  	def updateFlow(self,data):
 	 	try:
  			self.send_request('POST','modify_strict',data)
 		except Exception:
-			print 'Update flow : Exception'
+			print '!!!'
 
  	def deleteFlow(self,data):
  		try:
 		 	self.send_request('POST','delete_strict',data)
 		except Exception:
-			print 'Delete flow : Exception'
+			print '!!!'
 
  	def deleteAllFlow(self,dpid):
  		action = 'clear/'+'%s' %(dpid)
 		try:
  			self.send_request('DELETE',action)
 		except Exception:
-			print 'Clear flows : Exception'
+			print '!!!'
 
-class GetStats(Client):
-	"""
-		Client which will get the stats from the Ryu controller
-	"""
+class ConfigureStats(GenericClient):
+	""" formats and sends requests on statistics """
 	prefix_stat = 'Stats'
 
 	def __init__(self,host,port):
-		super(GetStats,self).__init__(host,port,GetStats.prefix_stat)
+		super(ConfigureStats,self).__init__(host,port,ConfigureStats.prefix_stat)
 
-	def getStatsFlow(self,dpid,data=None):
-		"""
-			Recup flow statistics from switch-{dpid}
-		"""
+	def get_StatsFlow(self,dpid,data=None):
+		""" sends statistics requests about
+			flows in an specific switch (dpid) """
 		action = 'flow/%d' % (dpid)
 		return self.send_request('GET',action,data)
 
-class ConfigurePackets(Client):
-	"""
-		Send packets to the Ryu Controller
-	"""
+class ConfigurePackets(GenericClient):
+	""" formats and sends requests on packets """
 	prefix = 'Packets'
 
 	def __init__(self,host,port):
 		super(ConfigurePackets,self).__init__(host,port,ConfigurePackets.prefix)
 
 	def sendPacket(self,data):
+		""" send a packet back to the controller """
 		action = 'push'
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			print 'Exception while sending packet to the controller'
+			print '!!!'
 
 class RyuClient(object):
-	"""
-		Corresponds to the Airnet REST client which send requests to the
-		RYU REST server at {localhost:8080}
+	""" uses the classes above to sends instructions to
+		the RYU SDN controller REST Server
 	"""
 	def __init__(self,runtime):
 		self.switches_rules_cpt = {}
 		self.runtime = runtime
-		self.runtime_mode = False # Proactive rules are not installed yet
+		# Proactive rules are not installed yet
+		self.runtime_mode = False
 
-	def build_match_field(self, src = None, dst = None,dl_src=None, dl_dst=None,
+	def build_MatchFields(self, src = None, dst = None,dl_src=None, dl_dst=None,
                           nw_src = None, nw_dst = None, tp_src=None, tp_dst=None, nw_proto= None, in_port=None):
-		"""
-			Construct OF MATCH fields in a dictionary
-		"""
+
+		""" constructs the OpenFlow match fields """
+
 		match = {}
 
 		if src:
@@ -170,10 +173,9 @@ class RyuClient(object):
 			match['in_port'] = in_port
 		return match
 
-	def build_action_fields(self,actions):
-		"""
-			Construct OF ACTIONS fields dictionary
-		"""
+	def build_ActionFields(self,actions):
+		""" constructs the OpenFlow actions fields """
+
 		actions_mod = []
 		for act in actions:
 			if isinstance(act, modify):
@@ -188,14 +190,69 @@ class RyuClient(object):
 		for act in actions:
 			if isinstance(act, forward):
 				if act.output == "OFPP_CONTROLLER":
-					act.output = 0xfffffffd #controller port
+					act.output = 0xfffffffd # controller port in OF 1.3
 				actions_mod.append({'type':'OUTPUT','port':act.output})
 		return actions_mod
 
-	def install_rules_on_dp(self, classifiers):
+	def get_MatchFromPacket(self,dpid, protos):
 		"""
-			Push Proactive Rules on the controller through the REST API
-			Rules are taken from classifiers (dictionary --> sw1 : [r1,r2,r3...], sw2 :...)
+			extracts packet information in protos parameter
+			to create match fields
+		"""
+		my_match = match()
+
+		if 'ipv4' in protos:
+			ip = protos.get('ipv4')
+			my_match.map["nw_src"] = ip.get('src')
+			my_match.map["nw_dst"] = ip.get('dst')
+		if 'tcp' in protos:
+			tcp = protos.get('tcp')
+			my_match.map["tp_src"] = tcp.get('src_port')
+			my_match.map["tp_dst"] = tcp.get('dst_port')
+			my_match.map["nw_proto"] = "TCP"
+		if 'udp' in protos:
+			udp = protos.get('udp')
+			my_match.map["tp_src"] = udp.get('src_port')
+			my_match.map["tp_dst"] = udp.get('dst_port')
+			my_match.map["nw_proto"] = 17
+		if 'icmp' in protos:
+			my_match.map["nw_proto"] = 1
+
+		switch = 's' + str(dpid)
+		edge = self.runtime.get_corresponding_virtual_edge(switch)
+		# add an edge field
+		if edge:
+			my_match.map['edge'] = edge
+		else:
+			return None
+		return my_match
+
+	def handle_PacketIn(self,packet):
+		""" Handle a packet in event received from RYU
+			Packet received can be :
+			- ARP -> delivers an ARP Reply
+			- IP  -> transfers it to the runtime module
+		"""
+
+		dpid = int(packet.get('dpid'))
+		port = int(packet.get('port'))
+		protos = (packet.get('packet'))
+		protos = ast.literal_eval(str(protos))
+
+		# ARP packet
+		if 'arp' in protos:
+			data_arp = protos.get('arp')
+			# ARP request
+			if data_arp.get('opcode') == ARP_REQUEST:
+				self.reply_arp(dpid,port,data_arp)
+		# IP Packet
+		else:
+			packet_match = self.get_MatchFromPacket(dpid,protos)
+			self.runtime.handle_packet_in(dpid, packet_match, packet)
+
+	def push_ProactiveRules(self, classifiers):
+		""" push static rules on the controller through the REST API
+			rules are stored classifiers (dictionary --> s1 : [r1,r2,r3...], s2 :...)
 		"""
 		c = ConfigureFlow('localhost',8080)
 
@@ -214,17 +271,95 @@ class RyuClient(object):
 				data['dpid'] = dpid
 				# the following is for every rule except the default one (identity -- identity -- drop)
 				if rule.match != identity:
-					data['match'] = self.build_match_field(**rule.match.map)
+					data['match'] = self.build_MatchFields(**rule.match.map)
 					# if there is at least one action
 					if not len(rule.actions) == 0:
-						data['actions'] = self.build_action_fields(rule.actions)
+						data['actions'] = self.build_ActionFields(rule.actions)
 				# set a degressive priority
 				data['priority'] = priority
 				priority = priority-1
 				# push the dictionary
 				c.addFlow(data)
-		# First rules are installed
+		# static rules are installed
 		self.runtime_mode = True
+
+	def reply_arp(self,dpid,port,data_arp):
+		""" constructs an ARP reply packet """
+
+		ip_src = data_arp.get('src_ip')
+		ip_dst = data_arp.get('dst_ip')
+		mac_src = data_arp.get('src_mac')
+		requested_mac = self.runtime.infra.arp(ip_dst)
+
+		if requested_mac is not None:
+			connect = ConfigurePackets('localhost',8080)
+
+			data_arp["opcode"] = ARP_REPLY
+			data_arp["src_ip"] = ip_dst
+			data_arp["dst_ip"] = ip_src
+			data_arp["src_mac"] = requested_mac
+			data_arp["dst_mac"]	= mac_src
+			packet = {}
+			packet["arp"] = data_arp
+			data_arp = unicode (data_arp)
+			packet_out = {}
+			packet_out['dpid'] = dpid
+			packet_out['port'] = port
+			packet_out['packet'] = packet
+			connect.sendPacket(packet_out)
+
+	def send_StatsRequest(self, switches, target_match):
+		""" sends stats requests about a flow to physical OF switches
+			that flow corresponds to target_match parameter
+		"""
+		req_stat = ConfigureStats('localhost',8080)
+		# backup the matching field
+		_target_match = copy.deepcopy(target_match)
+		# pop the edge field
+		_target_match.map.pop("edge")
+		request = {}
+		# build the match field dict
+		request['match'] = self.build_MatchFields(**_target_match.map)
+
+		for switch in switches:
+			dpid = int((switch[1:]))
+			request['dpid'] = dpid
+			# send the request to each switch
+			resp_stat = req_stat.get_StatsFlow(dpid,request)
+			# get the answer body
+			response = json.load(resp_stat)
+
+		# response looks like {"u'dpid'":[{u'field1: u'value1', u'field2': u'value2'... }]
+		# for each switch response
+		for h in response[u'{}'.format(dpid)]:
+			byte_count = h[u'byte_count']
+			packet_count = h[u'packet_count']
+
+		# construct the stat object
+		stat = Stat(byte_count,packet_count,**target_match.map)
+
+		return stat
+
+	def send_PacketOut(self, switch, packet, output):
+		"""
+			sends json data to RYU in order to deliver a packet
+			stored in a switch
+			@param switch : to which instruction will be transferred
+			@param packet : correspond to the packet stored by the switch
+			@param output : switch will use this output to send packet
+							to the correct destination
+		"""
+		c = ConfigurePackets('localhost',8080)
+
+		dpid = int((switch[1:]))
+		packet['dpid'] = dpid
+		packet['output'] = output
+		c.sendPacket(packet)
+
+
+#TODO: while cleaning runtime module
+
+
 
 	def installNewRules(self, classifiers):
 		c = ConfigureFlow('localhost',8080)
@@ -235,13 +370,12 @@ class RyuClient(object):
 				priority = len(self.runtime.new_classifiers[switch]) - rule[1]
 				data = {}
 				data['dpid'] = dpid
-				data['match'] = self.build_match_field(**rule[0].match.map)
+				data['match'] = self.build_MatchFields(**rule[0].match.map)
 				if not len(rule[0].actions) == 0:
-					data['actions'] = self.build_action_fields(rule[0].actions)
+					data['actions'] = self.build_ActionFields(rule[0].actions)
 				data['priority'] = priority
 				c.addFlow(data)
 			self.switches_rules_cpt[switch] += len(rules)
-
 
 	def install_new_rules(self, classifiers):
 		"""
@@ -257,10 +391,10 @@ class RyuClient(object):
 			for rule in rules:
 				data = {}
 				data['dpid'] = dpid
-				data['match'] = self.build_match_field(**rule.match.map)
+				data['match'] = self.build_MatchFields(**rule.match.map)
 
 				if not len(rule.actions) == 0:
-					data['actions'] = self.build_action_fields(rule.actions)
+					data['actions'] = self.build_ActionFields(rule.actions)
 				data['priority'] = priority
 				priority -= 1
 				c.addFlow(data)
@@ -279,9 +413,9 @@ class RyuClient(object):
 			for rule in rules:
 				data = {} #dictionnaire qui sera envoye
 				data['dpid'] = dpid
-				data['match'] = self.build_match_field(**rule[0].match.map)
+				data['match'] = self.build_MatchFields(**rule[0].match.map)
 				if not len(rule[0].actions) == 0:
-					data['actions'] = self.build_action_fields(rule[0].actions)
+					data['actions'] = self.build_ActionFields(rule[0].actions)
 				data['priority'] = self.switches_rules_cpt[switch] - rule[1]
 				c.deleteFlow(data)
 				cpt_deleted_rules += 1
@@ -331,9 +465,9 @@ class RyuClient(object):
 				else:
 					data = {} #dictionnaire qui sera envoye
 					data['dpid'] = dpid
-					data['match'] = self.build_match_field(**new_r[0].match.map)
+					data['match'] = self.build_MatchFields(**new_r[0].match.map)
 					if not len(new_r[0].actions) == 0:
-						data['actions'] = self.build_action_fields(new_r[0].actions)
+						data['actions'] = self.build_ActionFields(new_r[0].actions)
 					data['priority'] = self.switches_rules_cpt[switch] - new_r[1]
 					c.updateFlow(data)
 
@@ -345,141 +479,10 @@ class RyuClient(object):
 			for rule in rules:
 				data = {} #dictionnaire qui sera envoye
 				data['dpid'] = dpid
-				data['match'] = self.build_match_field(**rule[0].match.map)
+				data['match'] = self.build_MatchFields(**rule[0].match.map)
 				if not len(rule[0].actions) == 0:
-					data['actions'] = self.build_action_fields_bis(rule[0].actions)
+					data['actions'] = self.build_ActionFields_bis(rule[0].actions)
 				data['priority'] = self.switches_rules_cpt[switch] - rule[1]
 				#TODO runtime.msgs
 				c.updateFlow(data)
 	"""
-	def send_stat_request(self, switches, target_match):
-		"""
-			sends stats requests to physical OF switches
-			stats are associated to a flow which matches target_match
-		"""
-		# initialize the client
-		req_stat = GetStats('localhost',8080)
-		# backup the matching field
-		_target_match = copy.deepcopy(target_match)
-		# pop the edge field
-		_target_match.map.pop("edge")
-		request = {}
-		# build the match field dict
-		request['match'] = self.build_match_field(**_target_match.map)
-
-		for switch in switches:
-			dpid = int((switch[1:]))
-			request['dpid'] = dpid
-			# send the request to each switch
-			resp_stat = req_stat.getStatsFlow(dpid,request)
-			# get the answer body
-			response = json.load(resp_stat)
-
-		# response looks like {"u'dpid'":[{u'field1: u'value1', u'field2': u'value2'... }]
-		# for each switch response
-		for h in response[u'{}'.format(dpid)]:
-			byte_count = h[u'byte_count']
-			packet_count = h[u'packet_count']
-
-		# construct the stat object
-		stat = Stat(byte_count,packet_count,**target_match.map)
-
-		return stat
-
-	def handle_PacketIn(self,packet):
-		"""
-			Handle a packet/in event received from the controller
-			Packet can be ARP or IP
-			{"port":..,"id_packet":..,"dpid":..,"packet": {"ipv4":{.....},"tcp":{....},"icmp":{...},
-		                                                   "udp":{.....},"dl_src":...,"dl_dst":...}}
-		"""
-		dpid = int(packet.get('dpid'))
-		port = int(packet.get('port'))
-		protos = (packet.get('packet'))
-		protos = ast.literal_eval(str(protos))
-		# it's an ARP packet
-		if 'arp' in protos:
-			data_arp = protos.get('arp')
-			# it's an ARP request
-			if data_arp.get('opcode') == ARP_REQUEST:
-				self.reply_arp(dpid,port,data_arp)
-		# it's an IP Packet
-		else:
-			# extract informations had runtime deal with it
-			packet_match = self.match_from_packet(dpid,protos)
-			self.runtime.handle_packet_in(dpid, packet_match, packet)
-
-	def reply_arp(self,dpid,port,data_arp):
-		"""
-			Construct an ARP reply packet
-		"""
-		ip_src = data_arp.get('src_ip')
-		ip_dst = data_arp.get('dst_ip')
-		mac_src = data_arp.get('src_mac')
-		requested_mac = self.runtime.infra.arp(ip_dst)
-
-		if requested_mac is not None:
-			connect = ConfigurePackets('localhost',8080)
-
-			data_arp["opcode"] = ARP_REPLY
-			data_arp["src_ip"] = ip_dst
-			data_arp["dst_ip"] = ip_src
-			data_arp["src_mac"] = requested_mac
-			data_arp["dst_mac"]	= mac_src
-			packet = {}
-			packet["arp"] = data_arp
-			data_arp = unicode (data_arp)
-			packet_out = {}
-			packet_out['dpid'] = dpid
-			packet_out['port'] = port
-			packet_out['packet'] = packet
-			connect.sendPacket(packet_out)
-
-	"""
-	permet d'envoyer un dictionnaire contenant le numero et les entetes d'un paquet
-	au controleur ryu pour que celui-ci le delivre
-	switch: nom du switch sur lequel envoyer le paquet
-	output le numero de port du switch
-	packet: dictionnaire contenant les infos du paquet
-	{"port":..,"id_packet":..,"dpid":..,"packet": {"ipv4":{.....},"tcp":{....},"icmp":{...},
-                                                   "udp":{.....},"dl_src":...,"dl_dst":...}}
-	"""
-	def send_packet_out(self, switch, packet, output):
-		dpid = int((switch[1:]))
-		packet['dpid'] = dpid
-		packet['output'] = output
-		c = ConfigurePackets('localhost',8080)
-		c.sendPacket(packet)
-
-	"""
-	cree un match a partir des entete d'un paquet
-	dpid: numero du switch
-	protos: dictionnaires contenant les entetes des protocoles du packet
-	{"ipv4":{.....},"tcp":{....},"icmp":{...},"udp":{.....},"dl_src":...,"dl_dst":...}
-	"""
-	def match_from_packet(self,dpid, protos):
-		my_match = match()
-		if 'ipv4' in protos:
-			ip = protos.get('ipv4')
-			my_match.map["nw_src"] = ip.get('src')
-			my_match.map["nw_dst"] = ip.get('dst')
-		if 'tcp' in protos:
-			tcp = protos.get('tcp')
-			my_match.map["tp_src"] = tcp.get('src_port')
-			my_match.map["tp_dst"] = tcp.get('dst_port')
-			my_match.map["nw_proto"] = "TCP"
-		if 'udp' in protos:
-			udp = protos.get('udp')
-			my_match.map["tp_src"] = udp.get('src_port')
-			my_match.map["tp_dst"] = udp.get('dst_port')
-			my_match.map["nw_proto"] = 17
-		if 'icmp' in protos:
-			my_match.map["nw_proto"] = 1
-		#adding edge field in the match
-		switch = 's' + str(dpid)
-		edge = self.runtime.get_corresponding_virtual_edge(switch)
-		if edge:
-			my_match.map['edge'] = edge
-		else:
-			return None
-		return my_match

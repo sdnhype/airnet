@@ -1,4 +1,4 @@
-from ryu_client import RyuClient
+from restClient_controller import RyuClient
 from importlib import import_module
 from language import identity, forward, modify, carry, drop, CompositionPolicy, match, DataFctPolicy, NetworkFunction, Policy, DynamicPolicy
 from classifier import Rule
@@ -207,7 +207,7 @@ class Runtime():
                         for act in edge_rule.actions:
                             if isinstance(act, forward):
                                 output = self.get_phy_switch_output_port(switch, act.output)
-                                self.nexus.send_packet_out(switch, packet, output)
+                                self.nexus.send_PacketOut(switch, packet, output)
                                 find = True
                                 break
                     if find:
@@ -221,7 +221,7 @@ class Runtime():
                 fwd = self.get_dycRule_forward(matching_rule)
                 if fwd:
                     output = self.get_phy_switch_output_port(switch, fwd.output)
-                    self.nexus.send_packet_out(switch, packet, output)
+                    self.nexus.send_PacketOut(switch, packet, output)
 
         dyc_rule = None
 
@@ -246,7 +246,7 @@ class Runtime():
             fwd = self.get_dycRule_forward(dyc_rule)
             switch = 's' + str(dpid)
             output = self.get_phy_switch_output_port(switch, fwd.output)
-            self.nexus.send_packet_out(switch, result, output)
+            self.nexus.send_PacketOut(switch, result, output)
 
     def apply_netFunction_fromStat(self, bucket_match, stat):
         """
@@ -606,7 +606,7 @@ class Runtime():
             if edge[1] == "switch":
                 logger.info("\n ----- %s rules : (%d)\n%s" % (edge[0], len(self.physical_switches_classifiers[edge[0]]),"\n".join([str(j) for j in self.physical_switches_classifiers[edge[0]]])))
 
-        self.nexus.install_rules_on_dp(self.physical_switches_classifiers)
+        self.nexus.push_ProactiveRules(self.physical_switches_classifiers)
         logger.info("\n# Proactive rules installed == " + str(countOfMessages(self.physical_switches_classifiers)))
         print("\n# Proactive rules installed == " + str(countOfMessages(self.physical_switches_classifiers)))
 
@@ -1195,7 +1195,7 @@ class Runtime():
         # get physical switches which will send stats
         edge_switches = self.get_edge_physical_corresponding(target_match.map["edge"])
         # send stat requests through the Airnet Client
-        stat =  self.nexus.send_stat_request(edge_switches, target_match)
+        stat =  self.nexus.send_StatsRequest(edge_switches, target_match)
         # collect stats received from RYU
         self.handle_flow_stats(stat)
 
