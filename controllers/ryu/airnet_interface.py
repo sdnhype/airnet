@@ -325,7 +325,7 @@ class RestApi_main(app_manager.RyuApp):
 
     @set_ev_cls(event.EventHostAdd)
     def _event_host_add_handler(self, ev):
-        logger.debug("\n*** Host Add Event : {}  ".format(str(ev.host.mac)))
+        logger.debug("\n*** Host Add Event : {}  ".format(str(ev.host.to_dict())))
         msg = ev.host.to_dict()
         self.client.hostAdd(msg)
 

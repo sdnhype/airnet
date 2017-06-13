@@ -33,6 +33,8 @@ mapping_module = sys.argv[2]
 
 # launch the runtime module
 runtime = Runtime(control_module,mapping_module,infra,"RYU")
+# ryuClient
+
 
 # received a switch enter event from the controller
 @app.route('/Topo/Switch/enter',methods = ['POST'])
@@ -103,7 +105,7 @@ def handle_host_add():
 	infra._handle_host_tracker_HostEvent(dpid, port, mac, ipadrs, True)
 	if len(runtime.mapping.hosts) == len (infra.hosts):
 		# all hosts have been discovered, enforce proactive rules
-		thread.start_new_thread(launch,())
+		thread.start_new_thread(enforce_proactive_policies,())
 	return 'OK'
 
 # received a packet in event from the controller
@@ -114,7 +116,7 @@ def handle_packet_in():
 		runtime.nexus.handle_PacketIn(packet)
 	return 'OK'
 
-def launch():
+def enforce_proactive_policies():
 	time.sleep(5)
 	# show the global topology view with all equipments
 	runtime.infra.view()

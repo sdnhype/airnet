@@ -82,7 +82,7 @@ class PacketParser(object):
         if 'tcp' in protos:
             tp = protos.get('tcp')
             actions.append(dp.ofproto_parser.OFPActionSetField(tcp_src=tp.get('src_port')))
-            actions.append(dp.ofproto_parser.OFPActionSeField(tcp_dst=tp.get('dst_port')))
+            actions.append(dp.ofproto_parser.OFPActionSetField(tcp_dst=tp.get('dst_port')))
         elif 'udp' in protos:
             tp = protos.get('udp')
             actions.append(dp.ofproto_parser.OFPActionSetField(udp_src=tp.get('src_port')))

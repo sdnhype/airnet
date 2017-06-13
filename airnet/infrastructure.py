@@ -6,7 +6,7 @@
 # TODO: finalize rarp mechanism
 
 from collections import namedtuple
-from lib.graph import Graph
+from graph import Graph
 from lib.ipaddr import IPv4Network
 from log import Logger
 import copy

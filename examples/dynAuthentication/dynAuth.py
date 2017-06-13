@@ -36,7 +36,7 @@ def authenticate(packet):
 
     if whitelist.has_key(hostIP):
         print(hostIP + " is whitelisted. --> fwd")
-        new_policy = (match(edge=WAP, nw_src=hostIP, dst=WEB_SERVER, nw_proto=ICMP) >>
+        new_policy = (match(edge=WAP, nw_src=hostIP, dst=WEB_SERVER) >>
                       tag(GUESTS_WS_FLOWS) >> forward(FABRIC))
     else:
         print(hostIP + " is blacklisted. --> drop")

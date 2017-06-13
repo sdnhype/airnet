@@ -8,12 +8,11 @@
 	Sends intructions currently to {localhost:8080}
 """
 from language import identity, forward, modify, match
-from lib.dynamicFct import Stat
+from dynamicFct import Stat
 from log import Logger
 import ast, httplib, json, copy
 
 #TODO: mapping 1 edge --> n switches to handle in send_StatsRequest
-#TODO: can we have another ARP message type ? in handle_PacketIn
 
 ARP_REQUEST = 1
 ARP_REPLY = 2

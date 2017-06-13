@@ -5,7 +5,7 @@ from classifier import Rule
 from collections import namedtuple
 from lib.ipaddr import IPv4Network
 from tools import countOfMessages
-from lib.dynamicFct import Bucket,PeriodicTimer
+from dynamicFct import Bucket,PeriodicTimer
 from log import Logger
 import copy, time, logging, pdb
 

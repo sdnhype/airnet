@@ -1,11 +1,7 @@
-from classifier import Classifier, Rule, FabricRule, FabricClassifier
+from classifier import *
 from lib.ipaddr import IPv4Network
 from lib.addresses import IPAddr
 from tools import *
-import pdb
-
-#import traceback, sys
-#traceback.print_exception(*sys.exc_info())
 
 ##################################################
 #            virtual topology                    #
