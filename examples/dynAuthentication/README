@@ -60,6 +60,6 @@ mininet> users ping -c1 WS  ---> OK
 mininet> users ping -c1 DB  ---> OK
 
 mininet> guests ping -c1 WS  ---> OK  (guests IP on whitelist)
-mininet> guests wget WS      ---> micro-flow locked !!!  (WHY ??)
+mininet> guests wget WS      ---> OK  (guests IP on whitelist)
 
 mininet> guests ping -c1 DB  ---> K0
