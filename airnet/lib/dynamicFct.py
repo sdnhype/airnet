@@ -3,8 +3,8 @@
 
 #TODO: packet concurrency in add_packet
 
-from threading import Timer
 from language import identity,match
+from threading import Timer
 import copy, ast
 
 class Bucket(object):

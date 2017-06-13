@@ -1,7 +1,7 @@
-from tools import *
+from classifier import Classifier, Rule, FabricRule, FabricClassifier
 from lib.ipaddr import IPv4Network
 from lib.addresses import IPAddr
-from classifier import Classifier, Rule, FabricRule, FabricClassifier
+from tools import *
 import pdb
 
 #import traceback, sys
