@@ -37,9 +37,9 @@ Ex.: ( catch() + catch() ) >> carry()
 
 Virtual topology: 3 edges (one-to-two and one-to-one mapping), 2 fabrics
 
-======================================
-== Static edge gw between 2 fabrics ==
-======================================
+===========================================
+== Static edge gateway between 2 fabrics ==
+===========================================
 
 # examples/staticEdgeGateway/
 
@@ -47,38 +47,16 @@ One edge between two fabrics. Traffic forwarded through that edge.
 
 Virtual topology: 3 edges (one-to-one mapping), 2 fabrics
 
-******************************************************************************
-******************************************************************************
-
 ============================
 == Dynamic authentication ==
 ============================
 
-##### TODO : first packet is not reinjected into the data plane
-
 # examples/dynAuthentication/
 
--- RYU
+Example with an "authenticate" dynamic network control function. This function
+authenticates the flow based on the IP source address of the first packet.
 
-$ cd controllers/ryu/
-$ ryu-manager --observe-links airnet_interface.py
-
--- AirNet
-
-$ ./launch_airnet_ryu.sh dynAuthentication.dynAuth dynAuthentication.dynAuth_mapping
-
--- Mininet
-
-$ sudo python topo_9sw_4hosts.py 192.168.56.1 6633
-
--- Tests
-
-mininet> users ping -c1 WS  ---> OK
-mininet> users ping -c1 CC  ---> OK
-mininet> guests wget WS     ---> OK  (guests IP on whitelist)
-
-mininet> guests ping -c1 WS  ---> KO the first time : BUG!
-mininet> guests ping -c1 WS  ---> OK the second time : XXX BUG ! not OK. FIX ME!
+Virtual topology: 3 edges (one-to-one and one-to-two mapping), 1 fabric
 
 ******************************************************************************
 ******************************************************************************

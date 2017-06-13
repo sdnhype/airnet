@@ -1,0 +1,65 @@
+# ============================
+# examples/dynAuthentication/
+# ============================
+
+************************
+*** virtual topology ***
+************************
+
+-------------
+- Admin Net ------[IO]--- |
+-------------             |                       |-- WebServer
+                          |----[ Fabric ]---[AC]--|
+--------------            |                       |-- DataBase
+- Guests Net -----[WAP]---|
+--------------
+
+Policies:
+
+ADMIN_NET <--> WS and DB servers: allow ALL
+GUEST_NET <--> WS: allow only flows with IP source address in whitelist
+                 (thanks to authenticate function on WAP edge)
+
+************************
+*** mininet topology ***
+************************
+
+users---[s1]----|          |---[s5]---[s6]---|          |---[s8]---WS
+                |---[s3]---|                 |---[s7]---|
+guests---[s2]---|          |--------[s4] ----|          |---[s9]---DB
+
+***************
+*** mapping ***
+***************
+
+IO  --> s1
+WAP --> s2
+AC  --> [s8, s9]
+Fabric --> [s3, s4, s5, s6, s7]
+
+***************************
+*** running and testing ***
+***************************
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh dynAuthentication.dynAuth dynAuthentication.dynAuth_mapping
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- Mininet
+
+$ sudo python dynAuth_topo.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> users ping -c1 WS  ---> OK
+mininet> users ping -c1 DB  ---> OK
+
+mininet> guests ping -c1 WS  ---> OK  (guests IP on whitelist)
+mininet> guests wget WS      ---> micro-flow locked !!!  (WHY ??)
+
+mininet> guests ping -c1 DB  ---> K0

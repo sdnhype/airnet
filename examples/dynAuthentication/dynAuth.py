@@ -2,6 +2,7 @@
 from language import *
 from constants import *
 import ast
+
 whitelist = {}
 whitelist["172.16.0.12"] = "allow"
 
@@ -14,9 +15,11 @@ whitelist["172.16.0.12"] = "allow"
 - Guests Net -----[WAP]---|
 --------------
 
-ADMIN_NET <--> WS and DB servers : OK
-GUEST_NET <--> WS : only whitelist
+Policies:
 
+ADMIN_NET <--> WS and DB servers: allow ALL
+GUEST_NET <--> WS: allow only flows with IP source address in whitelist
+                 (thanks to authenticate function on WAP edge)
 """
 
 ADMIN_FLOWS = "ADMIN_FLOWS"
@@ -25,7 +28,7 @@ GUESTS_WS_FLOWS = "GUESTS_WS_FLOWS"
 @DynamicControlFct(data="packet", limit=1, split=["nw_src"])
 def authenticate(packet):
     if isinstance(packet, dict):
-        #ici il s'agit de {'dpid':..,'packet':{'ipv4':{......},'tcp':{....},...},'port':..}
+        # packet: JSON {'dpid':..., 'packet':{'ipv4':{......},'tcp':{....},...},'port':...}
         protos = packet.get('packet')
         protos = ast.literal_eval(str(protos))
         ip = protos.get('ipv4')
@@ -43,9 +46,9 @@ def authenticate(packet):
         new_policy = (match(edge=WAP, nw_src=hostIP, dst=WEB_SERVER) >> drop)
     return new_policy
 
-#Virtual topology
+# Virtual topology
 def virtual_network():
-    #VIRTUAL DEVICES
+    # Virtual components
     topology = VTopology()
     topology.addFabric(FABRIC,3)
     topology.addEdge(IO,2)
@@ -55,7 +58,7 @@ def virtual_network():
     topology.addHost(DATA_BASE)
     topology.addNetwork(GUEST_NET)
     topology.addNetwork(ADMIN_NET)
-    #LINKS
+    # Virtual links
     topology.addLink((IO,1),(ADMIN_NET,0))
     topology.addLink((IO,2),(FABRIC,1))
     topology.addLink((WAP,1),(GUEST_NET,0))
@@ -65,32 +68,30 @@ def virtual_network():
     topology.addLink((AC,3),(FABRIC,3))
     return topology
 
-#Policies
+# Policies
 def access_policies():
-    i1 = match(edge=IO, src=ADMIN_NET) >> tag(ADMIN_FLOWS) >> forward(FABRIC)
+    i1 = match(edge=IO,  src=ADMIN_NET) >> tag(ADMIN_FLOWS) >> forward(FABRIC)
     i2 = match(edge=WAP, src=GUEST_NET, dst=WEB_SERVER) >> authenticate()
-    #i5 = match(edge=WAP, src=GUEST_NET, dst=WEB_SERVER, nw_proto=ICMP) >> tag(GUESTS_WS_FLOWS) >> forward(FABRIC)
-    i3 = match(edge=AC, dst=GUEST_NET) >> tag(GUESTS_WS_FLOWS) >> forward(FABRIC)
-    i4 = match(edge=AC, dst=ADMIN_NET) >> tag(ADMIN_FLOWS) >> forward(FABRIC)
-
+    i3 = match(edge=AC,  dst=GUEST_NET) >> tag(GUESTS_WS_FLOWS) >> forward(FABRIC)
+    i4 = match(edge=AC,  dst=ADMIN_NET) >> tag(ADMIN_FLOWS) >> forward(FABRIC)
     return i1 + i2 + i3 + i4
 
 def distribution_policies():
-    i1 = match(edge=IO, dst=ADMIN_NET) >> forward(ADMIN_NET)
-    i2 = match(edge=WAP, dst=GUEST_NET) >> forward(GUEST_NET)
-    i3 = match(edge=AC, dst=WEB_SERVER) >> forward(WEB_SERVER)
-    i4 = match(edge=AC, dst=DATA_BASE) >> forward(DATA_BASE)
+    i1 = match(edge=IO,  dst=ADMIN_NET)  >> forward(ADMIN_NET)
+    i2 = match(edge=WAP, dst=GUEST_NET)  >> forward(GUEST_NET)
+    i3 = match(edge=AC,  dst=WEB_SERVER) >> forward(WEB_SERVER)
+    i4 = match(edge=AC,  dst=DATA_BASE)  >> forward(DATA_BASE)
     return i1 + i2 + i3 + i4
 
 def transport_policies():
-    t1 = ((catch(fabric=FABRIC, src=IO, flow=ADMIN_FLOWS) +
+    t1 = ( (catch(fabric=FABRIC, src=IO,  flow=ADMIN_FLOWS) +
             catch(fabric=FABRIC, src=WAP, flow=GUESTS_WS_FLOWS))
-                >> carry(dst=AC))
+                >> carry(dst=AC) )
     t2 = catch(fabric=FABRIC, src=AC, flow=ADMIN_FLOWS) >> carry(dst=IO)
     t3 = catch(fabric=FABRIC, src=AC, flow=GUESTS_WS_FLOWS) >> carry(dst=WAP)
     return t1 + t2 + t3
 
-#Main function
+# Main function
 def main():
     in_network_functions = access_policies() + distribution_policies()
     transport_function = transport_policies()

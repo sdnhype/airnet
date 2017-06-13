@@ -2,12 +2,30 @@ from mapping import Mapping
 from constants import *
 
 """
-mininet topology: topo_9sw_4hosts.py
 
+* Virtual topo:
+
+-------------
+- Admin Net ------[IO]--- |
+-------------             |                       |-- WebServer
+                          |----[ Fabric ]---[AC]--|
+--------------            |                       |-- DataBase
+- Guests Net -----[WAP]---|
+--------------
+
+* Mininet topo:
 
 users --|---[s1]---|           |---[s5]---[s6]----|           |---[s8]---WebServer
                    |---[s3] ---|                  |---[s7] ---|
-guests--|---[s2]---|           | -------[s4] -----|           |---[s9]---ComputerCluster
+guests--|---[s2]---|           | -------[s4] -----|           |---[s9]---DataBase
+
+* Mapping:
+
+IO  --> s1
+WAP --> s2
+AC  --> [s8, s9]
+Fabric --> [s3, s4, s5, s6, s7]
+
 """
 
 class Mymapping(Mapping):
