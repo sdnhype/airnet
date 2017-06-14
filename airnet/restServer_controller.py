@@ -16,11 +16,13 @@
 #TODO: launch nexus here
 #TODO: ipAdrs thing in handle_host_add
 
-from infrastructure import Infrastructure
-from flask import Flask,json,request,Response
+import thread
+import time
+import sys
 from pprint import pprint
+from flask import Flask,json,request,Response
+from infrastructure import Infrastructure
 from runtime import Runtime
-import thread,time,sys
 
 # WSGI Application
 app = Flask(__name__)

@@ -1,16 +1,13 @@
 # AIRNET PROJECT
 # Copyright (c) 2017 Messaoud AOUADJ, Emmanuel LAVINAL, Mayoro BADJI
-"""
-	Airnet REST GenericClient which sends intructions to the Controller REST Server
-		-> Flow Instructions (add, delete, update)
-		-> Packet Instructions (PacketOut)
-		-> Stats Instructions about a flow
-	Sends intructions currently to {localhost:8080}
-"""
+
+import ast
+import httplib
+import json
+import copy
 from language import identity, forward, modify, match
 from dynamicFct import Stat
 from log import Logger
-import ast, httplib, json, copy
 
 #TODO: mapping 1 edge --> n switches to handle in send_StatsRequest
 
@@ -20,7 +17,13 @@ ARP_REPLY = 2
 logger = Logger("Airnet_CLIENT","log/error.log").Log("ERROR")
 
 class GenericClient(object):
-	""" sends instructions to the controller REST server """
+	"""
+		Airnet REST GenericClient which sends intructions to the Controller REST Server
+			-> Flow Instructions (add, delete, update)
+			-> Packet Instructions (PacketOut)
+			-> Stats Instructions about a flow
+		Sends intructions currently to {localhost:8080}
+	"""
 	def __init__(self,host,port,prefix):
 		"""
 			@param host   : ipAddr of the REST server

@@ -3,9 +3,10 @@
 
 #TODO: packet concurrency in add_packet
 
-from language import identity,match
+import copy
+import ast
 from threading import Timer
-import copy, ast
+from language import identity,match
 
 class Bucket(object):
     """ Containers for data/stats received from the controller

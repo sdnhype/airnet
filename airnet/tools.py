@@ -4,6 +4,3 @@ def countOfMessages(of_messages):
     for dpid, messages in of_messages.iteritems():
         cpt += len(messages)
     return cpt
-
-def singleton(f):
-    return f()

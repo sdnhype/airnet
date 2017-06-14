@@ -5,11 +5,12 @@
 # TODO: assert avoids us to us critical log in _handle_SwitchJoin and Leave
 # TODO: finalize rarp mechanism
 
-from collections import namedtuple
-from graph import Graph
-from lib.ipaddr import IPv4Network
-from log import Logger
 import copy
+from collections import namedtuple
+from lib.ipaddr import IPv4Network
+from graph import Graph
+from log import Logger
+
 
 logger = Logger("Airnet_INFRA").Log()
 
