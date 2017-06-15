@@ -1,14 +1,19 @@
+# AIRNET PROJECT
+# Copyright (c) 2017 Messaoud AOUADJ, Emmanuel LAVINAL, Mayoro BADJI
+
 import logging
+import os
 
 class Logger :
 
-    def __init__ (self, name, file="debug.log") :
+    def __init__ (self, name, _file="messages.log") :
+        self.Close(_file)
         self.logger = logging.getLogger(name)
         self.formatter = logging.Formatter('%(asctime)s : %(name)s : [%(levelname)s] : %(message)s')
-        self.handler = logging.FileHandler(file,mode="a",encoding="utf-8")
+        self.handler = logging.FileHandler(_file,mode="a", encoding="utf-8")
         self.handler.setFormatter(self.formatter)
 
-    def getLog(self, level="DEBUG") :
+    def Log(self, level="DEBUG") :
         if level.upper() == "INFO" :
             self.handler.setLevel(logging.INFO)
             self.logger.setLevel(logging.INFO)
@@ -27,3 +32,7 @@ class Logger :
 
         self.logger.addHandler(self.handler)
         return self.logger
+
+    def Close(self, _file):
+        file_dsc = open(_file,'w')
+        file_dsc.close()

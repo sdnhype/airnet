@@ -1,25 +1,27 @@
-# client Rest
-from log import Logger
+# AIRNET PROJECT
+# Copyright (c) 2017 Messaoud AOUADJ, Emmanuel LAVINAL, Mayoro BADJI
+
 import httplib, json, logging
+from log import Logger
 
-handler_info = logging.StreamHandler()
-handler_info.setLevel(logging.INFO)
-logger = Logger("rest_client").getLog()
-logger.addHandler(handler_info)
+logger = Logger("Ryu_Client").Log()
 
-class Client(object):
+class GenericClient(object):
 	"""
-	   Class which allows to send requests to a REST Server
-	   Connection to the server is done through httplib library
-	   Data are transmitted in JSON format
+		RYU Rest GenericClient which send events to the Airnet REST Server
+		-> Equipements events (switch enter, link delete, host add...)
+		-> Packets events (Packet_in)
+		-> Statistics events
+		Sends events in json format through the httplib library to {0.0.0.0:9000}
 	"""
 	def __init__(self,host,port,prefix):
-		super(Client, self).__init__()
+		super(GenericClient, self).__init__()
 		self.host = host
 		self.port = port
 		self.prefix = '/'+prefix+'/'
 
 	def send_request(self,method,action,data=None):
+		""" sends requests through the httplib library """
 		# connection to the REST server
 		conn = httplib.HTTPConnection(self.host, self.port)
 		# Adding prefix (/Topo/)
@@ -32,7 +34,7 @@ class Client(object):
 			#logger.debug("Json File : \n{}".format(json.dumps(data, sort_keys=True, ident=4, separators=(',',': '))))
 			header['Content-Type'] = 'application/json'
 		try:
-			logger.debug("Send {} request via {} method to the Airnet hypervisor".format(action,method))
+			logger.debug("Send {} event via {} method to Airnet".format(action,method))
 			# send request to the REST Server and get the answer
 			conn.request(method,url,data,header)
 			res = conn.getresponse()
@@ -55,11 +57,10 @@ class Client(object):
 		except Exception:
 			return None
 
-class RyuTopologyClient(Client):
-	"""
-		Client used by RYU to notify topology changes to the Airnet Hypervisor
-		Notifications data are sent in json format through the REST API
-	"""
+class RyuTopologyClient(GenericClient):
+	""" use the GenericClient attributes to send
+		events to Airnet """
+
 	prefix_ryu = 'Topo'
 
 	def __init__(self,host,port):
@@ -70,55 +71,39 @@ class RyuTopologyClient(Client):
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			logger.info("Exception while sending Switch/enter notification to the Hypervisor")
+			logger.debug("Exception occurs while sending Switch/enter to Airnet")
 
 	def switchLeave(self,data):
 		action = 'Switch/leave'
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			logger.info("Exception while sending Switch/leave notification to the Hypervisor")
+			logger.debug("Exception occurs while sending Switch/leave to Airnet")
 
 	def linkAdd(self,data):
 		action = 'Link/add'
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			logger.info("Exception while sending Link/add notification to the Hypervisor")
+			logger.debug("Exception occurs while sending Link/add to Airnet")
 
 	def linkDelete(self,data):
 		action = 'Link/delete'
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			logger.info("Exception while sending Link/delete notification to the Hypervisor")
+			logger.debug("Exception occurs while sending Link/delete to Airnet")
 
 	def hostAdd(self,data):
 		action = 'Host/add'
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			logger.info("Exception while sending Host/add notification to the Hypervisor")
+			logger.debug("Exception occurs while sending Host/add to Airnet")
 
 	def packetIn(self,data):
 		action = 'Packet/in'
 		try:
 			self.send_request('POST',action,data)
 		except Exception:
-			logger.info("Exception while sending Packet/in notification to the Hypervisor")
-
-class GenericClient(Client):
-	"""
-
-	"""
-	def __init__(self,host,port,prefix):
-		super(GenericClient,self).__init__(host,port,prefix)
-
-	def doRequest(self,method,action,data=None):
-		try:
-			self.send_request(method,action,data)
-		except Exception:
-			print 'Generic method : Exception'
-
-	def doRequestRead(self,method,action,data=None):
-		return self.send_and_read_request(method,action,data)
+			logger.debug("Exception occurs while sending Packet/in to Airnet")
