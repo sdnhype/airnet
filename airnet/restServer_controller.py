@@ -21,7 +21,9 @@ import time
 import sys
 from pprint import pprint
 from flask import Flask,json,request,Response
+
 from infrastructure import Infrastructure
+from restClient_controller import RyuClient
 from runtime import Runtime
 
 # WSGI Application
@@ -34,9 +36,11 @@ control_module = sys.argv[1]
 mapping_module = sys.argv[2]
 
 # launch the runtime module
-runtime = Runtime(control_module,mapping_module,infra,"RYU")
-# ryuClient
-
+runtime = Runtime(control_module,mapping_module,infra)
+# launch the REST client which communicates with RYU
+client_ryu = RyuClient(runtime)
+# link it to the runtime module
+runtime.add_controller_client(client_ryu)
 
 # received a switch enter event from the controller
 @app.route('/Topo/Switch/enter',methods = ['POST'])

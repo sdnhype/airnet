@@ -1,41 +1,46 @@
-from restClient_controller import RyuClient
+# AIRNET PROJECT
+# Copyright (c) 2017 Messaoud AOUADJ, Emmanuel LAVINAL, Mayoro BADJI
+
+import copy
+import time
+import logging
 from importlib import import_module
-from language import identity, forward, modify, carry, drop, CompositionPolicy, match, DataFctPolicy, NetworkFunction, Policy, DynamicPolicy
-from classifier import Rule
 from collections import namedtuple
 from lib.ipaddr import IPv4Network
-from tools import countOfMessages
+
 from dynamicFct import Bucket,PeriodicTimer
 from log import Logger
-import copy, time, logging, pdb
 
-#TODO: in_port field
-#TODO: routing inside edge's switch and between edges
-#TODO: more than one fabric, at present we have a partial support
+from restClient_controller import RyuClient
+from language import identity, match, forward, drop, modify, carry,\
+                     NetworkFunction, Policy,\
+                     CompositionPolicy, DataFctPolicy, DynamicPolicy
+from classifier import Rule
 
-#*************** CODE AUDIT BY MAYORO ************
-#TODO: remove #1179 function since not used
+
+#TODO: test via_list constraint
 #TODO! Stop Stats Thread when Switch Leaves
-#TODO: #TODO: important on #736 (if we have many types of actions we got a problem)
-#TODO: enforce_dataFunction on #155
-#TODO: #158 services chaining by enforcing another netFunction rule instead of basic ones
-#TODO: #628 bug on identity
 
-# LOGGER CONSTRUCTION
-handler_info = Logger("Airnet_Runtime","log/info.log").handler
+
+# initialize a debug-level logger
+logger = Logger("Airnet_RUN").Log()
+# initialize info-level and error-level handlers and add them to the logger
+handler_info = Logger("Airnet_RUN","log/info.log").handler
+handler_error = Logger("Airnet_RUN","log/error.log").handler
 handler_info.setLevel(logging.INFO)
-logger = Logger("Airnet_Runtime").Log()
+handler_error.setLevel(logging.ERROR)
 logger.addHandler(handler_info)
+logger.addHandler(handler_error)
 
 class Runtime():
-    """
-        Airnet hypervisor runtime module
-        Instantiates Proactive and Reactive Cores
+    """ AIRNET RUNTIME module
+        initialize the Proactive (static)
+        and Reactive (dynamic) cores of the hypervisor
     """
 
-    def __init__(self, control_program, mapping_program, infra, controller):
+    def __init__(self, control_program, mapping_program, infra):
 
-        logger.debug("\n\n**************************************************\
+        logger.info("\n\n**************************************************\
         **************************************************\n\
                                                GETTING STARTED\n**************************************************\
         **************************************************\n")
@@ -56,14 +61,13 @@ class Runtime():
         # the graph corresponding to the physical infrastructure
         self.infra = infra
         self.phy_topology = infra.get_graph()
-        logger.debug("Got topology graph ")
+        logger.debug("Got global topology ")
 
         # virtual topology
         self.virtual_topology = main_module["virtual_topology"]
         logger.debug("Got virtual topology")
 
         # edge and fabric control policies
-        #self.user_edge_policies = main_module["edge_policies"]
         self.edge_policies = main_module["edge_policies"]
         logger.debug("Got edge policies")
 
@@ -77,7 +81,7 @@ class Runtime():
 
         # replace symbolic names in src and dst by ipAddrs
         self.replace_by_ipAddrs(self.edge_policies)
-        logger.debug("Replaced in edge policies symbolic names by ipAddrs")
+
 
         # then compile edge_policies --> return a Classifier object
         logger.debug("Compiling edge policies")
@@ -86,36 +90,38 @@ class Runtime():
 
         # compile also fabric_policies --> return a FabricClassifier object
         self.fabric_policies = main_module["fabric_policies"]
+        logger.debug("Got edge policies")
         logger.debug("Compiling fabric policies")
         self.fabric_policies = self.fabric_policies.compile()
         logger.info("Fabric rules generated : {}\n************\n{}************".format(self.fabric_policies.getNbRules(),self.fabric_policies.getLogRules()))
 
-        # the Airnet client which will send instructions to the RYU controller
-        self.nexus = RyuClient(self)
-        logger.debug("Ryu client started successfully")
+        # here none controller is instantiated
+        self.nexus = None
 
         self.main_module = main_module
         self._event_time = 0
 
         _compilation_duration = int(round(time.time() * 1000)) - _compilation_duration
-        #logger.info("Compilation finished -- Time == " + str(int(round(time.time() * 1000))))
-        print("Compilation finished -- Duration == " + str(_compilation_duration) + "ms")
-        logger.info("Compilation finished -- Duration == " + str(_compilation_duration) + "ms")
+        print("Compilation finished after " + str(_compilation_duration) + " ms")
+        logger.info("Compilation finished after " + str(_compilation_duration) + " ms")
 
-        # communication point with physical switches
-        # EL TODO: chose the controler in the class constructor
+    def add_controller_client(self, client):
+        """ links the runtime module whith the REST client
+            which will communicate with the controller
+            REST server
+        """
+        self.nexus = client
+        logger.debug("Airnet REST client started successfully")
 
-    #    if controller == "POX":
-    #        self.nexus = PoxClient()
-    #    elif controller == "RYU":
-    #    self.nexus = RyuClient(self)
-    #    else:
-    #        logger.error("Controller Not Supported !! Leaving ")
-    #        sys.exit()
+    def add_fabric_flow_routing_entry(self, fabric, rule, input_switch, output_switch, via_list):
+        """ fills @param fabric routing table with a tuple containing :
+        (@param rule, @param input_switch, @param output_switch, @param via_list)
+        """
+        self.fabrics_flows_routing_table[fabric].append((rule, input_switch, output_switch, via_list))
 
     def add_new_policy(self, new_policy):
-        """
-            Add a new policy
+        """ used by dynamic function to install
+            a new policy
         """
         # replace symbolic names by ipAddrs
         self.replace_by_ipAddrs(new_policy)
@@ -167,23 +173,19 @@ class Runtime():
             self.clear_fabric_switches(fabric, new_classifiers)
             self.fabrics_flows_routing_table[fabric] = []
             self.enforce_fabricPolicies(fabric, new_classifiers)
-            #for fabric, routing_list in self.fabrics_flows_routing_table.iteritems():
-                #routing_list.reverse()
 
-        #pdb.set_trace()
         new_classifiers = self.opt_physical_classifires(new_classifiers)
         # used by Ryu client
         self.new_classifiers = copy.deepcopy(new_classifiers)
         # get and install differences between old and new classifiers
         diff_lists = self.get_diff_lists(self.physical_switches_classifiers, new_classifiers)
         self.install_diff_lists(diff_lists)
-        # what's the point ?
-        #self.diff = copy.deepcopy(diff_lists)
         # copy the resulting classifiers in physical_switches_classifiers
         self.physical_switches_classifiers = copy.deepcopy(new_classifiers)
 
     def apply_netFunction_fromPacket(self, dpid, bucket_match, packet_match, packet):
-        """
+        """ apply the function declared in
+            the @DynamicControl(data=packet...) decorator
         """
         from language import modify
 
@@ -236,7 +238,6 @@ class Runtime():
         # function is a field of the named tuple dyc_rule (NwFctItem)
         result = dyc_rule.function.apply(packet)
 
-
         # don't u forget the identity bug
         if isinstance(result, Policy):
             self.add_new_policy(result)
@@ -249,9 +250,8 @@ class Runtime():
             self.nexus.send_PacketOut(switch, result, output)
 
     def apply_netFunction_fromStat(self, bucket_match, stat):
-        """
-            Used to apply network control policy generated by
-            a network function
+        """ apply the function declared in
+            the @DynamicControl(data=stat...) decorator
         """
         dyc_rule = None
 
@@ -268,12 +268,13 @@ class Runtime():
             self.add_new_policy(result)
 
     def clear_fabric_switches(self, fabric, classifiers):
+        """ empty fabric switches classifiers """
         fabric_switches = self.mapping.fabrics[fabric]
-        #TODO: add a special rule for LLDP packets
         for switch in fabric_switches:
             classifiers[switch] = []
 
     def create_classifiers(self):
+        """ initialzes a classifier for each switch """
         sw_classifiers = {}
 
         for edge in self.topology_graph.edges:
@@ -283,36 +284,50 @@ class Runtime():
         return sw_classifiers
 
     def convert_to_physical_rules(self, policies, classifiers):
+        """ convert each policy in @param policies
+            into a physical rule which will be stored
+            in @param classifiers
+        """
 
-        # enforce edge rules
+        # enforce edge rules first
         for rule in policies.rules:
+            # not used for now
+            """
             if self.is_dataFunction_rule(rule):
                 logger.debug("\n-- Data Function Rule : {}".format(str(rule)))
                 self.enforce_dataFunction(rule, classifiers)
-            elif self.is_dynamicFunction_rule(rule):
-                logger.debug("\n-- Dynamic Function Rule : {}".format(str(rule)))
+            """
+            if self.is_dynamicFunction_rule(rule):
+                logger.debug("\n\nDynamic Function Rule : {}".format(str(rule)))
                 self.enforce_dynamicFunction(rule, classifiers)
             elif self.is_ingress_rule(rule):
-                logger.debug("\n-- Ingress Rule : {}".format(str(rule)))
+                logger.debug("\n\nIngress Rule : {}".format(str(rule)))
                 self.enforce_ingressPolicies(rule, classifiers)
             elif self.is_egress_rule(rule):
-                logger.debug("\n-- Egress Rule : {}".format(str(rule)))
+                logger.debug("\n\nEgress Rule : {}".format(str(rule)))
                 self.enforce_egressPolicies(rule, classifiers)
             elif self.is_drop_rule(rule):
-                logger.debug("\n-- Drop Rule : {}".format(str(rule)))
+                logger.debug("\n\nDrop Rule : {}".format(str(rule)))
                 self.enforce_dropRule(rule, classifiers)
 
-        # enforce fabric rules
+        # enforce fabric rules then
         self.fabrics_flows_routing_table = {}
 
         for fabric in self.mapping.fabrics:
-            #for each fabric a list: {match, input_switch, output_switch}
+            # for each fabric a list: {match, input_switch, output_switch}
             self.fabrics_flows_routing_table[fabric] = []
-            logger.debug("Enforcing policies for fabrics")
             self.enforce_fabricPolicies(fabric, classifiers)
 
-    def enforce_dataFunction(self, rule, classifiers):
+    def countOfMessages(self,of_messages):
+        """ count the number of Openflow msgs
+            received from a switch """
+        cpt = 0
+        for dpid, messages in of_messages.iteritems():
+            cpt += len(messages)
+        return cpt
 
+    def enforce_dataFunction(self, rule, classifiers):
+        """ not used for now """
         def is_ingress(actions, nwFct):
             """
             :parm actions:
@@ -365,20 +380,119 @@ class Runtime():
         else:
             self.enforce_egressPolicies(controller_rule, classifiers)
 
-    def enforce_dropRule(self, rule, classifiers):
+    def enforce_dataMachine_path(self, rule, classifiers, fabric, excludes_nodes):
+        """
+            not used for now
+        """
+        def get_predecessors(switch, fabric):
+            fabric_switches = self.mapping.fabrics[fabric]
+            predecessors = list()
+            for vertex in self.topology_graph.vertices[switch]:
+                if not (vertex[1] in fabric_switches):
+                    predecessors.append(vertex)
+            return predecessors
 
-        #logger.debug("Drop Rule Enforcement :")
-        #for m in rule.match.map:
-        #    logger.debug("Match : " + m)
+        def get_corresponding_switches(dm_list):
+            switches = list()
+            for dm in dm_list:
+                for vertex in self.topology_graph.vertices[dm]:
+                    switches.append(vertex[1])
+            return switches
+
+        def get_in_port(target_switch, sending_switch):
+            """
+            return in_port from which target_switch recieve flows from sending_switch
+            """
+            for vertex in self.topology_graph.vertices[target_switch]:
+                if vertex[1] == sending_switch:
+                    return vertex[2]
+
+        def get_data_machine_switch(data_machine):
+            """
+            return a tuple that contain the switch and the port to which dm is connected
+            nq:parm: data machine name
+            :return: (switch, port)
+            """
+            adjacents = set()
+            # can't use graph get_adjacent method, because it is integrated to SPF algo, fix it
+            for link in self.topology_graph.vertices[data_machine]:
+                adjacents.add(link[1])
+            dm_switch = adjacents.pop()
+            for vertex in self.topology_graph.vertices[dm_switch]:
+                if vertex[1] == data_machine:
+                    return (dm_switch, vertex[2])
+
+        start = rule[1]
+        last = None
+
+        for dm in rule[3]:
+            intermediate = get_data_machine_switch(dm)
+
+            path = self.topology_graph.SPF(start, intermediate[0], excludes_nodes)
+            output_port_path = self.get_output_port_path(path)
+            dm_switches = get_corresponding_switches(rule[3])
+            for item in output_port_path:
+                if not item[0] in dm_switches:
+                    action = forward(item[1])
+                    filter = copy.deepcopy(rule[0])
+                    classifiers[item[0]].append(Rule(filter, identity, set([action])))
+                    last = item[0]
+                else:
+                    #to dm
+                    action = forward(intermediate[1])
+                    filter = copy.deepcopy(rule[0])
+                    if last is None:
+                        predecessors = get_predecessors(item[0], fabric)
+                        for pred in predecessors:
+                            filter.map["in_port"] = get_in_port(item[0], pred[1])
+                            classifiers[item[0]].append(Rule(filter, identity, set([action])))
+                    else:
+                        filter.map["in_port"] = get_in_port(item[0], last)
+                        classifiers[item[0]].append(Rule(filter, identity, set([action])))
+                    #from dm
+                    action = forward(item[1])
+                    filter = copy.deepcopy(rule[0])
+                    filter.map["in_port"] = intermediate[1]
+                    classifiers[item[0]].append(Rule(filter, identity, set([action])))
+                    last = item[0]
+            start = intermediate[0]
+
+        #pdb.set_trace()
+
+        action = forward(intermediate[1])
+        filter = copy.deepcopy(rule[0])
+        filter.map["in_port"] = get_in_port(intermediate[0], last)
+        classifiers[intermediate[0]].append(Rule(filter, identity, set([action])))
+
+
+        path = self.topology_graph.SPF(intermediate[0], rule[2], excludes_nodes)
+        output_port_path = self.get_output_port_path(path)
+        for item in output_port_path:
+            if not item[0] in dm_switches:
+                action = forward(item[1])
+                filter = copy.deepcopy(rule[0])
+                classifiers[item[0]].append(Rule(filter, identity, set([action])))
+            else:
+                action = forward(item[1])
+                filter = copy.deepcopy(rule[0])
+                filter.map["in_port"] = intermediate[1]
+                classifiers[item[0]].append(Rule(filter, identity, set([action])))
+
+    def enforce_dropRule(self, rule, classifiers):
+        """ fill @param classifiers with
+            a new drop rule """
 
         match_switches_list = self.get_switchesList_onMatch(rule.match)
         for switch in match_switches_list:
-            # Install on all corresponding switches, because we can have rules like match TCP==80
+            # Install on all corresponding switches
             physical_switch_rule = self.to_physical_switch_rule(rule, switch)
             classifiers[switch].append(physical_switch_rule)
 
     def enforce_dynamicFunction(self, rule, classifiers):
-
+        """ converts a rule with a dynamic function action
+            into a physical rule
+            also creates a bucket associated to the rule
+        """
         # get all non DynamicPolicy actions
         actions = [act for act in rule.actions if not isinstance(act, DynamicPolicy)]
 
@@ -410,7 +524,8 @@ class Runtime():
                 raise RuntimeError(str(rule.match) + " : dynamic function data type error")
 
         if function.type == "packet":
-            # add a rule that sends packets towards controller
+            # add a rule that sends this rule flow
+            # packets to the controller
             rule_actions = {forward("controller")}
             # add all non-forward actions
             for act in actions:
@@ -438,11 +553,11 @@ class Runtime():
             raise RuntimeError("dynamic function type error")
 
     def enforce_egressPolicies(self, rule, classifiers):
-        """
-            fill the physical_switches classifiers with a new egress rule
-        """
-        # return the network function output
+        """ fill @param classifiers with
+            a new egress rule """
+
         def get_nwFct_host_dst(rule_match):
+            """ returns a network function output """
             for nwFct_rule in self.nwFct_rules:
                 if nwFct_rule.match.map == rule_match.map:
                     for act in nwFct_rule.actions:
@@ -450,8 +565,8 @@ class Runtime():
                             return act.output
                     return self.get_netFunction_forward(nwFct_rule.function).output
 
-        # return the rule output
         def get_destination_host(rule):
+            """ returns a rule output """
             for action in rule.actions:
                 if isinstance(action, forward):
                     if action.output != "controller":
@@ -469,7 +584,7 @@ class Runtime():
         egress_edge_switches = self.get_edge_physical_corresponding(egress_edge)
         host_adjacent_switches = [node[1] for node in self.topology_graph.vertices[dst_host] if node[1] in egress_edge_switches]
 
-        logger.debug("Ouput switch(es) found : {}".format(" ".join(host_adjacent_switches)))
+        logger.debug("Ouput switch(es) : {}".format(" ".join(host_adjacent_switches)))
         # Strong assumption : host_adjacent_switches will contain a unique phy_switch
         for switch in host_adjacent_switches:
             physical_switch_rule = self.to_physical_switch_rule(rule, switch)
@@ -477,62 +592,34 @@ class Runtime():
             classifiers[switch].append(physical_switch_rule)
 
     def enforce_fabricPolicies(self, fabric, classifiers):
-        """
-            main function to enforce fabric rules
-            :param fabric: fabric to process
-        """
-        """
-        def via_data_machine(actions):
+        """ constructs a routing table based on
+            @param fabric rules """
 
-            # check if the flow need to passes through a data machine
-
-            from language import via
-            for act in actions:
-                if isinstance(act, via):
-                    return True
-            return False
-        """
         def get_edge_destination(actions):
-            """
-                return carry's destination
-            """
+            """ return carry's destination """
             for act in actions:
                 if isinstance(act, carry):
                     return act.destination
             raise RuntimeError("No final destination found for this fabric rule")
-        """
-        def get_via_list(actions):
-
-            #return via destinations
-
-            from language import via
-            via_list = []
-            for act in actions:
-                if isinstance(act, via):
-                    # We assume that we have one DataFct per DataMachine
-                    via_list.append(act.data_machine)
-            return via_list
-        """
 
         # Get all rules which concern the current fab
-        fabric_rules = [rule for rule in self.fabric_policies.rules if rule.flow.fabric == fabric]
+        fabric_rules = [rule for rule in self.fabric_policies.rules
+                        if rule.flow.fabric == fabric]
 
         # for each current fab rule
         for fab_rule in fabric_rules:
-            logger.debug("\n-- Fabric Rule : {}".format(str(fab_rule)))
+            logger.debug("\n\nFabric Rule : {}".format(str(fab_rule)))
             # get the edge destination of the fab rule
             egress_edge_destination = get_edge_destination(fab_rule.actions)
             # get the physical switches which correspond to the edge destination
             flow_egress_switches = self.get_edge_physical_corresponding(egress_edge_destination)
-            logger.debug("Egress Switch(es) Found : {}".format(" ".join(flow_egress_switches)))
+            logger.debug("Egress switch(es) : {}".format(" ".join(flow_egress_switches)))
 
             # ingress switches are inside the fabric
             flow_ingress_match_switch_list = self.get_corresponding_match_switch_list(fab_rule.flow.fabric,
                                                                                       fab_rule.flow.src,
                                                                                       fab_rule.flow.flow, classifiers)
 
-
-            logger.debug("Match and Fabric Switch src : {}".format(str(flow_ingress_match_switch_list)))
             # for each egress physical switches
             for egress_switch in flow_egress_switches:
                 # for each egress rule of this egress physical switch
@@ -554,35 +641,94 @@ class Runtime():
                                                                    intersection_match,
                                                                    item[1],
                                                                    egress_switch, None)
+        # then enforce fabric rules
         self.enforce_fabric_physical_rules(fabric, classifiers)
 
+    def enforce_fabric_physical_rules(self, fabric, classifiers):
+        """ install rules on the physical paths inside
+            the @param fabric routing table
+        """
+        def optimize_routing_table (fabric):
+            """ Optimize fabric classifiers """
+
+            # perform a copy of fabric routing table
+            routing_table = copy.deepcopy(self.fabrics_flows_routing_table[fabric])
+            out_table = []
+
+            # entry[0] == intersec_match, entry[1] == input_switch, entry[2] == output_switch, entry[3]==via_list
+            for entry in self.fabrics_flows_routing_table[fabric]:
+                # each entry is compared to the other ones
+                duplic = False
+                for road in routing_table:
+                    # if a another entry covers this current entry
+                    if(road[0].covers(entry[0]) and not entry[0]==road[0]):
+                        # verify that they have the same input and output switch
+                        if(entry[1]==road[1] and entry[2]==road[2]):
+                            # verify that they have the same via_list
+                            if(entry[3]==road[3] and len(road[3]) > 0):
+                                duplic = True
+                                break
+                # no other entry covers the current one
+                if not duplic:
+                    out_table.append(entry)
+
+
+            self.fabrics_flows_routing_table[fabric] = copy.deepcopy(out_table)
+
+        excludes_nodes = set()
+
+        for fab in self.mapping.fabrics:
+            if fab != fabric:
+                # select all other fabrics switches
+                excludes_nodes.update(self.mapping.fabrics[fab])
+        # excludes switches that are not
+        # in the current fabric
+        excludes_nodes = excludes_nodes - self.mapping.fabrics[fabric]
+
+        # optimize routing table before converting into physical rules
+        optimize_routing_table(fabric)
+
+        for rule in self.fabrics_flows_routing_table[fabric]:
+            #rule[0] == intersec_match, rule[1] == input_switch, rule[2] == output_switch, rule[3]==via_list
+            if rule[3] is None:
+                # test if there is via actions
+                path = self.topology_graph.SPF(rule[1], rule[2], excludes_nodes)
+                output_port_path = self.get_output_port_path(path)
+                #item: (switch, in_port, out_port)
+                for item in output_port_path:
+                    action = forward(item[1])
+                    filtr = rule[0]
+                    classifiers[item[0]].append(Rule(filtr, identity, set([action])))
+            else:
+                self.enforce_dataMachine_path(rule, classifiers, fabric, excludes_nodes)
+
     def enforce_ingressPolicies(self, rule, classifiers):
-        """
-        fill the physical_switches classifiers with a new ingress rule
-        :param rule: the ingress rule that need to be mapped onto physical switches
-        """
+        """ fill @param classifiers with
+            a new ingress rule """
+
+        # get the list of switches that corresponds
+        # to the rule match
         match_switches_list = self.get_switchesList_onMatch(rule.match)
 
-        logger.debug("{} switch(es) matched to the current rule".format(len(match_switches_list)))
+        logger.debug("{} switch(es) found for this rule".format(len(match_switches_list)))
         for switch in match_switches_list:
-            # Install on all corresponding switches, because we can have rules like match TCP==80
+            # Install on all corresponding switches
             physical_switch_rule = self.to_physical_switch_rule(rule, switch)
             classifiers[switch].append(physical_switch_rule)
 
     def enforce_policies(self):
-        """
-            Enforce proactive core policies
-            done at the startup
+        """ Enforce proactive core policies
+            Done at the startup
         """
         logger.info("Proactive core policies enforcement started --")
         _enforcing_duration = int(round(time.time() * 1000))
 
-        # get the physical infrastructure graph
+        # get the global topology graph
         graph = self.infra.get_graph()
+        logger.debug("Got global topology graph ")
 
         # replace hwAddrs in graph by symbolic names
         self.topology_graph = self.replace_hwAddrs_by_names(graph)
-        logger.debug("Replaced hwAddrs in graph by symbolic names")
 
         # initialize classifiers
         self.physical_switches_classifiers = {}
@@ -597,25 +743,27 @@ class Runtime():
         # Convert policies to physical rules stored on classifiers
         logger.debug("Converting high-level policies to physical rules")
         self.convert_to_physical_rules(self.edge_policies, self.physical_switches_classifiers)
-
+        logger.debug("Optimizing physical rules")
         self.physical_switches_classifiers = self.opt_physical_classifires(self.physical_switches_classifiers)
 
-        # For debug
+        # info printing
         logger.info("\n\n *** Physical rules to push on switches")
         for edge in self.topology_graph.edges :
             if edge[1] == "switch":
-                logger.info("\n ----- %s rules : (%d)\n%s" % (edge[0], len(self.physical_switches_classifiers[edge[0]]),"\n".join([str(j) for j in self.physical_switches_classifiers[edge[0]]])))
+                logger.info("\n----- %s rules : (%d)\n%s" % (edge[0], len(self.physical_switches_classifiers[edge[0]]),"\n".join([str(j) for j in self.physical_switches_classifiers[edge[0]]])))
 
         self.nexus.push_ProactiveRules(self.physical_switches_classifiers)
-        logger.info("\n# Proactive rules installed == " + str(countOfMessages(self.physical_switches_classifiers)))
-        print("\n# Proactive rules installed == " + str(countOfMessages(self.physical_switches_classifiers)))
+        logger.info("\n# Proactive rules installed == " + str(self.countOfMessages(self.physical_switches_classifiers)))
+        print("\n# Proactive rules installed == " + str(self.countOfMessages(self.physical_switches_classifiers)))
 
         _enforcing_duration = int(round(time.time() * 1000)) - _enforcing_duration
-        logger.info("Proactive core policies enforcement finished -- Duration == " + str(_enforcing_duration))
-        print("Proactive core policies enforcement finished -- Duration == " + str(_enforcing_duration))
+        print("Proactive core policies enforcement finished after " + str(_enforcing_duration) + " ms")
+        logger.info("Proactive core policies enforcement finished after " + str(_enforcing_duration) + " ms")
 
     def flow_limit_reached(self, fct_predicate):
-
+        """ install a new policy when the limit parameter
+            in a network function is reached by a flow
+        """
         # first: remove fct item from nwFct_rules list
         for idx in range(len(self.nwFct_rules)):
             if self.nwFct_rules[idx].match.map == fct_predicate.map:
@@ -651,7 +799,8 @@ class Runtime():
                             find = True
                             new_classifiers[switch][idx] = new_r
                     if not find:
-                        # Unlike for micro-flows, here we need to modify an existing rule and not to add new one
+                        # Unlike for micro-flows where we need to modify
+                        # an existing rule and not to add new one
                         raise RuntimeError
         else:
             # a rule with a single action: dycFct
@@ -669,11 +818,9 @@ class Runtime():
         self.physical_switches_classifiers = copy.deepcopy(new_classifiers)
 
     def get_corresponding_match_switch_list(self, fabric, flow_src, label, classifiers):
-        """
-        search in 'fabric' input rules and return rules that correspond to 'label'
-        the result is a list that contain tuples formed in this way: (match, switch)
-        :param fabric:
-        :param label:
+        """ searches in @param fabric rules
+            that correspond to @param label
+            returns a list of tuples formed in this way: (match, switch)
         """
 
         def apply_modify_action(my_match, my_modify):
@@ -696,105 +843,115 @@ class Runtime():
                 switch_match_list.append((_match, _switch))
         return switch_match_list
 
+    def get_corresponding_virtual_edge(self, physical_switch):
+        """
+        return the swicth's corresponding virtual edge
+        :param physical_switch: physical switch name
+        """
+        for edge, mapping in self.mapping.edges.iteritems():
+                if physical_switch in mapping:
+                    return edge
+        return None
+
     def get_diff_lists(self, old_classifiers, new_classifiers):
-            """
-                Compare rules in old_classifiers and new_classifiers
-                Return a list of DiffListItems
-                diff_list = [DiffListItem[s1], DiffListItem[s2]...)
-                with DiffListItem = a namedtuple
-            """
-            def find_same_rules(target, rule_list):
-                rules = []
-                # degressive priority
-                for priority in range(len(rule_list)-1, -1, -1):
-                    #TODO: fig identity bug!
-                    # identity is a singleton, but i have different id(identity)
-                    if ((target.match == rule_list[priority].match) or
-                        (len(target.match.map) == 0 and len(rule_list[priority].match.map)==0)):
-                        rules.append((rule_list[priority], priority))
+        """ Compares rules in @param old_classifiers and @param new_classifiers
+            returns a list of DiffListItems
+            diff_list = [DiffListItem[s1], DiffListItem[s2]...)
+            with DiffListItem = a namedtuple
+        """
+        def find_same_rules(target, rule_list):
+            rules = []
+            # degressive priority
+            for priority in range(len(rule_list)-1, -1, -1):
+                if ((target.match == rule_list[priority].match) or
+                    (len(target.match.map) == 0 and len(rule_list[priority].match.map)==0)):
+                    rules.append((rule_list[priority], priority))
 
-                if len(rules) != 0:
-                    return rules
-                else:
-                    return None
+            if len(rules) != 0:
+                return rules
+            else:
+                return None
 
-            def different_actions(act_list1, act_list2):
-                # test if they have same number of
-                for act1 in act_list1:
-                    find = False
-                    for act2 in act_list2:
-                        if act1 == act2:
-                            find = True
-                    if not find:
-                        return True
-                if len(act_list1) != len(act_list2):
+        def different_actions(act_list1, act_list2):
+            # test if they have same number of
+            for act1 in act_list1:
+                find = False
+                for act2 in act_list2:
+                    if act1 == act2:
+                        find = True
+                if not find:
                     return True
-                return False
+            if len(act_list1) != len(act_list2):
+                return True
+            return False
 
-            def opt_to_modify(to_modify, to_stay):
-                for idx in range(len(to_modify)):
-                    rules = find_same_rules(to_modify[idx][0][0], to_stay)
-                    if rules:
-                        for rule in rules:
-                            if not different_actions(to_modify[idx][0][0].actions, rule[0].actions):
-                                del to_modify[idx]
-                to_modify = [item[0] for item in to_modify]
-                return to_modify
+        def opt_to_modify(to_modify, to_stay):
+            for idx in range(len(to_modify)):
+                rules = find_same_rules(to_modify[idx][0][0], to_stay)
+                if rules:
+                    for rule in rules:
+                        if not different_actions(to_modify[idx][0][0].actions, rule[0].actions):
+                            del to_modify[idx]
+            to_modify = [item[0] for item in to_modify]
+            return to_modify
 
+        diffListItem = namedtuple('DiffListItem', ['to_add', 'to_delete', 'to_modify', 'to_stay'])
+        diff_lists = {}
 
-            diffListItem = namedtuple('DiffListItem', ['to_add', 'to_delete', 'to_modify', 'to_stay'])
-            diff_lists = {}
+        for switch, old_rules in old_classifiers.iteritems():
+            to_add = list()
+            to_delete = list()
+            to_modify = list()
+            to_stay = list()
 
-            for switch, old_rules in old_classifiers.iteritems():
-                to_add = list()
-                to_delete = list()
-                to_modify = list()
-                to_stay = list()
+            # rules are ordered by priority in the classifier
+            for priority in range(len(old_rules)-1, -1, -1):
+                new_rules = find_same_rules(old_rules[priority], new_classifiers[switch])
 
-                # rules are ordered by priority in the classifier
-                for priority in range(len(old_rules)-1, -1, -1):
-                    new_rules = find_same_rules(old_rules[priority], new_classifiers[switch])
+                if new_rules is None:
+                    to_delete.append((old_rules[priority], priority))
+                else:
+                    for new in new_rules:
+                        if (not different_actions(old_rules[priority].actions, new[0].actions) and
+                            len(old_rules)-priority == len(new_classifiers[switch])-new[1]):
+                            to_stay.append(old_rules[priority])
+                        else:
+                            to_modify.append((new, (old_rules[priority], priority)))
 
-                    if new_rules is None:
-                        to_delete.append((old_rules[priority], priority))
-                    else:
-                        for new in new_rules:
-                            if (not different_actions(old_rules[priority].actions, new[0].actions) and
-                                len(old_rules)-priority == len(new_classifiers[switch])-new[1]):
-                                to_stay.append(old_rules[priority])
-                            else:
-                                to_modify.append((new, (old_rules[priority], priority)))
+            for priority in range(len(new_classifiers[switch])-1, -1, -1):
+                rules = find_same_rules(new_classifiers[switch][priority], old_rules)
+                if rules is None:
+                    to_add.append((new_classifiers[switch][priority], priority))
 
-                for priority in range(len(new_classifiers[switch])-1, -1, -1):
-                    rules = find_same_rules(new_classifiers[switch][priority], old_rules)
-                    if rules is None:
-                        to_add.append((new_classifiers[switch][priority], priority))
+            diff_lists[switch] = diffListItem(to_add, to_delete, to_modify, to_stay)
 
-                diff_lists[switch] = diffListItem(to_add, to_delete, to_modify, to_stay)
+        return diff_lists
 
-            return diff_lists
+    def get_dycRule_forward(self, rule):
+        if len(rule.actions) != 0:
+            for act in rule.actions:
+                if isinstance(act, forward):
+                    return act
+            if isinstance(rule.function, DynamicPolicy):
+                return self.get_netFunction_forward(rule.function)
+        else:
+            return None
 
     def get_edge_physical_corresponding(self, edge, port=None):
+        """ returns a list of tuples (phy_switch, port)
+            that corresponds to @param edge
         """
-        return a list of tuples (phy_switch, port) that correspond to the virtual edge
-        :param edge: virtual edge name
-        :param port: port mapping if it was specified
-        """
-        #**********
-        # Used only for ingress rules
-        #**********
+
         phy_switches = []
         end_host = None
         if port is not None:
-            #**********
             # strong assumption : we have a one to one port mapping
-            #**********
             for link in self.virtual_topology._links:
                 if link.unitA[0] == edge and link.unitA[1] == port:
                     end_host = link.unitB[0]
                 elif link.unitB[0] == edge and link.unitA[1] == port:
                     end_host = link.unitA[0]
-            #end host are connected by a unique link witch a unique switch
+            # end host are connected by a unique link with a unique switch
             for phy_switch in self.topology_graph.vertices[end_host]:
                 phy_switches.append(phy_switch)
         else:
@@ -873,13 +1030,18 @@ class Runtime():
                                         input_rules.append((rule, vertex[1], link[2]))
         return input_rules
 
-    def get_switchesList_onMatch(self, rule_match):
-        #**********
-        # Used only for ingress rules
-        #**********
+    def get_fabric_output_edges(self, fabric):
         """
-        return a list of tuples (phy_switch, port) that correspond to the match policy
-        :param match: rule's match (filter)
+        return the set of edges that 'fabric' will send to them flows
+        :param fabric: fabric that will carry flows to edges
+        """
+        fabric_rules = [rule for rule in self.fabric_policies.rules if rule.flow.fabric == fabric]
+        output_edges = [rule.action.destination for rule in fabric_rules]
+        return output_edges
+
+    def get_switchesList_onMatch(self, rule_match):
+        """ returns a list of tuples (phy_switch, port)
+            that corresponds to @param rule_match
         """
         for header in rule_match.map:
             if header == "port":
@@ -888,6 +1050,7 @@ class Runtime():
                 return self.get_edge_physical_corresponding(rule_match.map["edge"])
 
     def get_netFunction_forward(self, fct):
+        """ returns a netFunction rule destination """
         if not isinstance(fct, DynamicPolicy):
             for act in fct.sequential_actions:
                 if isinstance(act, forward):
@@ -898,35 +1061,33 @@ class Runtime():
                 self.get_netFunction_forward(function)
 
     def get_phy_switch_output_port(self, switch, dst_output):
-        """
-        return physical switch's output_port that allows to go to dst_output
-        :param switch: phy_switch (start point)
-        :param dst_output: fabric or host (end point). forward's output parameter
+        """ return @param switch output_port in global topology
+            that allows to go to @param dst_output
         """
         #TODO: dst_output is an edge
-        # test if the destination is a fabric (i.e., ingress edge)
+        # dst_output is a fabric (ingress edge)
         if dst_output in self.mapping.fabrics:
             for fab_key, fab_mapping in self.mapping.fabrics.iteritems():
                 if fab_key == dst_output:
                     destination_switches_set = fab_mapping
-                    logger.debug("Possible destination(s) found : {}".format(" ".join(destination_switches_set)))
+                    logger.debug("Destination : {}".format(str(dst_output)))
 
             for adjacent_node in self.topology_graph.vertices[switch]:
                 if adjacent_node[1] in destination_switches_set:
-                    #**********
                     #return the first node found, all costs are 1 (i.e., take the first path)
                     #TODO: link cost or load balancing
-                    #**********
                     return adjacent_node[2]
 
-        # If the dst_output is a host
+        # dst_output is a host (egress edge)
         elif dst_output in self.mapping.hosts.values():
-            logger.debug("Destination found : {}".format(str(dst_output)))
+            logger.debug("Destination : {}".format(str(dst_output)))
             for adjacent_node in self.topology_graph.vertices[switch]:
                 if adjacent_node[1] == dst_output:
                     return adjacent_node[2]
-        # if the destination is the controller
+
+        # dst_output is the controller
         elif dst_output == "controller":
+            logger.debug("Destination : Controller")
             return "OFPP_CONTROLLER"
         else:
             raise AssertionError("no corresponding physical output port ")
@@ -949,16 +1110,14 @@ class Runtime():
                 self.apply_netFunction_fromStat(bucket.match, stat)
 
     def handle_packet_in(self, dpid, packet_match, packet):
-        logger.debug("Runtime -- handling a Packet/in")
+        logger.debug("Handling a Packet/in")
         for bucket in self.buckets:
             if bucket.match.covers(packet_match):
-                logger.debug("Runtime -- Found a bucket for this packet!")
+                logger.debug("Found a bucket for this packet!")
                 bucket.add_packet(dpid, packet_match, packet)
 
     def install_diff_lists(self, diff_lists):
-        """
-            Install/Delete/Modify rules in diff_lists
-        """
+        """ Install/Delete/Modify rules in diff_lists """
         to_add = {}
         to_delete = {}
         to_modify = {}
@@ -971,14 +1130,14 @@ class Runtime():
         _enforce_diffList_duration = int(round(time.time() * 1000))
         logger.info("\nDifferentiated rules list enforcement started --")
 
-        self.nexus.modifyExistingRules(to_modify)
-        logger.info("Rules modified == " + str(countOfMessages(to_modify)))
+        self.nexus.push_ModifiedRules(to_modify)
+        logger.info("Rules modified == " + str(self.countOfMessages(to_modify)))
 
-        self.nexus.installNewRules(to_add)
-        logger.info("Rules installed == " + str(countOfMessages(to_add)))
+        self.nexus.push_NewRules(to_add)
+        logger.info("Rules installed == " + str(self.countOfMessages(to_add)))
 
-        self.nexus.delete_rules(to_delete)
-        logger.info("Rules deleted == " + str(countOfMessages(to_delete)))
+        self.nexus.push_DeletedRules(to_delete)
+        logger.info("Rules deleted == " + str(self.countOfMessages(to_delete)))
 
         _enforce_diffList_duration = int(round(time.time() * 1000)) - _enforce_diffList_duration
         logger.info("Differentiated rules list enforcement finished -- Duration == "+str(_enforce_diffList_duration)+" ms\n")
@@ -1043,9 +1202,8 @@ class Runtime():
                 self.enforce_egressPolicies(target_rule, classifiers)
                 new_rule = True
 
-            # dynamicFct is the only action (i.e., match >> dycFct) ??
             if new_rule:
-                self.nexus.install_new_rules(classifiers)
+                self.nexus.push_NewRules_onTop(classifiers)
 
                 for switch, new_rules in classifiers.iteritems():
                     for new_r in new_rules:
@@ -1059,9 +1217,9 @@ class Runtime():
         else:
             raise RuntimeError("runtime failed to find the nwFct_rule corresponding to " + str(micro_flow))
 
-#TODO: modify and rename
     def opt_physical_classifires(self, classifiers):
-
+        """ optimizes rules stored in @param classifiers
+        """
         def remove_shadowed_rules(classifiers):
 
             opt_c = {}
@@ -1188,9 +1346,8 @@ class Runtime():
         return graph
 
     def send_stat_request(self, target_match):
-        """
-            Callback Method used by buckets (network functions rules containers)
-            to send stats requests
+        """ used by buckets (network functions rules containers)
+            as callback methods to send stats requests
         """
         # get physical switches which will send stats
         edge_switches = self.get_edge_physical_corresponding(target_match.map["edge"])
@@ -1200,14 +1357,12 @@ class Runtime():
         self.handle_flow_stats(stat)
 
     def to_physical_switch_rule(self, rule, switch):
+        """ replaces forward logical destination (e.g: H1)
+            with a phy_port (like in OF)
+            pops the edge field from the rule since it's no more needed
         """
-        change forward logical destination with a phy_port (like in Openflow messages)
-        pop the edge field from the rule since it's no more needed
-        IMPORTANT: to be used only on edges that will send trafic to fabric, or hosts
-        :param rule: rule to be transformed
-        :param switch: switch on which the rule will be installed
-        """
-        # we perform a deep copy to not change rule's value when pop 'edge' from phy_rule
+        # perform a deep copy so that
+        # @param rule value remains unchanged
         physical_rule = copy.deepcopy(rule)
         drop_rule = False
 
@@ -1218,15 +1373,15 @@ class Runtime():
                 drop_rule = True
         if drop_rule:
             physical_rule.actions = set()
+
         physical_rule.match.map.pop("edge")
-        logger.debug("Physical rule generated :")
-        logger.debug("{}".format(str(physical_rule)))
+        logger.debug("\n   --> Physical rule stored : {}".format(str(physical_rule)))
         return physical_rule
 
 
 
 
-
+    """
     def get_host_nwAddr(self, id):
         for host_ipAddr, host_name in self.mapping.hosts.iteritems():
             if host_name == id:
@@ -1246,6 +1401,7 @@ class Runtime():
         #TODO
         pass
 
+
     def get_packetIn_edge(self, phy_switch, my_match):
         edges = []
         if "nw_proto" in my_match.map.keys():
@@ -1259,47 +1415,19 @@ class Runtime():
                 if ((my_match == rule.match) or (rule.match.covers(my_match))) and (rule.match != identity):
                     return rule.match.map["edge"]
 
-    def get_corresponding_virtual_edge(self, physical_switch):
-        """
-        return the swicth's corresponding virtual edge
-        :param physical_switch: physical switch name
-        """
-        for edge, mapping in self.mapping.edges.iteritems():
-                if physical_switch in mapping:
-                    return edge
-        return None
-
-    def get_fabric_output_edges(self, fabric):
-        """
-        return the set of edges that 'fabric' will send to them flows
-        :param fabric: fabric that will carry flows to edges
-        """
-        fabric_rules = [rule for rule in self.fabric_policies.rules if rule.flow.fabric == fabric]
-        output_edges = [rule.action.destination for rule in fabric_rules]
-        return output_edges
-
     def get_fabric_output_phy_switches(self, fabric):
-        """
+        """ """
         return physical_switches (corresponding to fabric's output edges) that will receive flows from the fabric
         these physical switches are NOT INSIDE the fabric
         :param fabric: fabric that will carry flows to these physical switches
-        """
+        """ """
         output_edges = self.get_fabric_output_edges(fabric)
         output_switches = set()
         for edge in output_edges:
             for switch in self.get_edge_physical_corresponding(edge):
                 output_switches.add(switch)
         return output_switches
-
-    def get_dycRule_forward(self, rule):
-        if len(rule.actions) != 0:
-            for act in rule.actions:
-                if isinstance(act, forward):
-                    return act
-            if isinstance(rule.function, DynamicPolicy):
-                return self.get_netFunction_forward(rule.function)
-        else:
-            return None
+    """
 
 
 
@@ -1308,16 +1436,8 @@ class Runtime():
 
 
 
-    def add_fabric_flow_routing_entry(self, fabric, rule, input_switch, output_switch, via_list):
-        """
-        fill fabric routing table with a tuple containing :
-        (the rule, the input_phy_switch, output_phy_switch)
-        :param fabric: the concerned fabric
-        :param rule: rule to be installed, with the intersection match
-        :param input_switch: the fab_ input switch
-        :param output_switch: the output_switch (do not belong to the fabric)
-        """
-        self.fabrics_flows_routing_table[fabric].append((rule, input_switch, output_switch, via_list))
+
+
 
     def get_output_port_path(self, path):
         """
@@ -1337,159 +1457,8 @@ class Runtime():
 
         return output_port_path
 
-    def enforce_fabric_physical_rules(self, fabric, classifiers):
-        """
-        install rules on the physical paths inside the fabric
-        :param fabric: fabric to process
-        """
-        def optimize_routing_table (fabric):
-            """
-                Optimize fabric classifiers
-            """
-            #TODO: add via_list constraint
-
-            # perform a copy of fabric routing table
-            routing_table = copy.deepcopy(self.fabrics_flows_routing_table[fabric])
-            out_table = []
-
-            # entry[0] == intersec_match, entry[1] == input_switch, entry[2] == output_switch, entry[3]==via_list
-            for entry in self.fabrics_flows_routing_table[fabric]:
-                # each entry is compared to the other ones
-                duplic = False
-                for road in routing_table:
-                    # if a another entry covers this current entry
-                    if(road[0].covers(entry[0]) and not entry[0]==road[0]):
-                        # verify that they have the same input and output switch
-                        if(entry[1]==road[1] and entry[2]==road[2]):
-                            duplic = True
-                            break
-                # no other entry covers the current one
-                if not duplic:
-                    out_table.append(entry)
 
 
-            self.fabrics_flows_routing_table[fabric] = copy.deepcopy(out_table)
-
-        excludes_nodes = set()
-        for fab in self.mapping.fabrics:
-            if fab != fabric:
-                excludes_nodes.update(self.mapping.fabrics[fab])
-        excludes_nodes = excludes_nodes - self.mapping.fabrics[fabric]
-
-        # optimize routing table before convertion into physical rules
-        optimize_routing_table(fabric)
-
-        for rule in self.fabrics_flows_routing_table[fabric]:
-            #rule[0] == intersec_match, rule[1] == input_switch, rule[2] == output_switch, rule[3]==via_list
-            if rule[3] is None:
-                #test if there is via actions
-                path = self.topology_graph.SPF(rule[1], rule[2], excludes_nodes)
-                output_port_path = self.get_output_port_path(path)
-                #item: (switch, in_port, out_port)
-                for item in output_port_path:
-                    action = forward(item[1])
-                    filtr = rule[0]
-                    #print "rule for switch " + str(item[0]) + " : " + str(filter) + str(action)
-                    classifiers[item[0]].append(Rule(filtr, identity, set([action])))
-            else:
-                self.enforce_data_machine_path(rule, classifiers, fabric, excludes_nodes)
-
-    def enforce_data_machine_path(self, rule, classifiers, fabric, excludes_nodes):
-        """
-        """
-        def get_predecessors(switch, fabric):
-            fabric_switches = self.mapping.fabrics[fabric]
-            predecessors = list()
-            for vertex in self.topology_graph.vertices[switch]:
-                if not (vertex[1] in fabric_switches):
-                    predecessors.append(vertex)
-            return predecessors
-
-        def get_corresponding_switches(dm_list):
-            switches = list()
-            for dm in dm_list:
-                for vertex in self.topology_graph.vertices[dm]:
-                    switches.append(vertex[1])
-            return switches
-
-        def get_in_port(target_switch, sending_switch):
-            """
-            return in_port from which target_switch recieve flows from sending_switch
-            """
-            for vertex in self.topology_graph.vertices[target_switch]:
-                if vertex[1] == sending_switch:
-                    return vertex[2]
-
-        def get_data_machine_switch(data_machine):
-            """
-            return a tuple that contain the switch and the port to which dm is connected
-            nq:parm: data machine name
-            :return: (switch, port)
-            """
-            adjacents = set()
-            # can't use graph get_adjacent method, because it is integrated to SPF algo, fix it
-            for link in self.topology_graph.vertices[data_machine]:
-                adjacents.add(link[1])
-            dm_switch = adjacents.pop()
-            for vertex in self.topology_graph.vertices[dm_switch]:
-                if vertex[1] == data_machine:
-                    return (dm_switch, vertex[2])
-
-        start = rule[1]
-        last = None
-
-        for dm in rule[3]:
-            intermediate = get_data_machine_switch(dm)
-
-            path = self.topology_graph.SPF(start, intermediate[0], excludes_nodes)
-            output_port_path = self.get_output_port_path(path)
-            dm_switches = get_corresponding_switches(rule[3])
-            for item in output_port_path:
-                if not item[0] in dm_switches:
-                    action = forward(item[1])
-                    filter = copy.deepcopy(rule[0])
-                    classifiers[item[0]].append(Rule(filter, identity, set([action])))
-                    last = item[0]
-                else:
-                    #to dm
-                    action = forward(intermediate[1])
-                    filter = copy.deepcopy(rule[0])
-                    if last is None:
-                        predecessors = get_predecessors(item[0], fabric)
-                        for pred in predecessors:
-                            filter.map["in_port"] = get_in_port(item[0], pred[1])
-                            classifiers[item[0]].append(Rule(filter, identity, set([action])))
-                    else:
-                        filter.map["in_port"] = get_in_port(item[0], last)
-                        classifiers[item[0]].append(Rule(filter, identity, set([action])))
-                    #from dm
-                    action = forward(item[1])
-                    filter = copy.deepcopy(rule[0])
-                    filter.map["in_port"] = intermediate[1]
-                    classifiers[item[0]].append(Rule(filter, identity, set([action])))
-                    last = item[0]
-            start = intermediate[0]
-
-        #pdb.set_trace()
-
-        action = forward(intermediate[1])
-        filter = copy.deepcopy(rule[0])
-        filter.map["in_port"] = get_in_port(intermediate[0], last)
-        classifiers[intermediate[0]].append(Rule(filter, identity, set([action])))
-
-
-        path = self.topology_graph.SPF(intermediate[0], rule[2], excludes_nodes)
-        output_port_path = self.get_output_port_path(path)
-        for item in output_port_path:
-            if not item[0] in dm_switches:
-                action = forward(item[1])
-                filter = copy.deepcopy(rule[0])
-                classifiers[item[0]].append(Rule(filter, identity, set([action])))
-            else:
-                action = forward(item[1])
-                filter = copy.deepcopy(rule[0])
-                filter.map["in_port"] = intermediate[1]
-                classifiers[item[0]].append(Rule(filter, identity, set([action])))
 #TODO
     def get_switch_phy_egress_rules(self, egress_switch, classifiers, fabric):
         """

@@ -8,6 +8,7 @@
 import copy
 from collections import namedtuple
 from lib.ipaddr import IPv4Network
+
 from graph import Graph
 from log import Logger
 

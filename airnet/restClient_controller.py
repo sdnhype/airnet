@@ -5,9 +5,11 @@ import ast
 import httplib
 import json
 import copy
-from language import identity, forward, modify, match
+
 from dynamicFct import Stat
 from log import Logger
+
+from language import identity, forward, modify, match
 
 #TODO: mapping 1 edge --> n switches to handle in send_StatsRequest
 
@@ -358,12 +360,8 @@ class RyuClient(object):
 		packet['output'] = output
 		c.sendPacket(packet)
 
-
-#TODO: while cleaning runtime module
-
-
-
-	def installNewRules(self, classifiers):
+	def push_NewRules(self, classifiers):
+		""" push new rules instructions to RYU """
 		c = ConfigureFlow('localhost',8080)
 
 		for switch,rules in classifiers.iteritems():
@@ -379,16 +377,15 @@ class RyuClient(object):
 				c.addFlow(data)
 			self.switches_rules_cpt[switch] += len(rules)
 
-	def install_new_rules(self, classifiers):
-		"""
-			Push Reactive Rules to the SDN Controller
+	def push_NewRules_onTop(self, classifiers):
+		""" push new rules instructions to RYU
+			with the highest priority
 		"""
 		c = ConfigureFlow('localhost',8080)
 
 		for switch, rules in classifiers.iteritems():
-			# priority = len (old rules + new rules)
-			priority = self.switches_rules_cpt[switch] + len(rules)
 			dpid = int(switch[1:])
+			priority = self.switches_rules_cpt[switch] + len(rules)
 
 			for rule in rules:
 				data = {}
@@ -402,12 +399,10 @@ class RyuClient(object):
 				c.addFlow(data)
 			self.switches_rules_cpt[switch] += len(rules)
 
-	"""
-	supprime des regles,utilise par le mode reactif
-	to_delete: dictionnaire des regles a supprimer
-	"""
-
-	def delete_rules(self, to_delete):
+	def push_DeletedRules(self, to_delete):
+		""" push delete rules instructions
+			to RYU
+		"""
 		c = ConfigureFlow('localhost',8080)
 		for switch, rules in to_delete.iteritems():
 			cpt_deleted_rules = 0
@@ -423,7 +418,8 @@ class RyuClient(object):
 				cpt_deleted_rules += 1
 			self.switches_rules_cpt[switch] -= cpt_deleted_rules
 
-	def modifyExistingRules(self, to_modify):
+	def push_ModifiedRules(self, to_modify):
+		""" push rules to modify instructions to RYU """
 		c = ConfigureFlow('localhost',8080)
 
 		def different_actions(act_list1, act_list2):
@@ -451,10 +447,10 @@ class RyuClient(object):
 		def modify_priority(old_r, new_r, switch):
 			to_delete = {switch:[]}
 			to_delete[switch].append(old_r)
-			self.delete_rules(to_delete)
+			self.push_DeletedRules(to_delete)
 			to_add = {switch:[]}
 			to_add[switch].append(new_r)
-			self.installNewRules(to_add)
+			self.push_NewRules(to_add)
 
 		for switch, rules in to_modify.iteritems():
 			dpid = int(switch[1:])

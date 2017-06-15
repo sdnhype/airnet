@@ -3,6 +3,7 @@
 
 from lib.ipaddr import IPv4Network
 from lib.addresses import IPAddr
+
 from classifier import *
 
 #TODO : comment dataFct in dynamic policies
@@ -132,12 +133,12 @@ class Policy(object):
     def name(self):
         return self.__class__.__name__
 
-*********** singleton policies **********************
+# *********** singleton policies **********************
 
 def singleton(f):
     return f()
 
-                ----------
+#                ----------
 
 @singleton
 class identity(Policy):
@@ -182,7 +183,7 @@ class drop(Policy):
     def __str__(self):
         return "drop"
 
-************* edge policies ***********************
+# ************* edge policies ***********************
 
 class EdgePolicy(Policy):
     """ abstract superclass for edge policies
@@ -403,7 +404,7 @@ class tag(EdgePolicy):
 
 class across(EdgePolicy):
     """
-    transists a flow by a data machine, where a data function will be applied on him
+    transits a flow by a data machine, where a data function will be applied on him
     :param dataMachine: data machine on which dataFct is executed
     :param dataFct: function to apply on data flow
     """
@@ -424,7 +425,7 @@ class across(EdgePolicy):
         return ("across by: " + self.dataMachine + " | " + self.dataFct)
 
 
-************ fabric policies **********************
+# ************ fabric policies **********************
 
 class FabricPolicy(Policy):
     """
@@ -506,7 +507,7 @@ class via(FabricPolicy):
                  " and dataFct " + self.data_fct)
 
 
-************ dynamic policies *********************
+# ************ dynamic policies *********************
 
 """
 def DataFct(**decorator_kwargs):
@@ -523,7 +524,7 @@ def DynamicControlFct(**decorator_kwargs):
         return fct_warper
     return dynamic_fct_decorator
 
-                ----------
+#                ----------
 
 class NetworkFunction(EdgePolicy):
     """ base class for network functions """

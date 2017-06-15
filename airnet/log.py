@@ -1,8 +1,8 @@
 # AIRNET PROJECT
 # Copyright (c) 2017 Messaoud AOUADJ, Emmanuel LAVINAL, Mayoro BADJI
 
-from logging.handlers import RotatingFileHandler
 import logging
+from logging.handlers import RotatingFileHandler
 
 class Logger :
 
