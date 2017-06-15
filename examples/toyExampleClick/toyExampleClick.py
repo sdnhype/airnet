@@ -32,7 +32,7 @@ def virtual_network():
 
 #Policies
 def IO_policy(VID):
-    i1 = match(edge=VID, dst="server") >> tag("in_web_flows") >> forward("fabric")
+    i1 = match(edge=VID, dst="server",tp_dst=80) >> tag("in_web_flows") >> forward("fabric")
     i2 = match(edge=VID, dst="client1")  >> forward("client1")
     return i1 + i2
 
@@ -44,7 +44,7 @@ def AC_policy(VID):
 def fabric_policy(VID):
     t1 = catch(fabric=VID, src="IO", flow="in_web_flows") >> via("dm1", "fct") >> carry(dst="AC")
     t2 = catch(fabric=VID, src="AC", flow="out_web_flows") >> carry(dst="IO")
-    return t1 + t2
+    return t1 + t2 
 
 #Main function
 def main():

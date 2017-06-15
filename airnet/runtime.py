@@ -8,17 +8,15 @@ from importlib import import_module
 from collections import namedtuple
 from lib.ipaddr import IPv4Network
 
-from dynamicFct import Bucket,PeriodicTimer
+from dynfunction import Bucket,PeriodicTimer
 from log import Logger
 
-from restClient_controller import RyuClient
+from restclient_controller import RyuClient
 from language import identity, match, forward, drop, modify, carry,\
                      NetworkFunction, Policy,\
                      CompositionPolicy, DataFctPolicy, DynamicPolicy
 from classifier import Rule
 
-
-#TODO: test via_list constraint
 #TODO! Stop Stats Thread when Switch Leaves
 
 

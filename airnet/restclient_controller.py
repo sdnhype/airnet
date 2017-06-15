@@ -6,7 +6,7 @@ import httplib
 import json
 import copy
 
-from dynamicFct import Stat
+from dynfunction import Stat
 from log import Logger
 
 from language import identity, forward, modify, match
