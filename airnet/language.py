@@ -1,17 +1,22 @@
-from tools import *
+# AIRNET PROJECT
+# Copyright (c) 2017 Messaoud AOUADJ, Emmanuel LAVINAL, Mayoro BADJI
+
 from lib.ipaddr import IPv4Network
 from lib.addresses import IPAddr
-from classifier import Classifier, Rule, FabricRule, FabricClassifier
-import pdb
 
-#import traceback, sys
-#traceback.print_exception(*sys.exc_info())
+from classifier import *
+
+#TODO : comment dataFct in dynamic policies
+#TODO : udp on modify.apply()
+#TODO : should we keep across ?
+#TODO : is dataFct still useful ?
 
 ##################################################
-#            virtual topology                    #
+#           VIRTUAL TOPOLOGY ELEMENTS            #
 ##################################################
+
 class Edge(object):
-    """ Edge class"""
+    """ represents an edge """
     def __init__(self, name, ports):
         self.name = name
         self.ports = ports
@@ -20,7 +25,7 @@ class Edge(object):
         return self.name == other.name
 
 class Fabric(object):
-    """ Fabric class"""
+    """ reprensents a  fabric class"""
     def __init__(self, name, ports):
         self.name = name
         self.ports = ports
@@ -29,8 +34,7 @@ class Fabric(object):
         return self.name == other.name
 
 class DataMachine(object):
-    """ Data Machine class """
-
+    """ reprensents a dataMachine """
     def __init__(self, name, ports):
         self._name = name
         if ports > 0:
@@ -47,7 +51,7 @@ class DataMachine(object):
         return self._ports
 
 class Host(object):
-    """ Host class """
+    """ reprensents a host object """
     def __init__(self, name):
         self.name = name
 
@@ -55,23 +59,17 @@ class Host(object):
         return self.name == other.name
 
 class VLink(object):
-    """ virtual link class"""
+    """ represents a ling """
     def __init__(self, VirtualUnitA, VirtualUnitB):
         # unit is a tuple --> (device, port)
         self.unitA = VirtualUnitA
         self.unitB = VirtualUnitB
 
-#TODO:
-"""
-class Host(object):
-    pass
-
 class Network(object):
     pass
-"""
 
 class VTopology(object):
-    """ virtual topology class"""
+    """ represents a virtual topology """
     def __init__(self):
         self._edges = []
         self._fabrics = []
@@ -98,12 +96,11 @@ class VTopology(object):
     def addLink(self, VirtualUnitA, VirtualUnitB):
         self._links.append(VLink(VirtualUnitA, VirtualUnitB))
 
-
     def getFabricAdjacentEdges(self, fabric):
-
-        def is_edge(id):
+        """ returns edges connected to fabric """
+        def is_edge(name):
             for edge in self._edges:
-                if edge.name == id:
+                if edge.name == name:
                     return True
             return False
 
@@ -118,43 +115,46 @@ class VTopology(object):
         return edges
 
 ##################################################
-#            control policies                    #
+#                  POLICIES                      #
 ##################################################
 
 class Policy(object):
-    """
-        Top-Level abstract class for all policies
-        (edge and fabric)
-    """
+    """ Top level abstract class for
+        all policies (edge and fabric) """
     def __init__(self):
         self._classifier = None
 
     def compile(self):
-        """
-            compile a policy generates a classifier
-            in which rules are stored
-        """
+        """ compile a policy call the policy
+            generateClassifier method """
         self._classifier = self.generateClassifier()
         return self._classifier
 
     def name(self):
         return self.__class__.__name__
 
-################ Singleton policies ####################
+# *********** singleton policies **********************
+
+def singleton(f):
+    return f()
+
+#                ----------
 
 @singleton
 class identity(Policy):
-    """
-        identity is a neutral policy
-        it performs none changes
+    """ neutral policy which performed no changes
+        equivalent to NULL in other languages
     """
     def __init__(self):
         self.map = {}
 
     def intersec(self, other):
+        """ intersection between identity and another policy
+            always returns the other policy """
         return other
 
     def covers(self, other):
+        """ intersection always covers other policy """
         return True
 
     def __eq__(self, other):
@@ -166,14 +166,15 @@ class identity(Policy):
 
 @singleton
 class drop(Policy):
-    """
-        drop is an absorbing element
+    """ drop is an absorbing policy
         it generates a rule with an empty set of actions
     """
     def generateClassifier(self):
         return Classifier([Rule(identity, identity, set())])
 
     def intersec(self, other):
+        """ intersection between drop an another policy
+            always returns drop """
         return self
 
     def __repr__(self):
@@ -182,11 +183,11 @@ class drop(Policy):
     def __str__(self):
         return "drop"
 
-################ Edge policies ####################
+# ************* edge policies ***********************
 
 class EdgePolicy(Policy):
-    """
-        abstract class for all edge policies
+    """ abstract superclass for edge policies
+        and composition between those policies
     """
     def __add__(self, policy):
         if isinstance(policy, ParallelComposition):
@@ -201,101 +202,111 @@ class EdgePolicy(Policy):
             return SequentialComposition([self, policy])
 
 class match(EdgePolicy):
-    """
-    the match policy, Match on all specified fields.
-
-    :param **kwargs: field matches in keyword-argument format
-    """
+    """ match on specified fields """
     def __init__(self, **kwargs):
         """
-        self.map is a dictionary that stores match fields
+            @param **kwargs : list of couples field:value
+            - self.map stores match fields and values
         """
         self.map = dict(**kwargs)
 
     def generateClassifier(self):
-        """
-        Matched packets are kept, non-matched packets are dropped.
-        """
+        """ generates a rule for packets
+            thats corresponds to the match
+            and a default drop rule for packets
+            that do not corresponds """
         r1 = Rule(self, identity, {identity})
         r2 = Rule(identity, identity, set())
         return Classifier([r1, r2])
 
-    def intersec(self, pol):
+    def intersec(self, policy):
+        """ return a new match which is the result
+            of the intersection between the current match
+            and another policy
         """
-        return a new math which is the result of the intersection between self and pol
-        """
+
         def _intersect_ip(ipfx, opfx):
-            """
-            IP intersection, return the most specific IP address
-            """
+            """ returns the most specific address
+                between two IP addresses """
             most_specific = None
+
             if (IPv4Network(ipfx) in IPv4Network(opfx)):
                 most_specific = ipfx
             elif (IPv4Network(opfx) in IPv4Network(ipfx)):
                 most_specific = opfx
             return most_specific
 
-        # fct logic start here
-        if pol == identity:
+
+        if policy == identity:
             return self
-        elif pol == drop:
+        elif policy == drop:
             return drop
-        elif not isinstance(pol,match):
+        elif not isinstance(policy, match):
             raise TypeError
-        fs1 = set(self.map.keys())
-        fs2 = set(pol.map.keys())
-        shared = fs1 & fs2 # set intersection
+
+        self_keys = set(self.map.keys())
+        other_keys = set(policy.map.keys())
+
+        # intersection between fields
+        shared = self_keys & other_keys # set intersection
+
         most_specific_src = None
         most_specific_dst = None
-        for f in shared:
-            if (f=='nw_src'):
-                most_specific_src = _intersect_ip(self.map[f], pol.map[f])
+
+        for field in shared:
+            if (field == 'nw_src'):
+                # choose the most specific src address
+                most_specific_src = _intersect_ip(self.map[field], policy.map[field])
+                # none most specific src -> different flows
                 if most_specific_src is None:
-                    return drop # y a aucune intersection, c'est deux flux different
-            elif (f=='nw_dst'):
-                most_specific_dst = _intersect_ip(self.map[f], pol.map[f])
+                    return drop
+
+            elif (field == 'nw_dst'):
+                most_specific_dst = _intersect_ip(self.map[field], policy.map[field])
                 if most_specific_dst is None:
                     return drop
-            elif (self.map[f] != pol.map[f]):
-                #if there is only one different field, then the intersection is an empty set
+
+            elif (self.map[field] != policy.map[field]):
+                # if fields are different, there is no intersection
                 return drop
 
-        if 'nw_src' in fs1:
-            if 'nw_dst' in fs2:
-                if self.map['nw_src'] == pol.map['nw_dst']:
+        if 'nw_src' in self_keys:
+            if 'nw_dst' in other_keys:
+                if self.map['nw_src'] == policy.map['nw_dst']:
                     return drop
-        elif 'nw_dst' in fs1:
-            if 'nw_src' in fs2:
-                if self.map['nw_dst'] == pol.map['nw_src']:
+        elif 'nw_dst' in self_keys:
+            if 'nw_src' in other_keys:
+                if self.map['nw_dst'] == policy.map['nw_src']:
                     return drop
 
         # if there is no shared field, then merge
-        d = dict(self.map.items() + pol.map.items())
-        #d = self.map.update(pol.map) --> pyretic code, update method return nothing !
+        d = dict(self.map.items() + policy.map.items())
 
         if most_specific_src is not None:
-            #d = d.update({'srcip' : most_specific_src}) --> pyretic code !
             d.update({'nw_src' : most_specific_src})
         if most_specific_dst is not None:
-            #d = d.update({'dstip' : most_specific_dst})- -> pyretic code !
             d.update({'nw_dst' : most_specific_dst})
 
         return match(**d)
 
     def covers(self, other):
-        """
-        return true, if other is totally included in self
-        """
+        """ returns True if another policy is
+            fully included in the current match """
+
+        # match do not covers identity
         if other == identity and len(self.map.keys()) > 0:
             return False
+        # here match is empty (identity)
         elif other == identity:
             return True
+        # match covers drop
         elif other == drop:
             return True
 
         if set(self.map.keys()) - set(other.map.keys()) :
-            #if the set is empty == false, if not == true
-            # A - B: the resulting set has elements of the "A" set with all elements from the "B" set removed.
+            # We get there -> resulting set is not empty
+            # the resulting set has elements of the self fields
+            # with all fields from other removed
             return False
 
         for (f, v) in self.map.items():
@@ -307,8 +318,9 @@ class match(EdgePolicy):
                 return False
         return True
 
-    # to be able to use match object as dictionary key
     def __hash__(self):
+        """ allows to use match object as dictionary key
+        """
         return hash(repr(self.map))
 
     def __eq__(self, other):
@@ -319,12 +331,11 @@ class match(EdgePolicy):
         return "match " + str(self.map)
 
 class forward(EdgePolicy):
-    """
-    forward a flow at one of edge's port
+    """ forward a flow to one port
+        of the current edge """
 
-    :param destination: virtual device which is directly connected to the edge (or edge's port number)
-    """
     def __init__(self, output):
+        """ @param output : port number """
         self.output = output
 
     def generateClassifier(self):
@@ -340,21 +351,16 @@ class forward(EdgePolicy):
         return "forward ('{}'')".format(self.output)
 
 class modify(EdgePolicy):
-    """
-    Modify on all specified fields to specified values.
+    """ modify fields values on a specific flow """
 
-    :param **kwargs: field assignments in keyword-argument format
-    """
     def __init__(self, **kwargs):
         self.map = dict(**kwargs)
 
     def apply(self, packet):
-        """
-        """
-        import ast
-        # {'dpid':..,'packet':{'ipv4':{......},'tcp':{....},...},'port':..}
+        """ apply modification(s) on packet headers """
+
         protos = packet.get('packet')
-        #protos = ast.literal_eval(str(protos))
+
         if "dl_src" in self.map:
             protos['eth_src'] = self.map["dl_src"]
         if "dl_dst" in self.map:
@@ -382,27 +388,23 @@ class modify(EdgePolicy):
         return "modify such as " + str(self.map)
 
 class tag(EdgePolicy):
-    """
-    the tag policy allows to assigns a label to a matched flow
+    """ assigns a label to a matched flow """
 
-    :param label: identifier to be attached to the matched flow
-    """
     def __init__(self, label):
         self.label = label
 
     def generateClassifier(self):
-        # different from others !
         return Classifier([Rule(identity, self, {identity})])
 
     def __eq__(self, other):
         return (isinstance(other, tag)) and (self.label == other.label)
 
     def __repr__(self):
-        return "flow==" + self.label
+        return "flow == " + self.label
 
 class across(EdgePolicy):
     """
-    transists a flow by a data machine, where a data function will be applied on him
+    transits a flow by a data machine, where a data function will be applied on him
     :param dataMachine: data machine on which dataFct is executed
     :param dataFct: function to apply on data flow
     """
@@ -423,7 +425,7 @@ class across(EdgePolicy):
         return ("across by: " + self.dataMachine + " | " + self.dataFct)
 
 
-################ Fabric policies ####################
+# ************ fabric policies **********************
 
 class FabricPolicy(Policy):
     """
@@ -443,11 +445,9 @@ class FabricPolicy(Policy):
             return FabricSequentialComposition([self, policy])
 
 class catch(FabricPolicy):
-    """
-    the catch policy, match flows based on a label that has been inserted beforehand by an edge.
-
-    :param **kwargs: field (fabric, flow) matches in keyword-argument format
-    """
+    """ match tagged flows in a fabric based
+        on a label and the edge which inserted
+        the label """
 
     def __init__(self, src, fabric, flow):
         self.flow = flow
@@ -455,21 +455,14 @@ class catch(FabricPolicy):
         self.src= src
 
     def generateClassifier(self):
-        """
-        Matched packets are kept, non-matched packets are dropped.
-        """
         return FabricClassifier([FabricRule(self, {identity}, list())])
 
     def __repr__(self):
-        return "fabric='{}' ,src='{}' flow='{}'".format(self.fabric,self.src,self.flow)
+        return "fabric = '{}' ,src = '{}' flow = '{}'".format(self.fabric,self.src,self.flow)
 
 class carry(FabricPolicy):
-    """
-    carry a flow at one of fabric's port
-
-    :param destination: virtual device which is directly connected to the fabric (or fabric's port number)
-    :param **constraints: bandwidth constraint (the only constraint that is covered for now)
-    """
+    """ carry a tagged flow to one port
+        of the current fabric """
 
     def __init__(self, dst, **constraints):
         self.destination = dst
@@ -485,12 +478,10 @@ class carry(FabricPolicy):
         return FabricClassifier([FabricRule(identity, {self}, list())])
 
 class via(FabricPolicy):
-    """
-    allows to redirect a flow towards a data machine
+    """ redirects a tagged flow towards a dataMachine
+        dataMachine should then apply a data_function
+        on the flow """
 
-    :param dataMachine: target data machine
-    :param dataFct: target data function
-    """
     def __init__(self, data_machine, data_fct):
         self._data_machine = data_machine
         self._data_fct = data_fct
@@ -516,29 +507,36 @@ class via(FabricPolicy):
                  " and dataFct " + self.data_fct)
 
 
-################ Dynamic Policies ####################
+# ************ dynamic policies *********************
 
+"""
 def DataFct(**decorator_kwargs):
     def data_fct_decorator(fct ):
         def fct_warper(**fct_kwargs):
             return DataFctPolicy(fct, fct_kwargs, decorator_kwargs)
         return fct_warper
     return data_fct_decorator
-
+"""
 def DynamicControlFct(**decorator_kwargs):
-    def dynamic_fct_decorator(fct ):
+    def dynamic_fct_decorator(fct):
         def fct_warper(**fct_kwargs):
             return DynamicPolicy(fct, fct_kwargs, decorator_kwargs)
         return fct_warper
     return dynamic_fct_decorator
 
+#                ----------
+
 class NetworkFunction(EdgePolicy):
-    """
-    base class for network functions
-    """
+    """ base class for network functions """
     def __init__(self,  callback, callback_kwargs, decorator_kwargs):
+        """
+            @param callback         : function which will be executed
+            @param callback_kwargs  : function arguments
+            @param decorator_kwargs : decorator arguments
+        """
         self.callback = callback
         self.callback_kwargs = callback_kwargs
+
         try:
             self._type = decorator_kwargs["data"]
         except KeyError:
@@ -555,6 +553,7 @@ class NetworkFunction(EdgePolicy):
             self._every = decorator_kwargs["every"]
         except KeyError:
             self._every = None
+
     @property
     def type(self):
         return self._type
@@ -612,19 +611,25 @@ class DataFctPolicy(NetworkFunction):
         return (isinstance(other, DataFctPolicy))
 
 class DynamicPolicy(NetworkFunction):
+    """ class for dynamic control policies
+        on packets or statistics
+    """
 
     def __eq__(self, other):
         return (isinstance(other, DynamicPolicy))
 
     def apply(self, packet):
-        print("... Applying {}() dynamic function... ".format(self.callback.__name__))
+        """ apply a dynamic control function """
+        print("... Applying {}()... ".format(self.callback.__name__))
         return self.callback(packet, **self.callback_kwargs)
 
     def __repr__(self):
         return "{}()".format(self.callback.__name__)
 
 
-################ Composition policies ################
+##################################################
+#                 COMPOSITION                    #
+##################################################
 
 
 class CompositionPolicy(EdgePolicy):

@@ -1,24 +1,33 @@
-from threading import Timer
-from tools import match_from_packet
-from language import identity,match
-import copy
+# AIRNET PROJECT
+# Copyright (c) 2017 Messaoud AOUADJ, Emmanuel LAVINAL, Mayoro BADJI
 
-#TODO: what's the point on #66
-#TODO: merge tools.py on #84
-#TODO: addPacket on #91
+#TODO: packet concurrency in add_packet
+
+import copy
+import ast
+from threading import Timer
+
+from language import identity,match
 
 class Bucket(object):
-    """
-        Containers for data/stats received from the controller
-        One bucket is instantiated for each network function
+    """ Containers for data/stats received from the controller
+        One bucket is instantiated for each dynamic network function
     """
     def __init__(self, _filter, _type, split, limit, every, runtime):
+        """ initializes bucket components
+            @param _filter : flow on which the network function applies
+            @param _type   : whether it's a stat or packet network function
+            @param _split  : whether the flow is discriminated or not (_type->packet)
+            @param _limit  : # of flow packets which will be treated  (_type->packet)
+            @param _every  : interval in which stats are recovered
+            @param runtime : hypervisor runtime module
+        """
         self.runtime = runtime
         self.match = _filter
         self.limit = limit
         self.split = split
         self.data = []
-        # here we can multiples micro-flows
+        # here we can have multiples micro-flows
         if split is not None:
             self.nb_packets = {}
             self.locked = {}
@@ -33,34 +42,60 @@ class Bucket(object):
             self.timer = PeriodicTimer(every, limit, self.runtime.send_stat_request, _filter)
             self.timer.start()
 
+    def getMatch_fromPacket(self, packet):
+        """
+            generates a match object based on
+            fields in the packet param
+        """
+        packet_match = match()
+        # {'dpid':..,'packet':{'ipv4':{......},'tcp':{....},...},'port':..}
+        protos = packet.get('packet')
+        protos = ast.literal_eval(str(protos))
+        if 'ipv4' in protos:
+            ip = protos.get('ipv4')
+            packet_match.map["nw_src"] = ip.get('src')
+            packet_match.map["nw_dst"] = ip.get('dst')
+        if 'tcp' in protos:
+            tcp = protos.get('tcp')
+            packet_match.map["tp_src"] = tcp.get('src_port')
+            packet_match.map["tp_dst"] = tcp.get('dst_port')
+
+        return packet_match
+
     def update_bucket_state(self):
-        """
-            Don't know yet the point
-        """
+        """ not relevant """
         pass
-        #self.locked = True
 
     def update_stats(self, stat):
-        """
-            Transfer statistics data to the network function
-        """
+        """ transfer stats data to the network function """
         self.data = stat
-        #self.runtime.apply_netFunction_fromStat(self.match, stat)
 
     def get_micro_flow(self, packet):
-        packet_match = match_from_packet(packet)
+        """ get a match (corresponding to a micro_flow)
+            based on packet param headers """
+        packet_match = self.getMatch_fromPacket(packet)
         try:
             return match(**{field:packet_match.map[field] for field in self.split})
         except KeyError:
-            print "This packet can't be splitted"
+            print("[Error] Packet {} can't be splitted".format(str(packet)))
 
     def add_packet(self, dpid, packet_match, packet):
+        """
+            coordonates dynamic function execution after
+            datas are collected
+        """
+        # all packets are pulled
         if self.limit is None:
+            # store the packet
             self.data.append(packet)
+            # apply the network function stored in the bucket
             self.runtime.apply_netFunction_fromPacket(dpid, self.match, packet_match, packet)
         else:
+            # there are micro_flows here
             if self.split is not None:
+                # get the micro_flow based on packet headers
                 micro_flow = self.get_micro_flow(packet)
+                # lock it
                 try:
                     self.locked[micro_flow]
                 except KeyError:
@@ -71,35 +106,41 @@ class Bucket(object):
                     except KeyError:
                         self.nb_packets[micro_flow] = 1
                     self.data.append(packet)
+                    # check if the micro_flow reached the limit field
                     if self.nb_packets[micro_flow] == self.limit:
+                        # lock the micro_flow
                         self.locked[micro_flow] = True
                         micro_flow_match = copy.deepcopy(self.match)
                         micro_flow_match.map.update(micro_flow.map)
                         self.runtime.micro_flow_limit_reached(micro_flow_match)
                     self.runtime.apply_netFunction_fromPacket(dpid, self.match, packet_match, packet)
                 else:
-                    print "micro-flow locked"
+                    print "[Error] Micro-Flow Locked"
                     # TODO: add something to handle this lasts packets --> packets concurrency
             else:
                 if not self.locked:
                     self.nb_packets += 1
                     self.data.append(packet)
                     if self.nb_packets == self.limit:
-                        print("locked because of limit")
+                        print("Flow Locked because Limit is reached")
                         self.locked = True
                         self.runtime.apply_netFunction_fromPacket(dpid, self.match, packet_match, packet)
                         self.runtime.flow_limit_reached(self.match)
                     else :
                         self.runtime.apply_netFunction_fromPacket(dpid, self.match, packet_match, packet)
                 else:
-                    print "flow locked"
+                    print "[Error] Flow Locked"
                     # TODO: packets concurrency
 
 class PeriodicTimer(object):
-    """
-        Sends periodic stats requests through the callback function parameter
-    """
+    """ Sends periodic stats requests
+        through the callback function parameter """
     def __init__(self, interval, maxticks, callback, *args, **kwargs):
+        """
+            @param interval : in which threads are created
+            @param maxticks :
+            @param callback : dynamic function which is executed
+        """
         self._interval = interval
         self._callback = callback
         self._args = args
@@ -111,6 +152,7 @@ class PeriodicTimer(object):
             self._maxticks = None
 
     def _run(self):
+        """ function executed by threads """
         if self._maxticks:
             self._nticks += 1
             if self._nticks < self._maxticks:
@@ -123,21 +165,27 @@ class PeriodicTimer(object):
         self._callback(*self._args, **self._kwargs)
 
     def start(self):
+        """ launches threads """
         self._timer = Timer(self._interval, self._run)
         self._timer.start()
 
     def stop(self):
+        """ stops threads"""
         self._timer.cancel()
 
-class Stat_object(object):
-    """
-    Represents a stat object received from the RYU Controller
+class Stat(object):
+    """ represents statistics data structure collected
     """
     def __init__(self, byte_count, packet_count, **kwargs):
+        """
+            @param byte_count : # of bytes that hit a match
+            @param packet_count : # of packets that hit a match
+            @param **kwargs : other statistics features
+        """
         self.byte_count = byte_count
         self.packet_count = packet_count
-        # the matching fields
         self._issuing_match = match(**kwargs)
+
         try:
             self.nw_src = kwargs["nw_src"]
         except KeyError:

@@ -16,4 +16,4 @@ AIRNET_DIR=airnet
 
 echo "Starting AIRNET Hypervisor with RYU Controller ....... "
 
-python $AIRNET_DIR/main_server_ryu.py $CTRL_MODULE $MAPPING_MODULE
+python $AIRNET_DIR/restserver_controller.py $CTRL_MODULE $MAPPING_MODULE
