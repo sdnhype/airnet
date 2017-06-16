@@ -1,5 +1,0 @@
--rajout d'un attribut infrastructure dans runtime 
--remplacer core.infra par infra dans runtime
--rajout des deux mapping dans le fichier de mapping
--suppression de la conversion toStr dans les methodes arp et rarp d'infrastructure
--suppression de la conversion toStr dans la methode resolve_graph de runtime
