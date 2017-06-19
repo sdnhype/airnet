@@ -1,0 +1,62 @@
+# ============================
+# examples/flowControl/
+# ============================
+
+************************
+*** virtual topology ***
+************************
+
+                             DM1
+                              |
+Users_Net-----[IO]-------[ Fabric ]-------[AC]------ WebServer
+
+
+Policies:
+
+USERS_NET <--> allow only whitelisted IP source addresses
+               redirect other flows to DM1 (e.g. Deep Packet Inspector)
+                  before allow/drop
+
+************************
+*** mininet topology ***
+************************
+
+                         VM
+                          | (eth2)
+                          |
+                          | (eth2)
+users---[s1]------[s2]---[s3]---[s4]------[s5]---WS
+
+
+***************
+*** mapping ***
+***************
+
+IO  --> s1
+AC  --> s5
+Fabric --> [s2, s3, s4]
+
+***************************
+*** running and testing ***
+***************************
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh flowControl.flowControl flowControl.flowControl_mapping
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- Mininet
+
+$ sudo python flowControl_topo.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> users ping -c1 WS  ---> OK  (users IP on whitelist)
+mininet> users wget WS      ---> OK  (users IP on whitelist)
+
+mininet> users ping -c1 WS  ---> OK through VM (users IP not on whitelist
+                                      checks s3 flow table)

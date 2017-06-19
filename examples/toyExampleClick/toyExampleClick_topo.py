@@ -50,7 +50,7 @@ def emptyNet(controller_ip, controller_port):
 	net.addLink(s1, h1)
 	net.addLink(s6, h2)
 
-    	from mininet.link import Intf
+    from mininet.link import Intf
 	switch3 = net.switches[2]
 	_intf = Intf("eth2", node=switch3)
 
