@@ -29,11 +29,8 @@
 -- Other
 ---------
 
-- tools.py module: is it really useful? shouldn't it be somewhere else?
-
-- TO DELETE: stage_runtime.py, stage_arp_proxy.py ??
-
-- MOVE airnet/pox_client and airnet/ryu_client in folder airnet/backends/
+- When using a network in Airnet, how can we have multiple hosts in mininet
+  within this network?
 
 
 ***********************
@@ -94,4 +91,10 @@
 -----------
 
 - Log module (from the virtual composition phase to the physical rules)
+  DONE.
+
+- tools.py module: is it really useful? shouldn't it be somewhere else?
+  DONE.
+
+- TO DELETE: stage_runtime.py, stage_arp_proxy.py ??
   DONE.
