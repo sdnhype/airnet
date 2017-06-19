@@ -27,9 +27,9 @@ def defaultNet(controller_ip, controller_port):
     net.addController( 'c0', controller=RemoteController, ip=controller_ip, port=controller_port )
 
     info( '*** Adding hosts\n' )
-    h1 = net.addHost( 'users_1', ip = '172.16.0.12/16',  defaultRoute = "via 172.16.0.12")
-    h2 = net.addHost( 'users_2', ip = '172.16.0.13/16',  defaultRoute = "via 172.16.0.13")
-    h3 = net.addHost( 'WS',     ip = '192.168.0.11/16', defaultRoute = "via 192.168.0.11")
+    h1 = net.addHost( 'users_1', ip = '172.16.0.11/16',  defaultRoute = "via 172.16.0.11")
+    h2 = net.addHost( 'users_2', ip = '172.16.0.12/16',  defaultRoute = "via 172.16.0.12")
+    h3 = net.addHost( 'WS',      ip = '192.168.0.11/16', defaultRoute = "via 192.168.0.11")
 
 
     info( '*** Adding switch\n' )

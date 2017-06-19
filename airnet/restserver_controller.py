@@ -123,7 +123,7 @@ def handle_packet_in():
 	return 'OK'
 
 def enforce_proactive_policies():
-	time.sleep(5)
+	time.sleep(15)
 	# show the global topology view with all equipments
 	runtime.infra.view()
 	# enforce proactive rules

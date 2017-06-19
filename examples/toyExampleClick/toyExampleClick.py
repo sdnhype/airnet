@@ -1,6 +1,5 @@
 #Import language primitives
 from language import *
-import pdb
 
 """
 
@@ -44,7 +43,7 @@ def AC_policy(VID):
 def fabric_policy(VID):
     t1 = catch(fabric=VID, src="IO", flow="in_web_flows") >> via("dm1", "fct") >> carry(dst="AC")
     t2 = catch(fabric=VID, src="AC", flow="out_web_flows") >> carry(dst="IO")
-    return t1 + t2 
+    return t1 + t2
 
 #Main function
 def main():
