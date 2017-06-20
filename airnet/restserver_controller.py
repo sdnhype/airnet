@@ -13,7 +13,6 @@
 """
 
 #TODO: log here irrelevant or not ?
-#TODO: launch nexus here
 #TODO: ipAdrs thing in handle_host_add
 
 import thread
@@ -29,6 +28,13 @@ from runtime import Runtime
 # WSGI Application
 app = Flask(__name__)
 
+"""formatter = logging.Formatter('%(asctime)s : %(name)s : [%(levelname)s] : %(message)s')
+handler = logging.FileHandler("log/airnet.log",mode="a", encoding="utf-8")
+handler.setFormatter(formatter)
+app.logger.setLevel(logging.INFO)
+handler.setLevel(logging.INFO)
+app.logger.addHandler(handler)
+"""
 # initialize the global topology container
 infra = Infrastructure()
 
@@ -109,9 +115,13 @@ def handle_host_add():
 	port = int(ports['port_no'])
 	# add the new host to the global topology view
 	infra._handle_host_tracker_HostEvent(dpid, port, mac, ipadrs, True)
-	if len(runtime.mapping.hosts) == len (infra.hosts):
-		# all hosts have been discovered, enforce proactive rules
+	# check if all hosts has been discovered
+	if (runtime.all_hosts_discovered()) :
+		print("All hosts discovered")
+		# enforce proactive rules
 		thread.start_new_thread(enforce_proactive_policies,())
+	else :
+		print("At least 1 more host to discover")
 	return 'OK'
 
 # received a packet in event from the controller
@@ -123,7 +133,7 @@ def handle_packet_in():
 	return 'OK'
 
 def enforce_proactive_policies():
-	time.sleep(15)
+	time.sleep(5)
 	# show the global topology view with all equipments
 	runtime.infra.view()
 	# enforce proactive rules

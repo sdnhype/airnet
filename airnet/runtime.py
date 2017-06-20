@@ -181,6 +181,25 @@ class Runtime():
         # copy the resulting classifiers in physical_switches_classifiers
         self.physical_switches_classifiers = copy.deepcopy(new_classifiers)
 
+    def all_hosts_discovered (self) :
+        """ Checks if all hosts declared in the mapping module
+            have been registered in the infrastructure module
+        """
+        # for each host in the mapping module
+        for host_ip in self.mapping.hosts.keys():
+            check = False
+            # get each physical host in the infra module
+            for phy_host in self.infra.hosts.values():
+                # look for a match between the mapping host ip_addr
+                # and the physical host ip_addr
+                if  phy_host.ip_addrs.has_key(host_ip) :
+                    check = True
+                    break
+            # at least one host in mapping wasn't found in infra
+            if not check :
+                return False
+        return True
+
     def apply_netFunction_fromPacket(self, dpid, bucket_match, packet_match, packet):
         """ apply the function declared in
             the @DynamicControl(data=packet...) decorator
