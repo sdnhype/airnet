@@ -401,7 +401,6 @@ class RestApi_main(app_manager.RyuApp):
             packets[id_packet] = msg
             id_packet = id_packet + 1
 
-        print(str(data))
         # Packet contents are formatted in json
         data = json.dumps(data)
         # decomment if useful

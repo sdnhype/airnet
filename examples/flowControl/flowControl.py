@@ -69,14 +69,14 @@ def virtual_network():
 def access_policies():
     i1 = match(edge=IO, src="H1", dst=WEB_SERVER) >> control()
     i3 = match(edge=IO, src="H2", dst=WEB_SERVER) >> control()
-    i2 = match(edge=AC, dst="H1") >> tag("WEB_FLOWS") >> forward(FABRIC)
-    i4 = match(edge=AC, dst="H2") >> tag("WEB_FLOWS") >> forward(FABRIC)
+    i2 = match(edge=AC, dst="H1") >> tag("AC_FLOWS") >> forward(FABRIC)
+    i4 = match(edge=AC, dst="H2") >> tag("AC_FLOWS") >> forward(FABRIC)
     return i1 + i2 + i3 + i4
 
 def distribution_policies():
-    i1 = match(edge=IO,  dst="H1")  >> forward("H1")
-    i3 = match(edge=IO,  dst="H2")  >> forward("H2")
-    i2 = match(edge=AC,  dst=WEB_SERVER) >> forward(WEB_SERVER)
+    i1 = match(edge=IO, dst="H1")  >> forward("H1")
+    i3 = match(edge=IO, dst="H2")  >> forward("H2")
+    i2 = match(edge=AC, dst=WEB_SERVER) >> forward(WEB_SERVER)
     return i1 + i2 + i3
 
 def transport_policies():
@@ -84,7 +84,7 @@ def transport_policies():
                 >> carry(dst=AC) )
     t2 = (catch(fabric=FABRIC, src=IO,  flow=H2_FLOWS)
                 >> via("DM1", "fct") >> carry(dst=AC) )
-    t3 = catch(fabric=FABRIC, src=AC, flow="WEB_FLOWS") >> carry(dst=IO)
+    t3 = catch(fabric=FABRIC, src=AC, flow="AC_FLOWS") >> carry(dst=IO)
     return t1 + t2 + t3
 
 # Main function
