@@ -18,8 +18,8 @@ USERS_NET <--> allow only whitelisted IP source addresses
                   before allow/drop
 """
 
-H1_FLOWS = "GRANTED_FLOWS"
-H2_FLOWS = "CONTROLLED_FLOWS"
+GRANTED_FLOWS = "GRANTED_FLOWS"
+CONTROLLED_FLOWS = "CONTROLLED_FLOWS"
 
 @DynamicControlFct(data="packet", limit=1, split=["nw_src"])
 def control(packet):
@@ -36,11 +36,11 @@ def control(packet):
     if whitelist.has_key(hostIP):
         print(hostIP + " is whitelisted. --> no control")
         new_policy = (match(edge=IO, nw_src=hostIP, dst=WEB_SERVER) >>
-                      tag(H1_FLOWS) >> forward(FABRIC))
+                      tag(GRANTED_FLOWS) >> forward(FABRIC))
     else:
         print(hostIP + " is blacklisted. --> control")
         new_policy = (match(edge=IO, nw_src=hostIP, dst=WEB_SERVER) >>
-                      tag(H2_FLOWS) >> forward(FABRIC))
+                      tag(CONTROLLED_FLOWS) >> forward(FABRIC))
     return new_policy
 
 # Virtual topology
@@ -48,18 +48,18 @@ def virtual_network():
     # Virtual components
     topology = VTopology()
     topology.addFabric(FABRIC,3)
-    topology.addEdge(IO,3)
+    topology.addEdge(IO,2)
     topology.addEdge(AC,2)
     topology.addDataMachine("DM1", 1)
     topology.addHost(WEB_SERVER)
-    #topology.addNetwork(USERS_NET)
-    topology.addHost("H1")
-    topology.addHost("H2")
+    topology.addNetwork(USERS_NET)
+    #topology.addHost("H1")
+    #topology.addHost("H2")
     # Virtual links
-    #topology.addLink((IO,1),(USERS_NET,0))
-    topology.addLink((IO,1),("H1",0))
-    topology.addLink((IO,2),("H2",0))
-    topology.addLink((IO,3),(FABRIC,1))
+    topology.addLink((IO,1),(USERS_NET,0))
+    #topology.addLink((IO,1),("H1",0))
+    #topology.addLink((IO,2),("H2",0))
+    topology.addLink((IO,2),(FABRIC,1))
     topology.addLink((AC,1),(WEB_SERVER,0))
     topology.addLink((AC,2),(FABRIC,2))
     topology.addLink((FABRIC,3),("DM1",1))
@@ -67,22 +67,22 @@ def virtual_network():
 
 # Policies
 def access_policies():
-    i1 = match(edge=IO, src="H1", dst=WEB_SERVER) >> control()
-    i3 = match(edge=IO, src="H2", dst=WEB_SERVER) >> control()
-    i2 = match(edge=AC, dst="H1") >> tag("AC_FLOWS") >> forward(FABRIC)
-    i4 = match(edge=AC, dst="H2") >> tag("AC_FLOWS") >> forward(FABRIC)
-    return i1 + i2 + i3 + i4
+    i1 = match(edge=IO, src=USERS_NET, dst=WEB_SERVER) >> control()
+    #i3 = match(edge=IO, src="H2", dst=WEB_SERVER) >> control()
+    i2 = match(edge=AC, dst=USERS_NET) >> tag("AC_FLOWS") >> forward(FABRIC)
+    #i4 = match(edge=AC, dst="H2") >> tag("AC_FLOWS") >> forward(FABRIC)
+    return i1 + i2
 
 def distribution_policies():
-    i1 = match(edge=IO, dst="H1")  >> forward("H1")
-    i3 = match(edge=IO, dst="H2")  >> forward("H2")
+    i1 = match(edge=IO, dst=USERS_NET)  >> forward(USERS_NET)
+    #i3 = match(edge=IO, dst="H2")  >> forward("H2")
     i2 = match(edge=AC, dst=WEB_SERVER) >> forward(WEB_SERVER)
-    return i1 + i2 + i3
+    return i1 + i2
 
 def transport_policies():
-    t1 = (catch(fabric=FABRIC, src=IO,  flow=H1_FLOWS)
+    t1 = (catch(fabric=FABRIC, src=IO,  flow=GRANTED_FLOWS)
                 >> carry(dst=AC) )
-    t2 = (catch(fabric=FABRIC, src=IO,  flow=H2_FLOWS)
+    t2 = (catch(fabric=FABRIC, src=IO,  flow=CONTROLLED_FLOWS)
                 >> via("DM1", "fct") >> carry(dst=AC) )
     t3 = catch(fabric=FABRIC, src=AC, flow="AC_FLOWS") >> carry(dst=IO)
     return t1 + t2 + t3

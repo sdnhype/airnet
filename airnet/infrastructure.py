@@ -254,7 +254,7 @@ class Infrastructure(object):
                 print "    {}".format(port.hwAddr)
         print "\n----- Hosts -----"
         for host in self.hosts.values():
-            print "MacAddr: {}, ipAddrs: {}".format(host.hwAddr,host.ip_addrs.keys())
+            print "MacAddr: {}, ipAddrs: {}".format(host.hwAddr,str(host.ip_addrs))
 
         print "\n----- Links -----"
         for link in self.links:
@@ -267,7 +267,7 @@ class Infrastructure(object):
     def arp(self, ipAddr):
         """ returns the hwAddr corresponding to the ipAddr in param """
         for key, host in self.hosts.iteritems():
-            if (host.ip_addrs.keys()[0]) == ipAddr:
+            if (host.ip_addrs[0]) == ipAddr:
                 return host.hwAddr
         return None
 
@@ -275,7 +275,7 @@ class Infrastructure(object):
         """ returns the ipAddr corresponding to the hwAddr in param """
         for key, host in self.hosts.iteritems():
             if host.hwAddr == hwAddr:
-                return host.ip_addrs.keys()[0]
+                return host.ip_addrs[0]
 
     def get_output_to_destination(self, hwAddr):
         output = namedtuple('output', ['switch', 'port'])

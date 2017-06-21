@@ -105,9 +105,10 @@ def handle_link_delete():
 def handle_host_add():
 	data = request.json
 	ips = data['ipv4']
-	ipadrs = {}
+	ipadrs = []
 	for ip in ips:
-		ipadrs[str(ip)] = 1
+		#ipadrs[str(ip)] = 1
+		ipadrs.append(str(ip))
 
 	mac = str(data['mac'])
 	ports = data['port']

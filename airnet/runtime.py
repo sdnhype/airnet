@@ -192,9 +192,15 @@ class Runtime():
             for phy_host in self.infra.hosts.values():
                 # look for a match between the mapping host ip_addr
                 # and the physical host ip_addr
-                if  phy_host.ip_addrs.has_key(host_ip) :
+                if host_ip in phy_host.ip_addrs :
                     check = True
                     break
+                # check if the infra host is a part of a network
+                # declared in mapping
+                if IPv4Network(phy_host.ip_addrs[0]) in IPv4Network(host_ip) :
+                    # add it to the mapping hosts
+                    self.mapping.addHostMap(str(phy_host.hwAddr), phy_host.ip_addrs[0])
+                    check = True
             # at least one host in mapping wasn't found in infra
             if not check :
                 return False
@@ -592,21 +598,48 @@ class Runtime():
                     else:
                         return get_nwFct_host_dst(rule.match)
 
+        def replace_fwd_destination (rule, new_destination) :
+            """ replace in @param rule the forward action
+                by @param new_destination """
+            for action in rule.actions :
+                if isinstance(action, forward):
+                    action.output=new_destination
+
+        specific_rules = []
+        specific = False
+
         # get the egress edge
         egress_edge = rule.match.map["edge"]
         # get the destination
         dst_host = get_destination_host(rule)
+
+        # if the dst_host is a network
+        # we may have to add more precise rules
+        for phy_host in self.infra.hosts.values() :
+            # if one host in infra is in the network destination
+            if IPv4Network(phy_host.ip_addrs[0]) in IPv4Network(rule.match.map["nw_dst"]) \
+                    and IPv4Network(phy_host.ip_addrs[0]) != IPv4Network(rule.match.map["nw_dst"]):
+                specific = True
+                new_rule = copy.deepcopy(rule)
+                # replace the network destination by an host one
+                new_rule.match.map["nw_dst"] = str(phy_host.ip_addrs[0])
+                replace_fwd_destination (new_rule,str(phy_host.hwAddr))
+                logger.debug("\n        Specific Egress Rule : {}".format(str(new_rule)))
+                specific_rules.append(new_rule)
+        if not specific :
+            specific_rules.append(rule)
 
         # get the physical switches that match to the egress edge
         egress_edge_switches = self.get_edge_physical_corresponding(egress_edge)
         host_adjacent_switches = [node[1] for node in self.topology_graph.vertices[dst_host] if node[1] in egress_edge_switches]
 
         logger.debug("Ouput switch(es) : {}".format(" ".join(host_adjacent_switches)))
-        # Strong assumption : host_adjacent_switches will contain a unique phy_switch
-        for switch in host_adjacent_switches:
-            physical_switch_rule = self.to_physical_switch_rule(rule, switch)
-            # install the rule in the switch classifier
-            classifiers[switch].append(physical_switch_rule)
+        for rule in specific_rules :
+            # Strong assumption : host_adjacent_switches will contain a unique phy_switch
+            for switch in host_adjacent_switches:
+                physical_switch_rule = self.to_physical_switch_rule(rule, switch)
+                # install the rule in the switch classifier
+                classifiers[switch].append(physical_switch_rule)
 
     def enforce_fabricPolicies(self, fabric, classifiers):
         """ constructs a routing table based on
@@ -1083,6 +1116,7 @@ class Runtime():
         """
         #TODO: dst_output is an edge
         # dst_output is a fabric (ingress edge)
+
         if dst_output in self.mapping.fabrics:
             for fab_key, fab_mapping in self.mapping.fabrics.iteritems():
                 if fab_key == dst_output:
@@ -1099,6 +1133,8 @@ class Runtime():
         elif dst_output in self.mapping.hosts.values():
             logger.debug("Destination : {}".format(str(dst_output)))
             for adjacent_node in self.topology_graph.vertices[switch]:
+                print("{} adjac - {} - {}".format(switch,adjacent_node[1],adjacent_node[2]))
+
                 if adjacent_node[1] == dst_output:
                     return adjacent_node[2]
 
