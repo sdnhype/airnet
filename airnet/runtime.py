@@ -261,6 +261,7 @@ class Runtime():
         # function is a field of the named tuple dyc_rule (NwFctItem)
         result = dyc_rule.function.apply(packet)
 
+
         # don't u forget the identity bug
         if isinstance(result, Policy):
             self.add_new_policy(result)
@@ -615,14 +616,18 @@ class Runtime():
         # so that it will determine the output port
         specific_rule = self.get_network_specific_rule(rule,dst_host)
 
-        if specific_rule is not None:
-            rule = specific_rule
+        # a specific rule has been added
+        if len(specific_rule) > 1:
+            # change the dst_host
+            dst_host = specific_rule[0]
+            # put the new rule
+            rule = specific_rule [1]
 
         # get the physical switches that match to the egress edge
         egress_edge_switches = self.get_edge_physical_corresponding(egress_edge)
         host_adjacent_switches = [node[1] for node in self.topology_graph.vertices[dst_host] if node[1] in egress_edge_switches]
 
-        logger.debug("Ouput switch(es) : {}".format(" ".join(host_adjacent_switches)))
+        logger.debug("Output switch(es) : {}".format(" ".join(host_adjacent_switches)))
 
         # Strong assumption : host_adjacent_switches will contain a unique phy_switch
         for switch in host_adjacent_switches:
@@ -1099,7 +1104,7 @@ class Runtime():
                 rule.actions=rule_actions
             return rule
 
-        specific_rule = None
+        specific_rule = []
         # if the dst is a network
         # we may have to add controller rule
         for phy_host in self.infra.hosts.values() :
@@ -1107,9 +1112,10 @@ class Runtime():
             if rule.match.map.has_key("nw_dst") :
                 if IPv4Network(phy_host.ip_addrs[0]) in IPv4Network(rule.match.map["nw_dst"]) \
                     and IPv4Network(phy_host.ip_addrs[0]) != IPv4Network(rule.match.map["nw_dst"]):
+                    specific_rule.append(str(phy_host.hwAddr))
                     # replace the forward action
-                    specific_rule = replace_fwd_destination(rule)
-
+                    specific_rule.append(replace_fwd_destination(rule))
+                    break
         return specific_rule
 
     def get_switch_phy_egress_rules(self, egress_switch, classifiers, fabric):
@@ -1183,6 +1189,7 @@ class Runtime():
         #TODO: dst_output is an edge
         # dst_output is a fabric (ingress edge)
 
+
         if dst_output in self.mapping.fabrics:
             for fab_key, fab_mapping in self.mapping.fabrics.iteritems():
                 if fab_key == dst_output:
@@ -1228,10 +1235,46 @@ class Runtime():
 
     def handle_packet_in(self, dpid, packet_match, packet):
         logger.debug("Handling a Packet/in")
+        bucket_found = False
         for bucket in self.buckets:
             if bucket.match.covers(packet_match):
                 logger.debug("Found a bucket for this packet!")
+                bucket_found = True
                 bucket.add_packet(dpid, packet_match, packet)
+        # this a special dynamic function
+        if not bucket_found:
+            # check if there is a network in the mapping module
+            # which covers the current ip address
+            if packet_match.map.has_key("nw_dst"):
+                classifiers = self.create_classifiers()
+                switches_list = self.get_edge_physical_corresponding(packet_match.map["edge"])
+                for host_ip in self.mapping.hosts.keys():
+                    if IPv4Network(packet_match.map["nw_dst"]) in IPv4Network(host_ip) \
+                        and packet_match.map["nw_dst"] != host_ip:
+                        net_ip = host_ip
+                        break
+                for switch in switches_list:
+                    # locate the network rule in edge policies
+                    found = False
+                    for rule in enumerate(self.physical_switches_classifiers[switch]):
+                        if rule[1].match.map.has_key("nw_dst") :
+                            if rule[1].match.map["nw_dst"] == net_ip:
+                                found = True
+                                new_rule = copy.deepcopy(rule[1])
+                                new_rule.match.map["nw_dst"] = packet_match.map["nw_dst"]
+                                new_rule.match.map["edge"] = packet_match.map["edge"]
+                                hwAddr = self.infra.arp(new_rule.match.map["nw_dst"])
+                                new_rule.actions = {forward("{}".format(str(hwAddr)))}
+                                for act in new_rule.actions:
+                                    if isinstance(act,forward):
+                                        output = self.get_phy_switch_output_port(switch, act.output)
+                                        break
+                                self.enforce_egressPolicies(new_rule, classifiers)
+                                self.nexus.push_NewRules_onTop(classifiers)
+                                self.nexus.send_PacketOut(switch,packet,output)
+                                break
+                    if found:
+                        break
 
     def install_diff_lists(self, diff_lists):
         """ Install/Delete/Modify rules in diff_lists """
@@ -1438,7 +1481,7 @@ class Runtime():
                 # cross all endPoints in the mapping modules
                 for host_ipAddr, host_name in self.mapping.hosts.iteritems():
                     # it's the same endPoint (host or network)
-                    if (edge_ipAddr == host_ipAddr or IPv4Network(edge_ipAddr) in IPv4Network(host_ipAddr)):
+                    if (edge_ipAddr == host_ipAddr or IPv4Network(edge_ipAddr) == IPv4Network(host_ipAddr)):
                         # vertices update
                         """
                         create a copy of graph.vertices because i need to update it
@@ -1447,16 +1490,19 @@ class Runtime():
                         """
                         vertices = copy.copy(graph.vertices)
                         for edge_key, edge_list_adjacent in vertices.iteritems():
+
                             for idx, adjacent_node in enumerate(edge_list_adjacent):
+
                                 if adjacent_node[1] == edge[0]:
                                     # (link_weight, adjacent_node, output_port to adjacent)
                                     edge_list_adjacent[idx] = (adjacent_node[0], host_name, adjacent_node[2])
+                                    #if (IPv4Network(edge_ipAddr) in IPv4Network(host_ipAddr))\
+                                    #    and edge_ipAddr !=host_ipAddr :
+
                             if edge_key == edge[0]:
                                 graph.vertices[host_name] = graph.vertices.pop(edge_key)
                         # edges update
                         new_hosts[edge] = (host_name, "host")
-                        #graph.edges.remove(edge)
-                        #graph.edges.add((host_name, "host"))
         for old_edge, new_edge in new_hosts.iteritems():
             graph.edges.remove(old_edge)
             graph.edges.add(new_edge)
