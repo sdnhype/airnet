@@ -18,6 +18,7 @@
 import thread
 import time
 import sys
+from threading import RLock
 from pprint import pprint
 from flask import Flask,json,request,Response
 
@@ -47,6 +48,9 @@ runtime = Runtime(control_module,mapping_module,infra)
 client_ryu = RyuClient(runtime)
 # link it to the runtime module
 runtime.add_controller_client(client_ryu)
+
+# lock
+lock = RLock()
 
 # received a switch enter event from the controller
 @app.route('/Topo/Switch/enter',methods = ['POST'])
@@ -103,6 +107,7 @@ def handle_link_delete():
 # received a host add event from the controller
 @app.route('/Topo/Host/add',methods = ['POST'])
 def handle_host_add():
+	# events concurrency
 	data = request.json
 	ips = data['ipv4']
 	ipadrs = []
@@ -118,7 +123,6 @@ def handle_host_add():
 	infra._handle_host_tracker_HostEvent(dpid, port, mac, ipadrs, True)
 	# check if all hosts has been discovered
 	if (runtime.all_hosts_discovered()) :
-		print("All hosts discovered")
 		# enforce proactive rules
 		thread.start_new_thread(enforce_proactive_policies,())
 	else :
@@ -134,11 +138,14 @@ def handle_packet_in():
 	return 'OK'
 
 def enforce_proactive_policies():
-	time.sleep(5)
-	# show the global topology view with all equipments
-	runtime.infra.view()
-	# enforce proactive rules
-	runtime.enforce_policies()
+	with lock :
+		if not runtime.nexus.runtime_mode:
+			print("\n Enough hosts discovered -- starting()\n")
+			time.sleep(5)
+			# show the global topology view with all equipments
+			runtime.infra.view()
+			# enforce proactive rules
+			runtime.enforce_policies()
 
 def main():
 	app.run(host='0.0.0.0', port=9000)

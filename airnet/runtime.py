@@ -1157,7 +1157,8 @@ class Runtime():
                         destination = get_nwFct_host_dst(egress_switch, rule.match)
                     if (destination in hosts) or (destination in fabrics_switches):
                         egress_rules.append(rule)
-                    elif destination == "DYNAMICPOLICY" or act.output == 'OFPP_CONTROLLER':
+                    elif destination == "DYNAMICPOLICY" or act.output == 'OFPP_CONTROLLER'\
+                            or act.output==0xfffffffd:
                         egress_rules.append(rule)
         return egress_rules
 
@@ -1236,41 +1237,69 @@ class Runtime():
     def handle_packet_in(self, dpid, packet_match, packet):
         logger.debug("Handling a Packet/in")
         bucket_found = False
+
+        #_enforcing_dynamic = int(round(time.time() * 1000))
         for bucket in self.buckets:
             if bucket.match.covers(packet_match):
                 logger.debug("Found a bucket for this packet!")
                 bucket_found = True
                 bucket.add_packet(dpid, packet_match, packet)
+                #_enforcing_dynamic = int(round(time.time() * 1000)) - _enforcing_dynamic
+                #print("Duration -> {}".format(str(_enforcing_dynamic)))
         # this a special dynamic function
-        if not bucket_found:
+        # used when the destination in virtual topology is a network
+        # this will determine the host destination and install a new rule
+        # for this host
+        if not bucket_found :
             # check if there is a network in the mapping module
             # which covers the current ip address
             if packet_match.map.has_key("nw_dst"):
+                # create edge classifiers
                 classifiers = self.create_classifiers()
+                # get the list of switches which map to the current edge
                 switches_list = self.get_edge_physical_corresponding(packet_match.map["edge"])
+                # for each host in mapping module
                 for host_ip in self.mapping.hosts.keys():
+                    # check if the host destination in the packet
+                    # is part of a network in mapping module
                     if IPv4Network(packet_match.map["nw_dst"]) in IPv4Network(host_ip) \
                         and packet_match.map["nw_dst"] != host_ip:
+                        # get the net ip
                         net_ip = host_ip
                         break
+                # for each switch
                 for switch in switches_list:
                     # locate the network rule in edge policies
                     found = False
                     for rule in enumerate(self.physical_switches_classifiers[switch]):
+                        # get the edge rules
+                        # rule[0] = priority, rule[1]=rule
                         if rule[1].match.map.has_key("nw_dst") :
+                            # find the network rule
                             if rule[1].match.map["nw_dst"] == net_ip:
                                 found = True
+                                # copy it
                                 new_rule = copy.deepcopy(rule[1])
+                                # change the network dst by the host dst
                                 new_rule.match.map["nw_dst"] = packet_match.map["nw_dst"]
+                                # add an edge field
                                 new_rule.match.map["edge"] = packet_match.map["edge"]
+                                # get the dst host hardware address
                                 hwAddr = self.infra.arp(new_rule.match.map["nw_dst"])
+                                # replace the forward action
                                 new_rule.actions = {forward("{}".format(str(hwAddr)))}
                                 for act in new_rule.actions:
                                     if isinstance(act,forward):
+                                        # get the ouput port from the new
+                                        # forward action
                                         output = self.get_phy_switch_output_port(switch, act.output)
                                         break
+                                # print(new_rule)
+                                # enforce the new rule
                                 self.enforce_egressPolicies(new_rule, classifiers)
-                                self.nexus.push_NewRules_onTop(classifiers)
+                                # push the new rule to the controller
+                                self.nexus.push_NewRules_onTop(classifiers,3600)
+                                # send back the packet
                                 self.nexus.send_PacketOut(switch,packet,output)
                                 break
                     if found:
@@ -1363,7 +1392,7 @@ class Runtime():
                 new_rule = True
 
             if new_rule:
-                self.nexus.push_NewRules_onTop(classifiers)
+                self.nexus.push_NewRules_onTop(classifiers,3600)
 
                 for switch, new_rules in classifiers.iteritems():
                     for new_r in new_rules:
