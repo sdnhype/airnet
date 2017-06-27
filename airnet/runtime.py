@@ -709,7 +709,7 @@ class Runtime():
                         # verify that they have the same input and output switch
                         if(entry[1]==road[1] and entry[2]==road[2]):
                             # verify that they have the same via_list
-                            if(entry[3]==road[3] and len(road[3]) > 0):
+                            if(entry[3]==road[3]):
                                 duplic = True
                                 break
                 # no other entry covers the current one
