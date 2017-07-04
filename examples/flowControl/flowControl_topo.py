@@ -2,12 +2,13 @@
 import sys
 
 """
-                 (192.168.1.11/16)
-                         VM
-                          | (eth2)
-                          |
-                          | (eth2)
-users---[s1]------[s2]---[s3]---[s4]------[s5]---WS (192.168.0.11/16)
+                           VM
+                            | (eth2, 10.1.1.11/16)
+                            |
+                            | (eth2, 10.1.1.10/16)
+u_black---[s1]------[s2]---[s3]---[s4]------[s5]---WS (192.168.0.11/16)
+          /
+u_white--/
 
 """
 
@@ -15,7 +16,9 @@ from mininet.net import Mininet
 from mininet.node import Controller, RemoteController, OVSSwitch
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info
+from mininet.link import Intf
 from functools import partial
+
 
 def defaultNet(controller_ip, controller_port):
 
@@ -27,8 +30,8 @@ def defaultNet(controller_ip, controller_port):
     net.addController( 'c0', controller=RemoteController, ip=controller_ip, port=controller_port )
 
     info( '*** Adding hosts\n' )
-    h1 = net.addHost( 'users_1', ip = '172.16.0.11/16',  defaultRoute = "via 172.16.0.11")
-    h2 = net.addHost( 'users_2', ip = '172.16.0.12/16',  defaultRoute = "via 172.16.0.12")
+    h1 = net.addHost( 'u_black', ip = '172.16.0.11/16',  defaultRoute = "via 172.16.0.11")
+    h2 = net.addHost( 'u_white', ip = '172.16.0.12/16',  defaultRoute = "via 172.16.0.12")
     h3 = net.addHost( 'WS',      ip = '192.168.0.11/16', defaultRoute = "via 192.168.0.11")
 
 
@@ -48,9 +51,8 @@ def defaultNet(controller_ip, controller_port):
     net.addLink( s1, h2)
     net.addLink( s5, h3)
 
-        from mininet.link import Intf
-	switch3 = net.switches[2]
-	_intf = Intf("eth2", node=switch3)
+    switch3 = net.switches[2]
+    _intf = Intf("eth2", node=switch3)
 
     info( '*** Starting network\n' )
     net.start()

@@ -6,26 +6,27 @@
 *** virtual topology ***
 ************************
 
-                             DM1
-                              |
-Users_Net-----[IO]-------[ Fabric ]-------[AC]------ WebServer
-
+                            DM1
+                             |
+USERS_NET-----[IO]-------[ Fabric ]-------[AC]------ WEB_SERVER
 
 Policies:
 
-USERS_NET <--> allow only whitelisted IP source addresses
-               redirect other flows to DM1 (e.g. Deep Packet Inspector)
-                  before allow/drop
+USERS_NET <--> WEB_SERVER
+    allow only whitelisted IP source addresses (on edge IO)
+    redirect other flows to DM (e.g. Deep Packet Inspector)
 
 ************************
 *** mininet topology ***
 ************************
 
-                         VM
-                          | (eth2)
-                          |
-                          | (eth2)
-users---[s1]------[s2]---[s3]---[s4]------[s5]---WS
+                            VM
+                            | (eth2, 10.1.1.11/16)
+                            |
+                            | (eth2, 10.1.1.10/16)
+u_black---[s1]------[s2]---[s3]---[s4]------[s5]---WS (192.168.0.11/16)
+          /
+u_white--/
 
 
 ***************
@@ -34,6 +35,7 @@ users---[s1]------[s2]---[s3]---[s4]------[s5]---WS
 
 IO  --> s1
 AC  --> s5
+DM1 --> VM (10.1.1.11)
 Fabric --> [s2, s3, s4]
 
 ***************************
@@ -53,10 +55,14 @@ $ ryu-manager --observe-links airnet_interface.py
 
 $ sudo python flowControl_topo.py 192.168.56.1 6633
 
+-- Click
+
+TODO
+
 -- Tests
 
-mininet> users ping -c1 WS  ---> OK  (users IP on whitelist)
-mininet> users wget WS      ---> OK  (users IP on whitelist)
+mininet> u_white ping -c1 WS  ---> OK  (user's IP in whitelist)
+mininet> u_white wget WS      ---> OK  (user's IP in whitelist)
 
-mininet> users ping -c1 WS  ---> OK through VM (users IP not on whitelist
-                                      checks s3 flow table)
+mininet> u_black ping -c1 WS  ---> OK through VM (user's IP not in whitelist)
+                                   (check s3 flow table and tcpdump on VM)
