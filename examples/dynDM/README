@@ -1,5 +1,5 @@
 # ============================
-# examples/flowControl/
+# examples/dynDM/
 # ============================
 
 ************************
@@ -44,7 +44,7 @@ Fabric --> [s2, s3, s4]
 
 -- AirNet
 
-$ ./launch_airnet_ryu.sh flowControl.flowControl flowControl.flowControl_mapping
+$ ./launch_airnet_ryu.sh dynDM.dynDM dynDM.dynDM_mapping
 
 -- RYU
 
@@ -53,7 +53,7 @@ $ ryu-manager --observe-links airnet_interface.py
 
 -- Mininet
 
-$ sudo python flowControl_topo.py 192.168.56.1 6633
+$ sudo python dynDM_topo.py 192.168.56.1 6633
 
 -- Click
 
