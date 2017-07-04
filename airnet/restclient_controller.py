@@ -377,9 +377,12 @@ class RyuClient(object):
 				c.addFlow(data)
 			self.switches_rules_cpt[switch] += len(rules)
 
-	def push_NewRules_onTop(self, classifiers):
+	def push_NewRules_onTop(self, classifiers,duration=0):
 		""" push new rules instructions to RYU
 			with the highest priority
+			after @param duration s the new rules are deleted
+			from the switch table (temporary rules)
+			0 means rules will never be deleted
 		"""
 		c = ConfigureFlow('localhost',8080)
 
@@ -391,6 +394,7 @@ class RyuClient(object):
 				data = {}
 				data['dpid'] = dpid
 				data['match'] = self.build_MatchFields(**rule.match.map)
+				data['idle_timeout'] = duration
 
 				if not len(rule.actions) == 0:
 					data['actions'] = self.build_ActionFields(rule.actions)
@@ -468,19 +472,3 @@ class RyuClient(object):
 						data['actions'] = self.build_ActionFields(new_r[0].actions)
 					data['priority'] = self.switches_rules_cpt[switch] - new_r[1]
 					c.updateFlow(data)
-
-	"""
-	def modify_existing_rules(self, to_modify):
-		c = ConfigureFlow('localhost',8080)
-		for switch, rules in to_modify.iteritems():
-			dpid = int(switch[1:])
-			for rule in rules:
-				data = {} #dictionnaire qui sera envoye
-				data['dpid'] = dpid
-				data['match'] = self.build_MatchFields(**rule[0].match.map)
-				if not len(rule[0].actions) == 0:
-					data['actions'] = self.build_ActionFields_bis(rule[0].actions)
-				data['priority'] = self.switches_rules_cpt[switch] - rule[1]
-				#TODO runtime.msgs
-				c.updateFlow(data)
-	"""

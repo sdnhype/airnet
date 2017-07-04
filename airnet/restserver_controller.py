@@ -13,12 +13,12 @@
 """
 
 #TODO: log here irrelevant or not ?
-#TODO: launch nexus here
 #TODO: ipAdrs thing in handle_host_add
 
 import thread
 import time
 import sys
+from threading import RLock
 from pprint import pprint
 from flask import Flask,json,request,Response
 
@@ -29,6 +29,13 @@ from runtime import Runtime
 # WSGI Application
 app = Flask(__name__)
 
+"""formatter = logging.Formatter('%(asctime)s : %(name)s : [%(levelname)s] : %(message)s')
+handler = logging.FileHandler("log/airnet.log",mode="a", encoding="utf-8")
+handler.setFormatter(formatter)
+app.logger.setLevel(logging.INFO)
+handler.setLevel(logging.INFO)
+app.logger.addHandler(handler)
+"""
 # initialize the global topology container
 infra = Infrastructure()
 
@@ -41,6 +48,9 @@ runtime = Runtime(control_module,mapping_module,infra)
 client_ryu = RyuClient(runtime)
 # link it to the runtime module
 runtime.add_controller_client(client_ryu)
+
+# lock
+lock = RLock()
 
 # received a switch enter event from the controller
 @app.route('/Topo/Switch/enter',methods = ['POST'])
@@ -97,11 +107,13 @@ def handle_link_delete():
 # received a host add event from the controller
 @app.route('/Topo/Host/add',methods = ['POST'])
 def handle_host_add():
+	# events concurrency
 	data = request.json
 	ips = data['ipv4']
-	ipadrs = {}
+	ipadrs = []
 	for ip in ips:
-		ipadrs[str(ip)] = 1
+		#ipadrs[str(ip)] = 1
+		ipadrs.append(str(ip))
 
 	mac = str(data['mac'])
 	ports = data['port']
@@ -109,9 +121,12 @@ def handle_host_add():
 	port = int(ports['port_no'])
 	# add the new host to the global topology view
 	infra._handle_host_tracker_HostEvent(dpid, port, mac, ipadrs, True)
-	if len(runtime.mapping.hosts) == len (infra.hosts):
-		# all hosts have been discovered, enforce proactive rules
+	# check if all hosts has been discovered
+	if (runtime.all_hosts_discovered()) :
+		# enforce proactive rules
 		thread.start_new_thread(enforce_proactive_policies,())
+	else :
+		print("At least 1 more host to discover")
 	return 'OK'
 
 # received a packet in event from the controller
@@ -123,11 +138,14 @@ def handle_packet_in():
 	return 'OK'
 
 def enforce_proactive_policies():
-	time.sleep(5)
-	# show the global topology view with all equipments
-	runtime.infra.view()
-	# enforce proactive rules
-	runtime.enforce_policies()
+	with lock :
+		if not runtime.nexus.runtime_mode:
+			print("\n Enough hosts discovered -- starting()\n")
+			time.sleep(5)
+			# show the global topology view with all equipments
+			runtime.infra.view()
+			# enforce proactive rules
+			runtime.enforce_policies()
 
 def main():
 	app.run(host='0.0.0.0', port=9000)

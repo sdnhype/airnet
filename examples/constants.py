@@ -19,6 +19,7 @@ USERS = "users"
 
 ADMIN_NET = "ADMIN_NET"
 GUEST_NET = "GUEST_NET"
+USERS_NET = "USERS_NET"
 
 # Hosts
 
@@ -67,4 +68,3 @@ DM = "DM"
 
 IN_FLOWS = "in_flows"
 OUT_FLOWS = "out_flows"
-
