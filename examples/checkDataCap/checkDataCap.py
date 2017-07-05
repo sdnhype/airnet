@@ -2,7 +2,7 @@ from language import *
 
 """
      client1--|
-              |---[IO]---[ fabric ]---[AC]--|-- server
+              |---[IO]---[ fabric ]---[AC]--- server
      client2--|
 
 """
@@ -75,6 +75,7 @@ def IO_policy(VID):
 def AC_policy(VID):
     i1 = match(edge=VID, dst="server") >> forward("server")
     i2 = match(edge=VID, src="server") >> tag("out_web_flows") >> forward("fabric")
+    i2 = match(edge=VID, src="server") >> tag("out_web_flows") >> (checkDataCap(id="fct2") + forward("fabric"))
     return i1 + i2
 
 def fabric_policy(VID):

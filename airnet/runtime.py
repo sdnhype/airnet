@@ -181,6 +181,31 @@ class Runtime():
         # copy the resulting classifiers in physical_switches_classifiers
         self.physical_switches_classifiers = copy.deepcopy(new_classifiers)
 
+    def all_hosts_discovered (self) :
+        """ Checks if all hosts declared in the mapping module
+            have been registered in the infrastructure module
+        """
+        # for each host in the mapping module
+        for host_ip in self.mapping.hosts.keys():
+            check = False
+            # get each physical host in the infra module
+            for phy_host in self.infra.hosts.values():
+                # look for a match between the mapping host ip_addr
+                # and the physical host ip_addr
+                if host_ip in phy_host.ip_addrs :
+                    check = True
+                    break
+                # check if the infra host is a part of a network
+                # declared in mapping
+                if IPv4Network(phy_host.ip_addrs[0]) in IPv4Network(host_ip) :
+                    # add it to the mapping hosts
+                    self.mapping.addHostMap(str(phy_host.hwAddr), phy_host.ip_addrs[0])
+                    check = True
+            # at least one host in mapping wasn't found in infra
+            if not check :
+                return False
+        return True
+
     def apply_netFunction_fromPacket(self, dpid, bucket_match, packet_match, packet):
         """ apply the function declared in
             the @DynamicControl(data=packet...) decorator
@@ -235,6 +260,7 @@ class Runtime():
 
         # function is a field of the named tuple dyc_rule (NwFctItem)
         result = dyc_rule.function.apply(packet)
+
 
         # don't u forget the identity bug
         if isinstance(result, Policy):
@@ -573,16 +599,36 @@ class Runtime():
                     else:
                         return get_nwFct_host_dst(rule.match)
 
+        def replace_fwd_destination (rule, new_destination) :
+            """ replace in @param rule the forward action
+                by @param new_destination """
+            for action in rule.actions :
+                if isinstance(action, forward):
+                    action.output=new_destination
+
         # get the egress edge
         egress_edge = rule.match.map["edge"]
         # get the destination
         dst_host = get_destination_host(rule)
 
+        # if dst_host is a network
+        # we will need to send the traffic to the controller
+        # so that it will determine the output port
+        specific_rule = self.get_network_specific_rule(rule,dst_host)
+
+        # a specific rule has been added
+        if len(specific_rule) > 1:
+            # change the dst_host
+            dst_host = specific_rule[0]
+            # put the new rule
+            rule = specific_rule [1]
+
         # get the physical switches that match to the egress edge
         egress_edge_switches = self.get_edge_physical_corresponding(egress_edge)
         host_adjacent_switches = [node[1] for node in self.topology_graph.vertices[dst_host] if node[1] in egress_edge_switches]
 
-        logger.debug("Ouput switch(es) : {}".format(" ".join(host_adjacent_switches)))
+        logger.debug("Output switch(es) : {}".format(" ".join(host_adjacent_switches)))
+
         # Strong assumption : host_adjacent_switches will contain a unique phy_switch
         for switch in host_adjacent_switches:
             physical_switch_rule = self.to_physical_switch_rule(rule, switch)
@@ -1037,6 +1083,85 @@ class Runtime():
         output_edges = [rule.action.destination for rule in fabric_rules]
         return output_edges
 
+    def get_network_specific_rule (self,rule,dst):
+        """ add is forward action to the
+            controller if @param dst is a network
+        """
+        def replace_fwd_destination (rule) :
+            """ replace in @param rule the forward action
+            """
+            ctrller_fwd_action = False
+            for action in rule.actions :
+                if isinstance(action, forward) :
+                    if action.output == "controller":
+                        ctrller_fwd_action = True
+                        break
+            if not ctrller_fwd_action :
+                rule_actions = {forward("controller")}
+                for act in rule.actions:
+                    if not isinstance(act, forward):
+                        rule_actions.add(act)
+                rule.actions=rule_actions
+            return rule
+
+        specific_rule = []
+        # if the dst is a network
+        # we may have to add controller rule
+        for phy_host in self.infra.hosts.values() :
+            # if one host in infra is in the network destination
+            if rule.match.map.has_key("nw_dst") :
+                if IPv4Network(phy_host.ip_addrs[0]) in IPv4Network(rule.match.map["nw_dst"]) \
+                    and IPv4Network(phy_host.ip_addrs[0]) != IPv4Network(rule.match.map["nw_dst"]):
+                    specific_rule.append(str(phy_host.hwAddr))
+                    # replace the forward action
+                    specific_rule.append(replace_fwd_destination(rule))
+                    break
+        return specific_rule
+
+    def get_switch_phy_egress_rules(self, egress_switch, classifiers, fabric):
+        """
+            return switch's egress rules list
+        """
+
+        def get_nwFct_host_dst(switch, rule_match):
+            edge = self.get_corresponding_virtual_edge(switch)
+            rule_match = copy.deepcopy(rule_match)
+            rule_match.map["edge"] = edge
+            for nwFct_rule in self.nwFct_rules:
+                if nwFct_rule.match.map == rule_match.map:
+                    if not isinstance(nwFct_rule.function, DynamicPolicy):
+                        for act in nwFct_rule.actions:
+                            if isinstance(act, forward):
+                                return act.output
+                    else:
+                        #TODO: Find another solution
+                        return "DYNAMICPOLICY"
+                    return self.get_netFunction_forward(nwFct_rule.function).output
+
+        egress_rules = []
+        hosts = [host.name for host in self.virtual_topology._hosts]
+
+        #FOR edge_GW (edge between two fabrics)
+        fabrics_switches = set()
+        for fab in self.mapping.fabrics:
+            if fab != fabric:
+                fabrics_switches.update(self.mapping.fabrics[fab])
+
+        for rule in classifiers[egress_switch]:
+            destination=None
+            for act in rule.actions:
+                if isinstance(act, forward):
+                    if act.output != 'OFPP_CONTROLLER':
+                        destination = self.topology_graph.get_dst(egress_switch, act.output)
+                    else:
+                        destination = get_nwFct_host_dst(egress_switch, rule.match)
+                    if (destination in hosts) or (destination in fabrics_switches):
+                        egress_rules.append(rule)
+                    elif destination == "DYNAMICPOLICY" or act.output == 'OFPP_CONTROLLER'\
+                            or act.output==0xfffffffd:
+                        egress_rules.append(rule)
+        return egress_rules
+
     def get_switchesList_onMatch(self, rule_match):
         """ returns a list of tuples (phy_switch, port)
             that corresponds to @param rule_match
@@ -1064,6 +1189,8 @@ class Runtime():
         """
         #TODO: dst_output is an edge
         # dst_output is a fabric (ingress edge)
+
+
         if dst_output in self.mapping.fabrics:
             for fab_key, fab_mapping in self.mapping.fabrics.iteritems():
                 if fab_key == dst_output:
@@ -1109,10 +1236,74 @@ class Runtime():
 
     def handle_packet_in(self, dpid, packet_match, packet):
         logger.debug("Handling a Packet/in")
+        bucket_found = False
+
+        #_enforcing_dynamic = int(round(time.time() * 1000))
         for bucket in self.buckets:
             if bucket.match.covers(packet_match):
                 logger.debug("Found a bucket for this packet!")
+                bucket_found = True
                 bucket.add_packet(dpid, packet_match, packet)
+                #_enforcing_dynamic = int(round(time.time() * 1000)) - _enforcing_dynamic
+                #print("Duration -> {}".format(str(_enforcing_dynamic)))
+        # this a special dynamic function
+        # used when the destination in virtual topology is a network
+        # this will determine the host destination and install a new rule
+        # for this host
+        if not bucket_found :
+            # check if there is a network in the mapping module
+            # which covers the current ip address
+            if packet_match.map.has_key("nw_dst"):
+                # create edge classifiers
+                classifiers = self.create_classifiers()
+                # get the list of switches which map to the current edge
+                switches_list = self.get_edge_physical_corresponding(packet_match.map["edge"])
+                # for each host in mapping module
+                for host_ip in self.mapping.hosts.keys():
+                    # check if the host destination in the packet
+                    # is part of a network in mapping module
+                    if IPv4Network(packet_match.map["nw_dst"]) in IPv4Network(host_ip) \
+                        and packet_match.map["nw_dst"] != host_ip:
+                        # get the net ip
+                        net_ip = host_ip
+                        break
+                # for each switch
+                for switch in switches_list:
+                    # locate the network rule in edge policies
+                    found = False
+                    for rule in enumerate(self.physical_switches_classifiers[switch]):
+                        # get the edge rules
+                        # rule[0] = priority, rule[1]=rule
+                        if rule[1].match.map.has_key("nw_dst") :
+                            # find the network rule
+                            if rule[1].match.map["nw_dst"] == net_ip:
+                                found = True
+                                # copy it
+                                new_rule = copy.deepcopy(rule[1])
+                                # change the network dst by the host dst
+                                new_rule.match.map["nw_dst"] = packet_match.map["nw_dst"]
+                                # add an edge field
+                                new_rule.match.map["edge"] = packet_match.map["edge"]
+                                # get the dst host hardware address
+                                hwAddr = self.infra.arp(new_rule.match.map["nw_dst"])
+                                # replace the forward action
+                                new_rule.actions = {forward("{}".format(str(hwAddr)))}
+                                for act in new_rule.actions:
+                                    if isinstance(act,forward):
+                                        # get the ouput port from the new
+                                        # forward action
+                                        output = self.get_phy_switch_output_port(switch, act.output)
+                                        break
+                                # print(new_rule)
+                                # enforce the new rule
+                                self.enforce_egressPolicies(new_rule, classifiers)
+                                # push the new rule to the controller
+                                self.nexus.push_NewRules_onTop(classifiers,3600)
+                                # send back the packet
+                                self.nexus.send_PacketOut(switch,packet,output)
+                                break
+                    if found:
+                        break
 
     def install_diff_lists(self, diff_lists):
         """ Install/Delete/Modify rules in diff_lists """
@@ -1201,7 +1392,7 @@ class Runtime():
                 new_rule = True
 
             if new_rule:
-                self.nexus.push_NewRules_onTop(classifiers)
+                self.nexus.push_NewRules_onTop(classifiers,3600)
 
                 for switch, new_rules in classifiers.iteritems():
                     for new_r in new_rules:
@@ -1319,7 +1510,7 @@ class Runtime():
                 # cross all endPoints in the mapping modules
                 for host_ipAddr, host_name in self.mapping.hosts.iteritems():
                     # it's the same endPoint (host or network)
-                    if (edge_ipAddr == host_ipAddr or IPv4Network(edge_ipAddr) in IPv4Network(host_ipAddr)):
+                    if (edge_ipAddr == host_ipAddr or IPv4Network(edge_ipAddr) == IPv4Network(host_ipAddr)):
                         # vertices update
                         """
                         create a copy of graph.vertices because i need to update it
@@ -1328,16 +1519,19 @@ class Runtime():
                         """
                         vertices = copy.copy(graph.vertices)
                         for edge_key, edge_list_adjacent in vertices.iteritems():
+
                             for idx, adjacent_node in enumerate(edge_list_adjacent):
+
                                 if adjacent_node[1] == edge[0]:
                                     # (link_weight, adjacent_node, output_port to adjacent)
                                     edge_list_adjacent[idx] = (adjacent_node[0], host_name, adjacent_node[2])
+                                    #if (IPv4Network(edge_ipAddr) in IPv4Network(host_ipAddr))\
+                                    #    and edge_ipAddr !=host_ipAddr :
+
                             if edge_key == edge[0]:
                                 graph.vertices[host_name] = graph.vertices.pop(edge_key)
                         # edges update
                         new_hosts[edge] = (host_name, "host")
-                        #graph.edges.remove(edge)
-                        #graph.edges.add((host_name, "host"))
         for old_edge, new_edge in new_hosts.iteritems():
             graph.edges.remove(old_edge)
             graph.edges.add(new_edge)
@@ -1427,16 +1621,6 @@ class Runtime():
         return output_switches
     """
 
-
-
-
-
-
-
-
-
-
-
     def get_output_port_path(self, path):
         """
         return a path on which each node have also the output_port that allows
@@ -1458,48 +1642,7 @@ class Runtime():
 
 
 #TODO
-    def get_switch_phy_egress_rules(self, egress_switch, classifiers, fabric):
-        """
-            return switch's egress rules list
-        """
 
-        def get_nwFct_host_dst(switch, rule_match):
-            edge = self.get_corresponding_virtual_edge(switch)
-            rule_match = copy.deepcopy(rule_match)
-            rule_match.map["edge"] = edge
-            for nwFct_rule in self.nwFct_rules:
-                if nwFct_rule.match.map == rule_match.map:
-                    if not isinstance(nwFct_rule.function, DynamicPolicy):
-                        for act in nwFct_rule.actions:
-                            if isinstance(act, forward):
-                                return act.output
-                    else:
-                        #TODO: Find another solution
-                        return "DYNAMICPOLICY"
-                    return self.get_netFunction_forward(nwFct_rule.function).output
-
-        egress_rules = []
-        hosts = [host.name for host in self.virtual_topology._hosts]
-
-        #FOR edge_GW (edge between two fabrics)
-        fabrics_switches = set()
-        for fab in self.mapping.fabrics:
-            if fab != fabric:
-                fabrics_switches.update(self.mapping.fabrics[fab])
-
-        for rule in classifiers[egress_switch]:
-            destination=None
-            for act in rule.actions:
-                if isinstance(act, forward):
-                    if act.output != 'OFPP_CONTROLLER':
-                        destination = self.topology_graph.get_dst(egress_switch, act.output)
-                    else:
-                        destination = get_nwFct_host_dst(egress_switch, rule.match)
-                    if (destination in hosts) or (destination in fabrics_switches):
-                        egress_rules.append(rule)
-                    elif destination == "DYNAMICPOLICY" or act.output == 65533:
-                        egress_rules.append(rule)
-        return egress_rules
 
     #TODO: to remove
     def optimize_switches_classifiers(self, classifiers):

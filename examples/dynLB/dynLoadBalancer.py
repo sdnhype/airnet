@@ -1,21 +1,13 @@
 from language import *
-# TODO. Update airnet_lib
-# from usecases.airnet_lib import host_dlAddr
-import pdb
 
-# public_nw_addr = "10.0.0.50"
-# public_dl_addr = "00:26:55:42:9a:62"
 PUB_WS_NW = "10.0.0.50"
 PUB_WS_DL = "00:26:55:42:9a:62"
 
 PRIV_WS1_NW = "10.0.0.11"
 PRIV_WS1_DL = "00:00:00:00:00:05"
-# PRIV_WS1_DL = host_dlAddr("WS1")
 
 PRIV_WS2_NW = "10.0.0.12"
 PRIV_WS2_DL = "00:00:00:00:00:06"
-# PRIV_WS2_DL = host_dlAddr("WS2")
-
 
 """
 
@@ -34,12 +26,9 @@ PRIV_WS2_DL = "00:00:00:00:00:06"
 
 """
 
-
-#Network function declaration
+# Dynamic network control function
 @DynamicControlFct(data="packet", split=["nw_src"], limit=1)
 def Dynamic_LB(packet):
-    # WS1_dl_addr = host_dlAddr("WS1")
-    # WS2_dl_addr = host_dlAddr("WS2")
     ip = packet['packet']['ipv4']
     host_ip_src = ip['src']
     if Dynamic_LB.token == 1:
@@ -55,7 +44,8 @@ def Dynamic_LB(packet):
     return new_policy
 Dynamic_LB.token =1
 
-#Virtual topology
+# Virtual topology
+# -----------------
 def virtual_network():
     topologie = VTopology()
     topologie.addFabric("fabric",2)
@@ -77,7 +67,9 @@ def virtual_network():
     topologie.addLink(("LB",3),("fabric",2))
     return topologie
 
-#Policies
+# Policies
+# ---------
+
 def IO_policy(VID):
     i1 = match(edge=VID, nw_dst=PUB_WS_NW) >> tag("in_web_flows") >> forward("fabric")
     i2 = match(edge=VID, dst="client1")  >> forward("client1")
