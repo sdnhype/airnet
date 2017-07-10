@@ -101,6 +101,12 @@ def emptyNet(controller_ip, controller_port):
     h3.cmd('ip neigh add 10.0.0.50 lladdr 00:26:55:42:9a:62 dev client3-eth0')
     h4.cmd('ip neigh add 10.0.0.50 lladdr 00:26:55:42:9a:62 dev client4-eth0')
 
+
+    print("*** Starting web service on WS1")
+    h5.cmd( 'python -m SimpleHTTPServer 80 &' )
+    print("*** Starting web service on WS2")
+    h6.cmd( 'python -m SimpleHTTPServer 80 &' )
+
     net.ping([h1, h2], timeout=1)
     net.ping([h3, h4], timeout=1)
     net.ping([h5, h6], timeout=1)

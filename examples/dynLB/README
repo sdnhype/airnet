@@ -1,63 +1,42 @@
 # ===========================
-# examples/staticFiltering/
+# examples/dynLB/
 # ===========================
 
 ************************
 *** virtual topology ***
 ************************
 
-                       WS   SSH_GW
-                         \ /
-                         [D]
-------------              |              -----------------
-- Internet ----[I]---[ Fabric ]---[C]---- Corporate Net -
-------------              |              -----------------
-                         [W]
-                         /  \
-                   -------  --------
-                   - WiFI-   - WiFi -
-                   - Pub -   - Priv -
-                   -------   --------
+    client1--|
+    client2--|                               |--- WS1
+             |-----[IO]---[ Fabric ]---[LB]--|
+    client3--|                               |--- WS2
+    client4--|
 
 Policies (by app flows):
 
-- [ Internet, WiFi Pub and Priv ] <--> WS  : allow HTTP
-- [ Internet, WiFi Pub and Priv ] <--> WS  : allow ICMP
-
-- [ Internet, WiFi Pub and Priv ] <--> SSH_GW : allow SSH
-- [ SSH_GW ]                      <--> Corporate Net : allow ALL
-
-- [ Wifi Pub and Priv ]           <--> Internet : allow ALL
-- [ WiFi Priv ]                   <--> Corporate Net : allow TCP 8080
-
-- drop other (e.g. Internet --> Corp Net)
+  Dynamic Load Balancing on LB edge (based on the source address)
 
 ************************
 *** mininet topology ***
 ************************
-                                ws
-                               /
-   inet_h -- s1              s9 -- ssh_gw
-               \            /
-               s2 -- s3 -- s5 -- s7 -- priv_net_h
-                 \        /
-                  s4 -- s6 -- s8
-                             /   \
-                       wifipub_h   wifipriv_h
 
-'inet_h',     ip = '10.0.0.11/8'
-'ws',         ip = '192.168.10.16/24'
-'ssh_gw',     ip = '192.168.10.17/24'
-'priv_net_h', ip = '172.16.0.50/16'
-'wifipub_h',  ip = '192.168.20.2/24'
-'wifipriv_h', ip = '192.168.30.3/24'
+
+    client1---|
+              |---[s1]---|
+    client2---|          |          |--[s5]--[s6]--|                 |---WS1
+                         |---[s3]---|              |---[s7]---[s8]---|
+    client3---|          |          |-----[s4]-----|                 |---WS2
+              |---[s2]---|
+    client4---|
+
 
 ***************
 *** mapping ***
 ***************
 
-Edges: I --> s1, D --> s9, W --> s8, C --> s7
-Fabric: FAB --> s2, s3, s4, s5, s6
+  IO -> s1, s2
+  FAB -> s3, s4, s5, s6, s7
+  LB -> s8
 
 
 ***************************
@@ -66,7 +45,7 @@ Fabric: FAB --> s2, s3, s4, s5, s6
 
 -- AirNet
 
-$ ./launch_airnet_ryu.sh staticFiltering.staticFiltering staticFiltering.staticFiltering_mapping
+$ ./launch_airnet_ryu.sh dynLB.dynLoadBalancer dynLB.dynLoadBalancer_mapping
 
 -- RYU
 
@@ -75,25 +54,16 @@ $ ryu-manager --observe-links airnet_interface.py
 
 -- Mininet
 
-$ sudo python staticFiltering_topo.py 192.168.56.1 6633
+$ sudo python dynLoadBalancer_topo.py 192.168.56.1 6633
 
 -- Tests
 
-mininet> inet_h ping -c1 ws  ---> OK
-mininet> wifipub_h ping -c1 ws  ---> OK
-mininet> inet_h wget ws  ---> OK
+mininet> xterm WS1 WS2
+  WS1> tcpdump -n -i WS1-eth0
+  WS2> tcpdump -n -i WS2-eth0
 
-mininet> inet_h ping -c1 -W1 ssh_gw ---> KO
-mininet> inet_h ssh ssh_gw   ---> OK
+mininet> client1 wget 10.0.0.50  ---> OK (see WS1 output)
+mininet> client3 wget 10.0.0.50  ---> OK (see WS1 output)
 
-mininet> inet_h ping -c1 -W1 priv_net_h ---> KO
-mininet> wifipriv_h ping -c1 -W1 priv_net_h ---> KO
-mininet> wifipriv_h ssh priv_net_h ---> KO
-
-mininet> xterm priv_net_h wifipriv_h
-# TCP 8080
-priv_net_h> iperf -s -p 8080
-wifipriv_h> iperf -c 172.16.0.50 -p 8080 -i 2  ---> OK
-# UDP 8080
-priv_net_h> iperf -s -u -p 8080
-wifipriv_h> iperf -c 172.16.0.50 -u -p 8080 -i 2  ---> KO, no output on server side
+mininet> client2 wget 10.0.0.50  ---> OK (see WS2 output)
+mininet> client4 wget 10.0.0.50  ---> OK (see WS2 output)

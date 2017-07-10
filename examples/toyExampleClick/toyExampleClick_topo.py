@@ -57,9 +57,7 @@ def emptyNet(controller_ip, controller_port):
 	info( '*** Starting network\n')
 	net.start()
 
-	print("*** Starting web service on ws")
-
-    	net.ping([h1, h2], timeout=1)
+    net.ping([h1, h2], timeout=1)
 
 	info( '*** Running CLI\n' )
 	CLI( net )
