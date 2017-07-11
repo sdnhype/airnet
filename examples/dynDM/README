@@ -57,7 +57,7 @@ $ sudo python dynDM_topo.py 192.168.56.1 6633
 
 -- Click
 
-TODO
+see AIRNET_DIR/doc/click_router.txt
 
 -- Tests
 
