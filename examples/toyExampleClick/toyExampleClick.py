@@ -31,7 +31,7 @@ def virtual_network():
 
 #Policies
 def IO_policy(VID):
-    i1 = match(edge=VID, dst="server",tp_dst=80, nw_proto=6) >> tag("in_web_flows") >> forward("fabric")
+    i1 = match(edge=VID, dst="server", nw_proto=1) >> tag("in_web_flows") >> forward("fabric")
     i2 = match(edge=VID, dst="client1")  >> forward("client1")
     return i1 + i2
 
