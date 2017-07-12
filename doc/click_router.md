@@ -1,8 +1,8 @@
-# Documentation for click modular router
+# Click modular router
 
 ## What's click ?
 
-Click is a toolkit used by datamachines to simulate router operations on packets.
+Click is a toolkit used by datamachines to simulate operations on packets.
 See also https://github.com/kohler/click for more information.
 
 ## Architecture
@@ -51,7 +51,7 @@ See also https://github.com/kohler/click for more information.
 	have two internal interfaces : one for the click VM1 (e.g. mininet1) and one for
 	the click VM2 (e.g. mininet2).
 
-	P.S: Make sur the click VM internal interface is up and is in promicuous mode.
+	P.S: Make sure the click VM internal interface is up and is in promicuous mode.
 	- sudo ip link set dev [intf] up
 	- sudo ip link set dev [intf] promisc on
 

@@ -1,0 +1,195 @@
+################################################################################
+Sequential (>>) or parallel (+) composition of high-level policies
+generates virtual control rules
+The following content describes this mechanism
+################################################################################
+
+
+## Architecture
+------------
+      app.py       app_mapping.py
+        \               /
+         \             /
+          -------------
+                |                 |--- runtime.py
+          restserver_controller --|
+                                  |--- classifier.py
+
+
+## Composition Types
+
+  + Sequential Composition (>>)
+
+      e.g : match(...) >> tag() --> all the matched packets will be tagged
+
+
+  + Parallel Composition (+)
+
+      e.g : match() + tag()  --> tag can be applied before of after match
+
+
+## Control Program (app.py)
+
+  app.py content
+  - virtual topology (out of this documentation scope)
+  - virtual control rules (edge and fabric)
+
+  Virtual control rules are composition of edge and fabric policies
+
+    - sequential composition of edge policies (match, tag, forward, modify, drop)
+          e.g.: e1 = match(...) >> tag(...) >> modify(...) >> forward(...)
+
+    - parallel composition of edge policies (match, tag, forward, modify, drop)
+          e.g.: e1 = match(flow1) + match(flow2)
+
+    - sequential composition of fabric policies (catch, carry, via)
+          e.g.: e1 = catch(...) >> via(...) >> carry(...)
+
+    - parallel composition of fabric policies (catch, carry, via)
+          e.g.: e1 = catch(flow1) + catch(flow2)
+
+    Sequential and parallel composition can be mixed
+          e.g.: e1 = match(...) >> tag(...) >> modify(...) >> (forward(A)+forward(B))
+                e2 = (catch(flow1) + catch(flow2)) >> carry (...)
+
+
+## Compilation
+
+  Step 1 : get policies in app.py
+
+        "edge_policies"    : language.SequentialComposition or language.ParallelComposition Object
+        "fabric_policies"  : language.FabricSequentialComposition or language.FabricParralelComposition Object
+
+
+  Step 2 : compile edge_policies
+
+    - edge_policies as a SequentialComposition object
+
+        P.S.: SequentialComposition inherits CompositionPolicy which inherits EdgePolicy which inherits Policy
+
+        compile a SequentialComposition object means compile each one of its policies
+
+        compile a policy return a classifier in which at least one rule is stored
+
+          e.g.: e1 = match(....) >> tag(...) >> forward(...)
+
+            e.compile() --> match.compile() >> tag.compile() >> forward.compile()
+
+            match.compile()  --> returns a classifier with at least two rules
+                                    r1 = Rule(match(...), identity, set[identity])
+                                    r2 = Rule(identity, identity, set[]) # drop rule
+
+            tag.compile()    --> returns a classifier with one rule
+                                    r1 = Rule(identity, flow=="...", set[identity])
+
+            forward.compile()--> returns a classifier with one rule
+                                    r1 = Rule(identity, identity, set[forward(...)])
+
+            These 3 classifiers generated are combined through the redefined __rshift__ (>>) operator
+            to create one final classifier with 2 rules :
+
+              r1 = Rule(match(...), flow=="...", set[action1])
+              r2 = identity, identity, set[]
+
+
+    - edge_policies as a ParallelComposition object
+
+        P.S.: ParallelComposition inherits CompositionPolicy which inherits EdgePolicy which inherits Policy
+
+        ParallelComposition concerns :
+
+          -- basic policies --> match (A) + match (B) returns the intersection between A and B
+                            --> tag (A) + tag (B) returns the more specific label
+                            --> forward(B) + DynamicPolicy() means the order of execution doesn't matter
+
+          -- full rules --> r1 + r2 means the order of execution doesn't matter
+                            r1 or r2 can be a SequentialComposition object
+
+       e.g. : e1 = match(F1) >> tag(F1) >> action1
+              e2 = match(F2) >> tag(F2) >> action2
+              return e1 + e2
+
+              (e1 + e2) is a ParallelComposition object with e1 and e2 SequentialComposition objects
+
+              (e1 + e2).compile() --> (e1.compile() + e2.compile())
+
+              e1.compile() generates one classifier (C1) with 2 rules :
+                r1a = Rule(match(F1), flow=="F1", set[action1])
+                r1b = identity, identity, set[]
+
+              e2.compile() generates one classifier (C2) with 2 rules :
+                r2a = Rule(match(F2), flow=="F2", set[action2])
+                r2b = identity, identity, set[]
+
+                C1 and C2 are combined through the redefined __add__ (+) operator
+                to create one final classifier with :
+
+                  -- 3 rules if there is no intersection between F1 and F2
+
+                    r1 = Rule(match(F1), flow=="F1", set[action1])
+                    r2 = Rule(match(F2), flow=="F2", set[action2])
+                    r3 = identity, identity, set[]
+
+                  -- 4 rules if there is an intersection between F1 and F2
+
+                    r0 = Rule(match(F'), flow=="F'", set[action'])
+                    r1 = Rule(match(F1), flow=="F1", set[action1])
+                    r2 = Rule(match(F2), flow=="F2", set[action2])
+                    r3 = identity, identity, set[]
+
+                      r0 is the rule for the intersection flow F' between F1 and F2
+                      r0 has higher priority than r1 and r2
+                      F' is the much specific label between F1 and F2
+                      action' could be :
+                        -- action1
+                        -- action2
+                        -- action1 + action2
+
+  Step 3 : Compile Fabric_policies
+
+    * fabric_policies as a FabricSequentialComposition object
+
+        P.S.: FabricSequentialComposition inherits FabricCompositionPolicy which inherits FabricPolicy
+              which inherits Policy
+
+        compile a FabricSequentialComposition object means compile each one of its policies
+
+        e.g.: f1 = catch(....) >> carry(...) >> [via (...)]
+
+          f1.compile() --> catch.compile() >> carry.compile() >> via.compile()
+
+            catch.compile() --> returns a classifier with one rule
+                                  r1 = Rule(catch(...),{identity},list())
+
+            carry.compile() --> returns a classifier with one rule
+                                  r1 = Rule(identity,{self},list[])
+
+            via.compile()   --> returns a classifier with one rule at least
+                                  r1 = Rule(identity,{identity},[via(...)])
+
+            These 3 classifiers generated are combined through the redefined __rshift__ (>>) operator
+            to create one final Fabric classifier with 1 rule :
+
+              r1 = FabricRule(catch(...), carry('..':[..]), [via(...)])
+
+    * fabric_policies as a FabricParallelComposition object
+
+      P.S.: FabricParallelComposition inherits FabricCompositionPolicy which inherits FabricPolicy
+      which inherits Policy
+
+      e.g. : f1 = catch(X1) >> carry(L1) >> via(DM1)
+             f2 = catch(X2) >> carry(L2) >> []
+             return f1 + f2
+
+             (f1 + f2).compile() --> (f1.compile() + f2.compile())
+
+             f1.compile() generates one classifier (C1) with 1 rule :
+                r1 = FabricRule(catch(X1), carry(L1), [via(DM1)])
+
+             f2.compile() generates one classifier (C2) with 1 rule :
+                r2 = FabricRule(catch(X2), carry(L2), [])
+
+             C1 and C2 are combined through the redefined __add__ (+) operator
+             to create one Fabric final classifier with 2 rules :
+                r1 = FabricRule(catch(X1), carry(L1), [via(DM1)])
+                r2 = FabricRule(catch(X2), carry(L2), [])
