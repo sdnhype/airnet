@@ -1,6 +1,4 @@
-
 # Protocols
-
 UDP = 17
 TCP = 6
 ICMP = 1
@@ -8,7 +6,6 @@ HTTP = 80
 SSH = 22
 
 # Networks
-
 NETA = "Net.A"
 NETB = "Net.B"
 INTERNET = "Internet"
@@ -22,7 +19,6 @@ GUEST_NET = "GUEST_NET"
 USERS_NET = "USERS_NET"
 
 # Hosts
-
 WS = "WebServer"
 SSH_GW = "SSH_GW"
 C01 = "C01"
@@ -42,15 +38,12 @@ INET1 = "inet1"
 USER1 = "user1"
 
 # Fabric
-
 FAB = "Fabric"
 FAB1 = "Fabric1"
 FAB2 = "Fabric2"
-
 FABRIC = "FABRIC"
 
 # Edges
-
 E1 = "E1"
 E2 = "E2"
 E3 = "E3"
@@ -63,8 +56,13 @@ EW = "EW"
 IO = "IO"
 AC = "AC"
 WAP = "WAP"
-
 DM = "DM"
 
+# TAGS
 IN_FLOWS = "in_flows"
 OUT_FLOWS = "out_flows"
+
+ICMP_IN = "in_icmp"
+ICMP_OUT = "out_icmp"
+HTTP_IN = "in_http"
+HTTP_OUT = "out_http"
