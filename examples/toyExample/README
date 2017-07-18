@@ -1,0 +1,65 @@
+# ===========================
+# examples/toyExample/
+# ===========================
+
+************************
+*** virtual topology ***
+************************
+
+
+    HOST_A----[E1]---[ Fabric ]---[E2]----HOST_C
+               |
+    HOST_B-----+
+
+Policies (by network flows):
+
+ALLOW ICMP between HOST_A and HOST_C
+ALLOW ICMP between HOST_B and HOST_C
+ALLOW HTTP between HOST_A and HOST_C
+DENY others
+
+************************
+*** mininet topology ***
+************************
+
+host_A -- s1 -- s2 -- s3 -- s4 -- host_C
+          |
+host_B ---+
+
+'host_A', ip='10.0.0.10/8'
+'host_B', ip='10.0.0.11/8'
+'host_C', ip='172.16.0.50/16'
+
+***************
+*** mapping ***
+***************
+
+E1 --> s1
+E2 --> s4
+Fabric --> [s2, s3]
+
+***************************
+*** running and testing ***
+***************************
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh toyExample.toyExample toyExample.toyExample_mapping
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- Mininet
+
+$ sudo python toyExample_topo.py 192.168.56.1 6633
+
+-- Tests
+
+mininet> host_A ping -c2 host_C  ---> OK
+mininet> host_B ping -c2 host_C  ---> OK
+
+mininet> host_A wget host_C ---> OK
+mininet> host_B wget -T1 -t1 host_C ---> failed, Connection timed out.
+(-T timeout in seconds, -t number of retries)
