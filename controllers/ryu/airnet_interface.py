@@ -1,3 +1,5 @@
+# coding: utf8
+
 # AirNet, a virtual network control language based on an Edge-Fabric model.
 # Copyright (C) 2016-2017 Université Toulouse III - Paul Sabatier
 #
