@@ -33,17 +33,19 @@ def authenticate(packet):
         protos = ast.literal_eval(str(protos))
         ip = protos.get('ipv4')
         hostIP = ip.get('src')
+        dstIP = ip.get('dst')
     else:
         ip = packet.find('ipv4')
         hostIP = ip.srcip.toStr()
+        dstIP = ip.dstip.toStr()
 
     if whitelist.has_key(hostIP):
         print(hostIP + " is whitelisted. --> fwd")
-        new_policy = (match(edge=WAP, nw_src=hostIP, dst=WEB_SERVER) >>
+        new_policy = (match(edge=WAP, nw_src=hostIP, nw_dst=dstIP) >>
                       tag(GUESTS_WS_FLOWS) >> forward(FABRIC))
     else:
         print(hostIP + " is blacklisted. --> drop")
-        new_policy = (match(edge=WAP, nw_src=hostIP, dst=WEB_SERVER) >> drop)
+        new_policy = (match(edge=WAP, nw_src=hostIP, nw_dst=dstIP) >> drop)
     return new_policy
 
 # Virtual topology
