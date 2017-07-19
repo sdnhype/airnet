@@ -1,81 +1,76 @@
 # Click modular router
 
-## What's click ?
+## What's click?
 
-Click is a toolkit used by datamachines to simulate operations on packets.
-See also https://github.com/kohler/click for more information.
+Click is a modular router toolkit.  We use it to implement AirNet's *Data Machines*.
+See https://github.com/kohler/click for more information.
 
 ## Architecture
 
-			---------------------
-		  	AirNet Hypervisor
-			---------------------
-			         |
-			---------------------
-				 RYU Controller
-			---------------------
-			         |
-			      VM mininet -- VM click
-
+        --------------------
+         AirNet Hypervisor
+        --------------------
+                |
+        --------------------
+           RYU Controller
+        --------------------
+                |
+        --------------------
+     Mininet VM ---- Click VM
+        --------------------
 
 ## Configuration
 
-1 install a Linux-based VM for click
-	- sudo aptitude update
-	- sudo aptitude upgrade
-	- sudo aptitude install build-essential
+1) Install a Linux-based VM for Click
 
-2 clone and install the click project
-	- git clone git://github.com/kohler/click.git
-	- cd click
-	- ./configure
-	- sudo make install
+    $ sudo aptitude update
+    $ sudo aptitude upgrade
+    $ sudo aptitude install build-essential
 
-3 configure VMs interfaces
+2) Clone and install the Click project
 
-	+ For the mininet VM
-		- NAT interface for internet access (e.g. eth0)
-		- HostOnly interface for ssh connexion from the host (e.g. eth1)
-		- Internal-network interface for connexion with the click VM (e.g. eth2)
+    $ git clone git://github.com/kohler/click.git
+    $ cd click
+    $ ./configure
+    $ sudo make install
 
-	+ For the click VM
-		- NAT interface for internet access (e.g. eth0)
-		- HostOnly interface for ssh connexion from the host (e.g. eth1)
-		- Internal-network interface for connexion with the mininet VM (e.g. eth2)
+3) Configure the VMs interfaces
 
-	The click VM internal interface address (e.g. eth2) should be the same as the
-	datamachine ip address in the mapping file.
-	- sudo ip addr add [ip_adress] dev [intf]
+On each VM (Mininet and Click), configure three interfaces:
 
-	For two datamachines, two click VMs are needed. In that case, the mininet VM should
-	have two internal interfaces : one for the click VM1 (e.g. mininet1) and one for
-	the click VM2 (e.g. mininet2).
-
-	P.S: Make sure the click VM internal interface is up and is in promicuous mode.
-	- sudo ip link set dev [intf] up
-	- sudo ip link set dev [intf] promisc on
-
-4 define in click the operation to apply on packets
-
-	e.g. : Store packets arriving in [intf] in a queue
-	 			 Send them back to [intf] after a 100 ms delay
-
-	Content of toto.click configuration file in click/conf folder
-
-			FromDevice(eth2) -> Queue(2) -> DelayShaper(0.1) -> ToDevice(eth2);
+* _NAT interface_ to access Internet (e.g. eth0)
+* _Host-only interface_ to enable SSH from the host (e.g. eth1)
+* _Internal network interface_ to connect to other VMs (e.g. eth2)
 
 
-5 start AirNet, RYU and mininet topology
+The Click VM internal interface address (e.g. eth2) must be configured with the same IP address as the _DataMachine_ IP address in the mapping file. Moreover, make sure the internal interface is up and is in promiscuous mode.
 
-	- airnet$ ./launch_airnet_ryu.sh click.usecase click.usecase_mapping
-	- ryu$ ryu-manager --observe-links airnet_interface.py
-	- mininet$ sudo python click_topo.py [ryu_ip_address] 6633
+    $ sudo ip addr add <ip_address> dev <intf>
+    $ sudo ip link set dev <intf> up
+    $ sudo ip link set dev <intf> promisc on
 
-6 start click
-	- ping -c1 192.168.0.1 (so that the host can be detected by RYU)
-	- sudo click click/conf/toto.click
-	- sudo tcpdump -n -i eth2
+Note that for two DataMachines, two Click VMs are needed. In that case, the Mininet VM must have two internal interfaces: one for the Click VM1 and one for the Click VM2.
 
-7 run tests (ping, wget...)
 
-	Redirected packets should appear in the click VM console
+4) Define in Click the operation to apply on packets
+
+See the Click documentation for details on that part. For example, in order to store packets arriving on interface eth2 in a queue and send them back on the same interface after a 100 ms delay, the content of the Click file (in the click/conf folder) could be:
+
+    FromDevice(eth2) -> Queue(10) -> DelayShaper(0.1) -> ToDevice(eth2);
+
+
+5) Start AirNet, RYU and Mininet.
+
+    (localhost)$ ./launch_airnet_ryu.sh <click_usecase> <click_usecase_mapping>
+    (localhost)$ ryu-manager --observe-links airnet_interface.py
+    (mininet VM)$ sudo python click_usecase_topo.py <ryu_ip_address> <ryu_port>
+
+6) Start Click
+
+    $ ping -c1 192.168.0.1 (so that the host can be detected by Ryu)
+    $ sudo click click/conf/delayDM.click
+	$ sudo tcpdump -n -i eth2 (optional)
+
+7) Run tests in Mininet (ping, wget...)
+
+Redirected packets should appear in the Click VM tcpdump console.
