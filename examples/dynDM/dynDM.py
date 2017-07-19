@@ -51,11 +51,9 @@ def control(packet):
         protos = ast.literal_eval(str(protos))
         ip = protos.get('ipv4')
         hostIP = ip.get('src')
-        # TODO: check why this doesn't work: dstIP = ip.get('dst')
     else:
         ip = packet.find('ipv4')
         hostIP = ip.srcip.toStr()
-        # TODO: check why this doesn't work: dstIP = ip.dstip.toStr()
 
     if whitelist.has_key(hostIP):
         print(hostIP + " is whitelisted. --> no control")
