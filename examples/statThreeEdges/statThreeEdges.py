@@ -16,9 +16,9 @@ import datetime
 
 * Virtual Policies
 
-    - Distributed packets to A, B, C on E1
-    - Distributed packets to D, E, F on E2
-    - Distributed packets to G, H, I on E3
+    - Distribute packets to A, B, C on E1
+    - Distribute packets to D, E, F on E2
+    - Distribute packets to G, H, I on E3
 
     - Forward to hosts based on MAC destination address
     - Poll statistics (packet and byte counters) on edges E1, E2 and E3
@@ -151,7 +151,7 @@ def statPolicy():
     s2 = edgeStatForX(E2, D) + edgeStatForX(E2, E) + edgeStatForX(E2, F)
     s3 = edgeStatForX(E3, G) + edgeStatForX(E3, H) + edgeStatForX(E3, I)
     return s1 + s2 + s3
-    
+
 # ============================================================================
 # Main function
 # ============================================================================

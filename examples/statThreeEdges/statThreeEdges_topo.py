@@ -43,7 +43,7 @@ import sys
 """
 
 
-def emptyNet(controller_ip, controller_port):
+def defaultNet(controller_ip, controller_port):
 
     # Create an empty network and add nodes to it.
 
@@ -111,4 +111,4 @@ if __name__ == '__main__':
     if len(sys.argv) != 3:
         print 'Usage: ', sys.argv[0], ' controller_ip controller_port'
         sys.exit()
-    emptyNet(sys.argv[1], int(sys.argv[2]))
+    defaultNet(sys.argv[1], int(sys.argv[2]))
