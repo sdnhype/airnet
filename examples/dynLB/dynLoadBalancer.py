@@ -19,7 +19,7 @@ PRIV_WS2_DL = "00:00:00:00:00:06"
     client3--|                               |--- WS2
     client4--|
 
-* Virtual Policies
+* Policies
 
     Dyn load balancer on LB edge (based on the source address)
 

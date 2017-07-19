@@ -6,19 +6,32 @@
 *** virtual topology ***
 ************************
 
-TODO
+     client1--|
+              |---[IO]---[ fabric ]---[AC]--- server
+     client2--|
+
+Policies:
+
+  - Dynamic control function (on edge IO) performing bandwidth cap
+    (i.e. limiting the clients bandwidth)
 
 ************************
 *** mininet topology ***
 ************************
 
-TODO
+h1(192.168.0.11)--|
+                  |-- s1 -- s2 -- s3 -- s4 -- s5 ---- h3 (172.16.0.11)
+h2(192.168.0.12)--|
 
 ***************
 *** mapping ***
 ***************
 
-TODO
+client1 --> h1, client2 --> h2, server  --> h3
+Edge IO --> s1
+Edge AC --> s5
+Fabric  --> s2, s3, s4
+
 
 ***************************
 *** running and testing ***
@@ -39,4 +52,25 @@ $ sudo python checkDataCap_topo.py 192.168.56.1 6633
 
 -- Tests
 
-TODO.
+# Open the three terminals
+mininet> xterm h1 h2 h3
+
+# Run iperf from h3 to h2 (400Kbps for 80 seconds)
+mininet:h2> iperf -s -u
+mininet:h3> -c 192.168.0.12 -u -b 400K -t80
+
+  ---> It works, no problem (throughput doesn't exceed the limit).
+
+# Run iperf from h3 to h1 (700Kbps for 80 seconds)
+mininet:h1> iperf -s -u
+mininet:h3> iperf -c 192.168.0.11 -u -b 700K -t80
+
+  ---> AirNet console should display the following message:
+
+... Applying checkDataCap()...
+192.168.0.11 has exceeded its data quota
+192.168.0.11 communications are blocked for 60 seconds
+
+Then a ping from h3 to h1 should fail. Until (60 seconds later):
+... Applying checkDataCap()...
+192.168.0.11 can again use the network

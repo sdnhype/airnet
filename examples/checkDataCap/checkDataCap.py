@@ -1,21 +1,31 @@
 from language import *
 
 """
+* Virtual topology
+
      client1--|
               |---[IO]---[ fabric ]---[AC]--- server
      client2--|
 
+
+* Policies
+
+  - Dynamic control function (on edge IO) performing bandwidth cap
+    (i.e. limiting the clients bandwidth)
+
+(Note. the bandwidth cap is installed on edge IO but could be installed on edge AC)
 """
 
-data_threshold = 1000
+# setting data threshold to 62500 bytes (500 kbits) per second
+data_threshold = 62500*60
 hosts_data_amount = {}
 hosts_permission = {}
 
-#Network functions declaration
+# Network function declaration
 @DynamicControlFct(data="stat", every=60.0, limit=None)
 def checkDataCap(stat, id):
     """
-        every host can download at most 1000 bytes per 60 seconds
+        Every host can download at most 62500*60 bytes per 60 seconds (i.e. 500 kbps)
     """
     checkDataCap.time[id] +=1
     print "Time elapsed for "+ id + " == "+  str(checkDataCap.time[id]) + " minute(s)"
@@ -44,12 +54,12 @@ def checkDataCap(stat, id):
             print stat.nw_dst + " communications are blocked for 60 seconds"
             return (match(edge="IO", nw_dst=stat.nw_dst) >> drop)
         else:
-            hosts_permission[stat.nw_dst] ="allow"
+            hosts_permission[stat.nw_dst] = "allow"
             hosts_data_amount[stat.nw_dst] = stat.byte_count
+
 checkDataCap.time = {"fct1":0, "fct2":0}
 
-
-#Virtual topology
+# Virtual topology
 def virtual_network():
     topologie = VTopology()
     topologie.addFabric("fabric",2)
@@ -65,9 +75,9 @@ def virtual_network():
     topologie.addLink(("AC",2),("fabric",2))
     return topologie
 
-#Policies
+# Policies
 def IO_policy(VID):
-    i1 = match(edge=VID, dst="server") >> tag("in_web_flows") >> forward("fabric")
+    i1 = match(edge=VID, dst="server")   >> tag("in_web_flows") >> forward("fabric")
     i2 = match(edge=VID, dst="client1")  >> (checkDataCap(id="fct1") + forward("client1"))
     i3 = match(edge=VID, dst="client2")  >> (checkDataCap(id="fct2") + forward("client2"))
     return i1 + i2 + i3
@@ -75,7 +85,6 @@ def IO_policy(VID):
 def AC_policy(VID):
     i1 = match(edge=VID, dst="server") >> forward("server")
     i2 = match(edge=VID, src="server") >> tag("out_web_flows") >> forward("fabric")
-    i2 = match(edge=VID, src="server") >> tag("out_web_flows") >> (checkDataCap(id="fct2") + forward("fabric"))
     return i1 + i2
 
 def fabric_policy(VID):
@@ -83,7 +92,7 @@ def fabric_policy(VID):
     t2 = catch(fabric=VID, src="AC", flow="out_web_flows") >> carry(dst="IO")
     return t1 + t2
 
-#Main function
+# Main function
 def main():
     in_network_functions = IO_policy("IO") + AC_policy("AC")
     transport_function = fabric_policy("fabric")

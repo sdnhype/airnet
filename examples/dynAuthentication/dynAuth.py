@@ -7,6 +7,8 @@ whitelist = {}
 whitelist["172.16.0.12"] = "allow"
 
 """
+* Virtual topology
+
 -------------
 - Admin Net ------[IO]--- |
 -------------             |                       |-- WebServer
@@ -15,7 +17,7 @@ whitelist["172.16.0.12"] = "allow"
 - Guests Net -----[WAP]---|
 --------------
 
-Policies:
+* Policies
 
 ADMIN_NET <--> WS and DB servers: allow ALL
 GUEST_NET <--> WS: allow only flows with IP source address in whitelist
