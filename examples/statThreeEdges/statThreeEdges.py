@@ -14,7 +14,7 @@ import datetime
                   |  |  |
                   D  E  F
 
-* Virtual Policies
+* Policies
 
     - Distribute packets to A, B, C on E1
     - Distribute packets to D, E, F on E2

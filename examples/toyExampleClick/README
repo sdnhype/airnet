@@ -1,0 +1,72 @@
+# ===========================
+# examples/toyExampleClick/
+# ===========================
+
+************************
+*** virtual topology ***
+************************
+
+                         DM1
+                          |
+    client1----[IO]---[ Fabric ]---[AC]---- server
+
+Policies (transport):
+
+ALL input flows from client1 to server pass through data machine dm1
+ALL output flows from server to client1 go directly from edge AC to edge IO
+
+************************
+*** mininet topology ***
+************************
+
+@IP 192.168.0.0/16
+
+                          VM1
+                           | (eth2)
+                           |
+                           | (eth2)
+     c1---[s1]----[s2]----[s3]------[s4]-------[s5]---[s6]---c2
+   (.0.11)                                                  (.0.12)
+
+***************
+*** mapping ***
+***************
+
+Edge IO --> s1, Edge AC --> s6
+Fabric --> s2, s3, s4, s5
+DM1 --> VM1 with IPv4 address 10.1.1.11
+        (and mininet eth2: 10.1.1.10 for example)
+
+***************************
+*** running and testing ***
+***************************
+
+-- AirNet
+
+$ ./launch_airnet_ryu.sh toyExampleClick.toyExampleClick toyExampleClick.toyExampleClick_mapping
+
+-- RYU
+
+$ cd controllers/ryu/
+$ ryu-manager --observe-links airnet_interface.py
+
+-- Mininet
+
+$ sudo python toyExampleClick_topo.py 192.168.56.1 6633
+
+-- Click
+
+see AIRNET_DIR/examples/README_click.md
+
+-- Tests
+
+mininet> c1 ping -c2 c2
+PING 192.168.0.12 (192.168.0.12) 56(84) bytes of data.
+64 bytes from 192.168.0.12: icmp_seq=1 ttl=64 time=10.9 ms
+64 bytes from 192.168.0.12: icmp_seq=2 ttl=64 time=10.5 ms
+
+--- 192.168.0.12 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 10.564/10.744/10.925/0.208 ms
+
+==> The 10ms delay is introduced by the DataMachine (see the click config file)

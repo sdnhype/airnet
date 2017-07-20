@@ -1,19 +1,21 @@
-#Import language primitives
 from language import *
+from constants import *
+
+"""
+* Virtual topo
+
+                         DM1
+                          |
+    client1----[IO]---[ Fabric ]---[AC]---- server
+
+* Policies (transport)
+
+ALL input flows from client1 to server pass through data machine dm1
+ALL output flows from server to client1 go directly from edge AC to edge IO
 
 """
 
-                       dm1
-                        |
-    client1----[IO]---[ fabric ]---[AC]---- server
-
-FAB policies:
-(src=IO,   flow="in_web_flows")  >> via("dm1", "fct") >> carry(dst="AC")
-(src="AC", flow="out_web_flows") >> carry(dst="IO")
-
-"""
-
-#Virtual topology
+# Virtual topology
 def virtual_network():
     topologie = VTopology()
     topologie.addFabric("fabric",3)
@@ -29,23 +31,23 @@ def virtual_network():
     topologie.addLink(("fabric",3),("dm1",1))
     return topologie
 
-#Policies
+# Policies
 def IO_policy(VID):
-    i1 = match(edge=VID, dst="server", nw_proto=1) >> tag("in_web_flows") >> forward("fabric")
-    i2 = match(edge=VID, dst="client1")  >> forward("client1")
+    i1 = match(edge=VID, dst="server")  >> tag("in_flows") >> forward("fabric")
+    i2 = match(edge=VID, dst="client1") >> forward("client1")
     return i1 + i2
 
 def AC_policy(VID):
     i1 = match(edge=VID, dst="server") >> forward("server")
-    i2 = match(edge=VID, src="server") >> tag("out_web_flows") >> forward("fabric")
+    i2 = match(edge=VID, src="server") >> tag("out_flows") >> forward("fabric")
     return i1 + i2
 
 def fabric_policy(VID):
-    t1 = catch(fabric=VID, src="IO", flow="in_web_flows") >> via("dm1", "fct") >> carry(dst="AC")
-    t2 = catch(fabric=VID, src="AC", flow="out_web_flows") >> carry(dst="IO")
+    t1 = catch(fabric=VID, src="IO", flow="in_flows") >> via("dm1", "fct") >> carry(dst="AC")
+    t2 = catch(fabric=VID, src="AC", flow="out_flows") >> carry(dst="IO")
     return t1 + t2
 
-#Main function
+# Main function
 def main():
     in_network_functions = IO_policy("IO") + AC_policy("AC")
     transport_function = fabric_policy("fabric")

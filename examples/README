@@ -2,80 +2,62 @@
             *** AirNet use cases ***
             ************************
 
+Each use case is in a separate folder.
+
 ******************************************************************************
 Basic use cases
 ******************************************************************************
 
+== toyExample  ==
 
-== toyExample/toyExample  ==
+Example which allows HTTP and ICMP flows, and deny all other traffic.
 
-Example which allows http and icmp and deny all other traffic.
+== toyExampleClick  ==
 
-
-
-== toyExampleClick/toyExampleClick  ==
-
-Example which redirects all granted traffic to a dataMachine (click).
-
-
+Example which redirects all granted traffic through a DataMachine (this DM is
+implemented in a separate VM thanks to the click modular router).
 
 ******************************************************************************
 Static use cases
 ******************************************************************************
 
-
-== staticFiltering/staticFiltering  ==
+== staticFiltering  ==
 
 Example which filters traffic based on the destination host,
 the network and/or transport protocol and/or port number.
 
-
-
-
-== staticParallelCatch/staticParallelCatch  ==
+== staticParallelCatch  ==
 
 Example which involves 2 catch() instructions in parallel with the same
 destination in the carry().
 e.g.: ( catch() + catch() ) >> carry()
 
+== staticTwoFabrics  ==
 
-
-
-== staticTwoFabrics/twoFabrics  ==
-
-Example which involves 2 Fabrics in the virtual topology.
-
-
+Example which involves 2 fabrics in the virtual topology.
 
 ******************************************************************************
-Dynamic use cases (dynamic network control function-s is/are used here)
+Dynamic use cases (dynamic network control function(s) is(are) used here)
 ******************************************************************************
 
+== statThreeEdges  ==
 
-== statThreeEdges/statThreeEdges  ==
+Example which collects statistics based on layer 2 exchanges.
 
-Example which collects statistics on layer 2 exchanges.
+== checkDataCap  ==
 
+Example which regulates bandwidth usage.
 
-
-== checkDataCap/checkDataCap  ==
-
-Example which regulates bandwith usage by hosts.
-
-
-
-== dynAuthentication/dynAuth ==
+== dynAuthentication ==
 
 Example which authenticates flows based on the IP source address of the first packet.
 
+== dynDM ==
 
+Example which redirects non-trustworthy flows through a DataMachine (this DM is
+implemented in a separate VM thanks to the click modular router).
 
-== dynDM/dynDM ==
+== dynLB ==
 
-Example which redirects non-trustworthy flows towards a dataMachine (click).
-
-
-
-== dynLB/dynLB ==
-
-Example which balances traffic between two web servers based on the IP source address.
+Example which balances traffic between two web servers according to a simple
+round-robin algorithm.

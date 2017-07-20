@@ -43,7 +43,7 @@ On each VM (Mininet and Click), configure three interfaces:
 * _Internal network interface_ to connect to other VMs (e.g. eth2)
 
 
-The Click VM internal interface address (e.g. eth2) must be configured with the same IP address as the _DataMachine_ IP address in the mapping file. Moreover, make sure the internal interface is up and is in promiscuous mode.
+**The Click VM internal interface address (e.g. eth2) must be configured with the same IP address as the _DataMachine_ IP address in the mapping file**. Moreover, make sure the internal interface is up and is in promiscuous mode.
 
     $ sudo ip addr add <ip_address> dev <intf>
     $ sudo ip link set dev <intf> up
@@ -67,8 +67,8 @@ See the Click documentation for details on that part. For example, in order to s
 
 6) Start Click
 
-    $ ping -c1 192.168.0.1 (so that the host can be detected by Ryu)
-    $ sudo click click/conf/delayDM.click
+    $ ping -c1 <mininet_IP_addr> (so that the host can be detected by Ryu)
+    $ sudo click click/conf/emptyDM.click
 	$ sudo tcpdump -n -i eth2 (optional)
 
 7) Run tests in Mininet (ping, wget...)

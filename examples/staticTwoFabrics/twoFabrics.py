@@ -2,13 +2,16 @@ from language import *
 from constants import *
 
 """
+* Virtual topo
+
 INTERNET ---|      /------FAB1------E2-----WS
             |----E1
 USERS ------|      \------FAB2------E3-----SSH_GW
 
+* Policies
+
 HTTP from * to WS          OK (via FAB1)
 ICMP from USERS to SSH_GW  OK (via FAB2)
-
 """
 
 WEB_FLOWS = "Web_Flows"
