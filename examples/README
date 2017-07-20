@@ -3,119 +3,79 @@
             ************************
 
 ******************************************************************************
+Basic use cases
 ******************************************************************************
 
-=======================
-== Static filtering  ==
-=======================
 
-# examples/staticFiltering/
+== toyExample/toyExample  ==
 
-This is an example involving different types of policies filtering traffic
-based on the destination, network protocol, transport protocol or port number.
+Example which allows http and icmp and deny all other traffic.
 
-Virtual topology: 4 edges (one-to-one mapping), 1 fabric
 
-======================
-== Static 2 fabrics ==
-======================
 
-# examples/staticTwoFabrics/
+== toyExampleClick/toyExampleClick  ==
 
-This is an example of AirNet program that uses two fabrics.
+Example which redirects all granted traffic to a dataMachine (click).
 
-Virtual topology: 3 edges (one-to-two and one-to-one mapping), 2 fabrics
 
-=======================================
-== Static catch parallel composition ==
-=======================================
-
-# examples/staticParallelCatch/
-
-Testing 2 catch() instructions in parallel, same destination in the carry().
-Ex.: ( catch() + catch() ) >> carry()
-
-Virtual topology: 3 edges (one-to-two and one-to-one mapping), 2 fabrics
-
-===========================================
-== Static edge gateway between 2 fabrics ==
-===========================================
-
-# examples/staticEdgeGateway/
-
-One edge between two fabrics. Traffic forwarded through that edge.
-
-Virtual topology: 3 edges (one-to-one mapping), 2 fabrics
-
-============================
-== Dynamic authentication ==
-============================
-
-# examples/dynAuthentication/
-
-Example with an "authenticate" dynamic network control function. This function
-authenticates the flow based on the IP source address of the first packet.
-
-Virtual topology: 3 edges (one-to-one and one-to-two mapping), 1 fabric
 
 ******************************************************************************
+Static use cases
 ******************************************************************************
 
-============================
-== Dynamic Load Balancer  ==
-============================
 
-##### TODO : first packet is not reinjected into the data plane
+== staticFiltering/staticFiltering  ==
 
-# examples/dynLB/
-
--- RYU
-
-$ cd controllers/ryu/
-$ ryu-manager --observe-links airnet_interface.py
-
--- AirNet
-
-$ ./launch_airnet_ryu.sh dynLB.dynLoadBalancer dynLB.dynLoadBalancer_mapping
-
--- Mininet
-
-$ sudo python dynLoadBalancer_topo.py 192.168.56.1 6633
-
--- Tests
-
-#PUBLIC IP == 10.0.0.50
-
-mininet> client1 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received, 20% packet loss)
-mininet> client1 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 5 received, 0% packet loss)
+Example which filters traffic based on the destination host,
+the network and/or transport protocol and/or port number.
 
 
-mininet> client2 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received, 20% packet loss)
-mininet> client3 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received, 20% packet loss)
-mininet> client4 ping -c5 10.0.0.50  ---> OK (5 packets transmitted, 4 received, 20% packet loss)
+
+
+== staticParallelCatch/staticParallelCatch  ==
+
+Example which involves 2 catch() instructions in parallel with the same
+destination in the carry().
+e.g.: ( catch() + catch() ) >> carry()
+
+
+
+
+== staticTwoFabrics/twoFabrics  ==
+
+Example which involves 2 Fabrics in the virtual topology.
+
+
 
 ******************************************************************************
+Dynamic use cases (dynamic network control function-s is/are used here)
 ******************************************************************************
 
-=======================================
-== Statistics on Three Edges ==
-=======================================
 
-# examples/statThreeEdges/
+== statThreeEdges/statThreeEdges  ==
 
--- RYU
+Example which collects statistics on layer 2 exchanges.
 
-$ cd controllers/ryu/
-$ ryu-manager --observe-links airnet_interface.py
 
--- AirNet
 
-$ ./launch_airnet_ryu.sh statThreeEdges.statThreeEdges statThreeEdges.statThreeEdges_mapping
+== checkDataCap/checkDataCap  ==
 
--- Mininet
+Example which regulates bandwith usage by hosts.
 
-$ sudo python statThreeEdges_topo.py 192.168.56.1 6633
 
--- Tests
 
-mininet> pingall --> OK
+== dynAuthentication/dynAuth ==
+
+Example which authenticates flows based on the IP source address of the first packet.
+
+
+
+== dynDM/dynDM ==
+
+Example which redirects non-trustworthy flows towards a dataMachine (click).
+
+
+
+== dynLB/dynLB ==
+
+Example which balances traffic between two web servers based on the IP source address.
