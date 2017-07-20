@@ -21,20 +21,20 @@ See https://github.com/kohler/click for more information.
 
 ## Configuration
 
-1) Install a Linux-based VM for Click
+1- Install a Linux-based VM for Click
 
     $ sudo aptitude update
     $ sudo aptitude upgrade
     $ sudo aptitude install build-essential
 
-2) Clone and install the Click project
+2- Clone and install the Click project
 
     $ git clone git://github.com/kohler/click.git
     $ cd click
     $ ./configure
     $ sudo make install
 
-3) Configure the VMs interfaces
+3- Configure the VMs interfaces
 
 On each VM (Mininet and Click), configure three interfaces:
 
@@ -52,25 +52,25 @@ On each VM (Mininet and Click), configure three interfaces:
 Note that for two DataMachines, two Click VMs are needed. In that case, the Mininet VM must have two internal interfaces: one for the Click VM1 and one for the Click VM2.
 
 
-4) Define in Click the operation to apply on packets
+4- Define in Click the operation to apply on packets
 
 See the Click documentation for details on that part. For example, in order to store packets arriving on interface eth2 in a queue and send them back on the same interface after a 100 ms delay, the content of the Click file (in the click/conf folder) could be:
 
     FromDevice(eth2) -> Queue(10) -> DelayShaper(0.1) -> ToDevice(eth2);
 
 
-5) Start AirNet, RYU and Mininet.
+5- Start AirNet, RYU and Mininet.
 
     (localhost)$ ./launch_airnet_ryu.sh <click_usecase> <click_usecase_mapping>
     (localhost)$ ryu-manager --observe-links airnet_interface.py
     (mininet VM)$ sudo python click_usecase_topo.py <ryu_ip_address> <ryu_port>
 
-6) Start Click
+6- Start Click
 
     $ ping -c1 <mininet_IP_addr> (so that the host can be detected by Ryu)
     $ sudo click click/conf/emptyDM.click
 	$ sudo tcpdump -n -i eth2 (optional)
 
-7) Run tests in Mininet (ping, wget...)
+7- Run tests in Mininet (ping, wget...)
 
 Redirected packets should appear in the Click VM tcpdump console.

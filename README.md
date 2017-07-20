@@ -57,16 +57,16 @@ For each example, you have a README file that includes:
 
 For each AirNet program you wish to test, you need to go through three steps:
 
-1) Run AirNet (in one terminal):
+1- Run AirNet (in one terminal):
 
     $ launch_airnet_ryu.sh <example.py> <example_mapping.py>
 
-2) Run Ryu (in another terminal)
+2- Run Ryu (in another terminal)
 
     $ cd controllers/ryu/
     $ ryu-manager --observe-links airnet_interface.py
 
-3) Run Mininet (in the VM)
+3- Run Mininet (in the VM)
 
     $ sudo python <example_topo.py> <contoller_IP_address> <controller_port>
 
